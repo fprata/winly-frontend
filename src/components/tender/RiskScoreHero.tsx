@@ -36,7 +36,7 @@ export function RiskScoreHero({ score, level, factors }: RiskScoreHeroProps) {
       : [];
 
   return (
-    <div className={`${config.bgColor} ${config.borderColor} border rounded-[32px] p-8 shadow-sm`}>
+    <div className={`${config.bgColor} ${config.borderColor} border rounded-2xl p-8 shadow-sm`}>
       <div className="flex flex-col md:flex-row items-center gap-8">
         {/* Gauge */}
         <div className="flex flex-col items-center">

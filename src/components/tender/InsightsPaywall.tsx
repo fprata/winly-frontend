@@ -38,7 +38,7 @@ export function InsightsPaywall({ tenderId, initialInsights, derivedDocLink, tie
     return (
       <div className="space-y-6">
         {/* Truncated preview */}
-        <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-8">
+        <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles size={16} className="text-blue-600" />
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('paywall.previewLabel')}</span>
@@ -70,7 +70,7 @@ export function InsightsPaywall({ tenderId, initialInsights, derivedDocLink, tie
   // Free tier with no insights - disabled generate + upgrade
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-[32px] p-10 flex flex-col items-center text-center">
+      <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl p-8 flex flex-col items-center text-center">
         <div className="w-16 h-16 rounded-3xl bg-slate-300 shadow-xl shadow-slate-200 flex items-center justify-center mb-6">
           <Lock className="text-white" size={28} />
         </div>
@@ -114,7 +114,7 @@ function UpgradeCTA() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[32px] p-8 text-white flex items-center justify-between">
+    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white flex items-center justify-between">
       <div>
         <h3 className="text-lg font-black uppercase tracking-tight mb-1">{t('paywall.upgradeTitle')}</h3>
         <p className="text-sm text-blue-100 font-medium">{t('paywall.upgradeDesc')}</p>

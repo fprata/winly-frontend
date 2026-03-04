@@ -181,7 +181,7 @@ export function CompetitorIntelligenceClient({
               {backUrl ? t('back') : t('backToSearch')}
             </button>
           </div>
-          <div className="bg-white/70 backdrop-blur-sm rounded-[32px] border border-slate-200/60 shadow-sm p-8 lg:p-12">
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-sm p-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
               <div className="flex items-center gap-6">
                 <div className="w-20 h-20 rounded-3xl bg-slate-900 flex items-center justify-center text-white border border-slate-800 shadow-2xl">
@@ -222,7 +222,7 @@ export function CompetitorIntelligenceClient({
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
               {/* Card 1: Activity & Revenue */}
-              <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-8 h-full flex flex-col">
+              <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 h-full flex flex-col">
                 <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                   <TrendingUp size={18} className="text-blue-600" />
                   {t('marketActivity')}
@@ -252,7 +252,7 @@ export function CompetitorIntelligenceClient({
               </div>
 
               {/* Card 2: Market Presence & Risk */}
-              <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-8 h-full flex flex-col">
+              <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 h-full flex flex-col">
                 <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                   <Users size={18} className="text-purple-600" />
                   {t('marketReach')} & {t('biddingBehavior')}
@@ -291,7 +291,7 @@ export function CompetitorIntelligenceClient({
           {/* Row 2: Strategic Focus (Sectors & Buyers) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
               {/* Strategic Sector Dominance */}
-              <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-8 h-full">
+              <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 h-full">
                 <h3 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-2 uppercase tracking-tight text-sm">
                   <Users size={20} className="text-purple-600" />
                   {t('sectorSpecialization')}
@@ -302,7 +302,7 @@ export function CompetitorIntelligenceClient({
               </div>
 
               {/* Top Buyers */}
-              <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-8 h-full">
+              <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 h-full">
                 <h3 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-2 uppercase tracking-tight text-sm">
                   <Building2 size={20} className="text-emerald-600" />
                   {t('topBuyers')}
@@ -344,7 +344,7 @@ export function CompetitorIntelligenceClient({
           </div>
 
           {/* Row 4: Won Tenders Table */}
-          <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-8">
+          <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8">
             <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-tight text-sm">
                 <Trophy size={20} className="text-blue-600" />
                 {t('wonTendersTitle')}

@@ -90,7 +90,7 @@ export function BuyerEvolutionCharts({ competitorTrends, sectorTrends }: TrendPr
 
   if (!sourceData || sourceData.length === 0) {
     return (
-      <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm overflow-hidden flex flex-col h-full items-center justify-center p-10">
+      <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden flex flex-col h-full items-center justify-center p-8">
         <TrendingUp size={48} className="text-slate-200 mb-4" />
         <p className="text-slate-400 font-bold text-sm italic">
           {t('noTrendHistory', { defaultValue: 'No strategic trend history available.' })}
@@ -101,14 +101,14 @@ export function BuyerEvolutionCharts({ competitorTrends, sectorTrends }: TrendPr
 
   if (!isMounted) {
     return (
-      <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm overflow-hidden flex flex-col h-full items-center justify-center p-10">
+      <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden flex flex-col h-full items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm overflow-hidden flex flex-col h-full">
+    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden flex flex-col h-full">
         {/* Header & Tabs */}
         <div className="px-8 pt-8 pb-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight text-sm flex items-center gap-2">

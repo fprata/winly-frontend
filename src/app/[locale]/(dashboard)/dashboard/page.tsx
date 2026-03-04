@@ -44,8 +44,8 @@ export default async function Dashboard() {
     <div className="max-w-7xl mx-auto">
       <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-1 tracking-tight">{t('title')}</h1>
-          <p className="text-sm text-gray-500 max-w-xl">{t('subtitle')}</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-1 tracking-tight">{t('title')}</h1>
+          <p className="text-sm text-slate-500 max-w-xl">{t('subtitle')}</p>
         </div>
         <div className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 border ${
           status === 'online' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
@@ -96,20 +96,20 @@ export default async function Dashboard() {
 
       {/* Quick Actions */}
       <div className="mb-5">
-        <h2 className="text-lg font-bold text-gray-900 mb-0.5">{t('priorityActions')}</h2>
-        <p className="text-sm text-gray-500">{t('quickAccess')}</p>
+        <h2 className="text-lg font-bold text-slate-900 mb-0.5">{t('priorityActions')}</h2>
+        <p className="text-sm text-slate-500">{t('quickAccess')}</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Link href="/profile">
           <Card hover className="flex items-center gap-5 group">
-            <div className="w-12 h-12 rounded-xl bg-gray-900 flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform">
+            <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform">
               <User size={22} />
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="font-bold text-gray-900 mb-0.5 group-hover:text-teal-700 transition-colors">{t('biddingProfile.title')}</h4>
-              <p className="text-sm text-gray-500 truncate">{t('biddingProfile.description')}</p>
+              <h4 className="font-bold text-slate-900 mb-0.5 group-hover:text-teal-700 transition-colors">{t('biddingProfile.title')}</h4>
+              <p className="text-sm text-slate-500 truncate">{t('biddingProfile.description')}</p>
             </div>
-            <ArrowRight size={18} className="text-gray-300 group-hover:text-teal-600 group-hover:translate-x-1 transition-all shrink-0" />
+            <ArrowRight size={18} className="text-slate-300 group-hover:text-teal-600 group-hover:translate-x-1 transition-all shrink-0" />
           </Card>
         </Link>
 
@@ -119,10 +119,10 @@ export default async function Dashboard() {
               <Search size={22} />
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="font-bold text-gray-900 mb-0.5 group-hover:text-teal-700 transition-colors">{t('marketExplorer.title')}</h4>
-              <p className="text-sm text-gray-500 truncate">{t('marketExplorer.description')}</p>
+              <h4 className="font-bold text-slate-900 mb-0.5 group-hover:text-teal-700 transition-colors">{t('marketExplorer.title')}</h4>
+              <p className="text-sm text-slate-500 truncate">{t('marketExplorer.description')}</p>
             </div>
-            <ArrowRight size={18} className="text-gray-300 group-hover:text-teal-600 group-hover:translate-x-1 transition-all shrink-0" />
+            <ArrowRight size={18} className="text-slate-300 group-hover:text-teal-600 group-hover:translate-x-1 transition-all shrink-0" />
           </Card>
         </Link>
       </div>

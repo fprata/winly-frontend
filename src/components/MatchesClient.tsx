@@ -126,7 +126,7 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
             budget: { label: t('categories.financialAlignment'), icon: <DollarSign size={13} />, color: "text-emerald-600", bg: "bg-emerald-50" },
             sector: { label: t('categories.sectorExpertise'), icon: <Target size={13} />, color: "text-violet-600", bg: "bg-violet-50" },
             ai: { label: t('categories.aiMatchConfidence'), icon: <Brain size={13} />, color: "text-teal-600", bg: "bg-teal-50" },
-            process: { label: t('categories.proceduralExperience'), icon: <FileText size={13} />, color: "text-gray-600", bg: "bg-gray-50" }
+            process: { label: t('categories.proceduralExperience'), icon: <FileText size={13} />, color: "text-slate-600", bg: "bg-slate-50" }
           };
           categories[key] = { ...configs[key] };
         }
@@ -174,16 +174,16 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
         subtitle={t('subtitle')}
         icon={<Star size={18} />}
         actions={
-          <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
             <button
               onClick={() => setMinScoreFilter(0)}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${minScoreFilter === 0 ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${minScoreFilter === 0 ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
             >
               {t('allMatches')}
             </button>
             <button
               onClick={() => setMinScoreFilter(75)}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${minScoreFilter === 75 ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${minScoreFilter === 75 ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
             >
               {t('highConfidence')}
             </button>
@@ -212,37 +212,37 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
       </div>
 
       {/* Score Legend */}
-      <div className="mb-8 flex flex-wrap items-center gap-y-3 gap-x-6 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+      <div className="mb-8 flex flex-wrap items-center gap-y-3 gap-x-6 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
         <div className="flex items-center gap-2 mr-2">
           <Brain size={16} className="text-teal-600" />
-          <span className="text-xs font-black text-gray-900 uppercase tracking-widest">{t('scoreLegend.title')}</span>
+          <span className="text-xs font-black text-slate-900 uppercase tracking-widest">{t('scoreLegend.title')}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-violet-400 shadow-sm" />
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">{t('scoreLegend.cpv')}</span>
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{t('scoreLegend.cpv')}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-sm" />
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">{t('scoreLegend.strategic')}</span>
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{t('scoreLegend.strategic')}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-teal-400 shadow-sm" />
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">{t('scoreLegend.semantic')}</span>
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{t('scoreLegend.semantic')}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm" />
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">{t('scoreLegend.keyword')}</span>
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{t('scoreLegend.keyword')}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-sm" />
-          <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">{t('scoreLegend.location')}</span>
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{t('scoreLegend.location')}</span>
         </div>
       </div>
 
       {loading ? (
         <div className="grid grid-cols-1 gap-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-44 bg-white rounded-xl border border-gray-100 animate-pulse" />
+            <div key={i} className="h-44 bg-white rounded-xl border border-slate-100 animate-pulse" />
           ))}
         </div>
       ) : error ? (
@@ -268,24 +268,24 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
             const reasons = getCategorizedReasons(match.match_reasons);
 
             return (
-              <Card key={match.tender_id} className="p-0 flex flex-col md:flex-row items-stretch group hover:border-gray-300 hover:shadow-md transition-all duration-300 overflow-hidden">
+              <Card key={match.tender_id} className="p-0 flex flex-col md:flex-row items-stretch group hover:border-slate-300 hover:shadow-md transition-all duration-300 overflow-hidden">
 
                 {/* Score Column */}
-                <div className="md:w-40 bg-gray-50 flex flex-col items-center justify-center p-5 border-b md:border-b-0 md:border-r border-gray-100">
+                <div className="md:w-40 bg-slate-50 flex flex-col items-center justify-center p-5 border-b md:border-b-0 md:border-r border-slate-100">
                   <div className="relative w-20 h-20 flex items-center justify-center mb-2">
                     <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="40" cy="40" r="36" stroke="currentColor" strokeWidth="5" fill="transparent" className="text-gray-200" />
+                      <circle cx="40" cy="40" r="36" stroke="currentColor" strokeWidth="5" fill="transparent" className="text-slate-200" />
                       <circle
                         cx="40" cy="40" r="36" stroke="currentColor" strokeWidth="5" fill="transparent"
                         strokeDasharray={226.2}
                         strokeDashoffset={226.2 - (226.2 * match.match_score) / 100}
-                        className={`${match.match_score >= 75 ? 'text-teal-600' : match.match_score >= 50 ? 'text-amber-500' : 'text-gray-400'} transition-all duration-700`}
+                        className={`${match.match_score >= 75 ? 'text-teal-600' : match.match_score >= 50 ? 'text-amber-500' : 'text-slate-400'} transition-all duration-700`}
                         strokeLinecap="round"
                       />
                     </svg>
-                    <span className="absolute text-xl font-extrabold text-gray-900">{Math.round(match.match_score)}%</span>
+                    <span className="absolute text-xl font-extrabold text-slate-900">{Math.round(match.match_score)}%</span>
                   </div>
-                  <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-2">{t('matchScore')}</span>
+                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-2">{t('matchScore')}</span>
 
                   {/* Score Components Mini-Bar */}
                   <div className="flex gap-0.5 w-full px-3">
@@ -315,20 +315,20 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                       </Badge>
                     )}
 
-                    <span className="text-gray-400 text-[11px] font-medium flex items-center gap-1.5 ml-auto">
+                    <span className="text-slate-400 text-[10px] font-medium flex items-center gap-1.5 ml-auto">
                       <Building2 size={12} />
                       {match.buyer_name}
                     </span>
                   </div>
 
                   <Link href={`/tenders/${match.tender_uuid}`}>
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-teal-700 transition-colors leading-snug mb-1.5 pr-4">
+                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors leading-snug mb-1.5 pr-4">
                       {match.title}
                     </h3>
                   </Link>
 
 
-                  <p className="text-xs text-gray-400 mb-4 truncate max-w-[500px]" title={getCpvDescription(match.cpv_code)}>
+                  <p className="text-xs text-slate-400 mb-4 truncate max-w-[500px]" title={getCpvDescription(match.cpv_code)}>
                     {getCpvDescription(match.cpv_code)}
                   </p>
 
@@ -338,8 +338,8 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                         <DollarSign size={16} />
                       </div>
                       <div>
-                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider leading-none mb-0.5">{t('value')}</p>
-                        <p className="text-sm font-semibold text-gray-800 tabular-nums">{formatValue(match.estimated_value, match.currency)}</p>
+                        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider leading-none mb-0.5">{t('value')}</p>
+                        <p className="text-sm font-semibold text-slate-800 tabular-nums">{formatValue(match.estimated_value, match.currency)}</p>
                       </div>
                     </div>
 
@@ -348,8 +348,8 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                         <MapPin size={16} />
                       </div>
                       <div>
-                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider leading-none mb-0.5">{t('region')}</p>
-                        <p className="text-sm font-semibold text-gray-800 uppercase">{match.country}</p>
+                        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider leading-none mb-0.5">{t('region')}</p>
+                        <p className="text-sm font-semibold text-slate-800 uppercase">{match.country}</p>
                       </div>
                     </div>
 
@@ -370,10 +370,10 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                 </div>
 
                 {/* Actions Column */}
-                <div className="flex flex-row md:flex-col items-center justify-center gap-2 p-4 border-t md:border-t-0 md:border-l border-gray-100">
+                <div className="flex flex-row md:flex-col items-center justify-center gap-2 p-4 border-t md:border-t-0 md:border-l border-slate-100">
                   <Link
                     href={`/tenders/${match.tender_uuid}`}
-                    className="flex-1 md:flex-none w-full md:w-10 h-10 bg-gray-900 text-white rounded-lg flex items-center justify-center hover:bg-teal-700 transition-all group/btn"
+                    className="flex-1 md:flex-none w-full md:w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center hover:bg-teal-700 transition-all group/btn"
                     title={t('viewReport')}
                   >
                     <ArrowRight size={18} className="group-hover/btn:translate-x-0.5 transition-transform" />

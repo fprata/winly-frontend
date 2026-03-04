@@ -7,8 +7,8 @@ export function DashboardFooter() {
   const t = useTranslations('footer');
 
   return (
-    <footer className="mt-auto py-8 px-8 border-t border-gray-200/60 bg-gray-50">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400 font-medium">
+    <footer className="mt-auto py-8 px-8 border-t border-slate-200/60 bg-slate-50">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium">
         <p>{t('copyright')}</p>
         <div className="flex gap-6">
           <Link href="/" className="hover:text-teal-600 transition-colors">{t('landingPage')}</Link>

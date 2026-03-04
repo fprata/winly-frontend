@@ -25,7 +25,7 @@ export default function Loading() {
 
       <div className="grid grid-cols-1 gap-6">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="h-64 bg-white rounded-[32px] border border-slate-100 animate-pulse" />
+          <div key={i} className="h-64 bg-white rounded-2xl border border-slate-100 animate-pulse" />
         ))}
       </div>
     </div>

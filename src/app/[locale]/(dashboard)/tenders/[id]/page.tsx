@@ -317,7 +317,7 @@ export default async function TenderDetailsPage({
         {/* Main Column */}
         <div className="lg:col-span-8 space-y-8">
           {/* Header Card */}
-          <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
             <div className={`bg-slate-50/50 px-8 py-4 border-b border-slate-100 flex justify-between items-center ${isAwarded ? 'bg-amber-50/50 border-amber-100' : ''}`}>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
@@ -439,7 +439,7 @@ export default async function TenderDetailsPage({
             {isAwarded ? (
               <>
                 {/* Award Summary Card */}
-                <div className="bg-amber-900 text-white p-8 rounded-[32px] shadow-xl">
+                <div className="bg-amber-900 text-white p-8 rounded-2xl shadow-xl">
                   <h3 className="text-xs font-black text-amber-300 uppercase tracking-widest mb-6">{t('awardDetails')}</h3>
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
@@ -482,7 +482,7 @@ export default async function TenderDetailsPage({
                 </div>
 
                 {/* Company Fit Card (also useful for awarded tenders) */}
-                <div className="bg-white rounded-[32px] border border-slate-200 p-8 shadow-sm">
+                <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
                   <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                     <Briefcase size={18} className="text-indigo-600" />
                     {t('companyProfileFit')}
@@ -500,7 +500,7 @@ export default async function TenderDetailsPage({
             ) : (
               <>
                 {/* Deadline Card */}
-                <div className="bg-slate-900 text-white p-8 rounded-[32px] shadow-xl">
+                <div className="bg-slate-900 text-white p-8 rounded-2xl shadow-xl">
                   <h3 className="text-xs font-black text-blue-400 uppercase tracking-widest mb-6">{t('submissionDeadline')}</h3>
                   <div className="flex items-center gap-4 mb-8">
                     <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
@@ -538,7 +538,7 @@ export default async function TenderDetailsPage({
 
                 {/* Risk Score Mini Card */}
                 {riskScore != null && (
-                  <div className={`rounded-[32px] p-6 shadow-sm border ${
+                  <div className={`rounded-2xl p-6 shadow-sm border ${
                     riskScore <= 3 ? 'bg-emerald-50 border-emerald-200' :
                     riskScore <= 6 ? 'bg-amber-50 border-amber-200' :
                     'bg-rose-50 border-rose-200'
@@ -573,7 +573,7 @@ export default async function TenderDetailsPage({
                 )}
 
                 {/* Company Fit Card */}
-                <div className="bg-white rounded-[32px] border border-slate-200 p-8 shadow-sm">
+                <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
                   <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                     <Briefcase size={18} className="text-indigo-600" />
                     {t('companyProfileFit')}

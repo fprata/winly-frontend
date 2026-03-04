@@ -134,16 +134,16 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
       
       {/* Subscription Tier */}
       <Card>
-        <div className="flex items-center gap-2 mb-5 text-gray-900">
+        <div className="flex items-center gap-2 mb-5 text-slate-900">
           <CreditCard size={18} className="text-teal-600" />
           <h2 className="font-bold text-base">{t('subscriptionPlan')}</h2>
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <p className="text-xs text-gray-400 uppercase tracking-wider font-medium mb-1">{t('currentPlan')}</p>
-            <h3 className="text-3xl font-extrabold text-gray-900">{profile?.tier || 'Explorer'}</h3>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-xs text-slate-400 uppercase tracking-wider font-medium mb-1">{t('currentPlan')}</p>
+            <h3 className="text-3xl font-extrabold text-slate-900">{profile?.tier || 'Explorer'}</h3>
+            <p className="text-sm text-slate-500 mt-1">
               {profile?.tier === 'Enterprise' ? t('enterpriseDesc') :
                 profile?.tier === 'Business' ? t('businessDesc') :
                 profile?.tier === 'Professional' ? t('professionalDesc') :
@@ -173,7 +173,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
 
       {/* General Info */}
       <Card>
-        <div className="flex items-center gap-2 mb-5 text-gray-900">
+        <div className="flex items-center gap-2 mb-5 text-slate-900">
           <Building2 size={18} className="text-teal-600" />
           <h2 className="font-bold text-base">{t('generalInfo')}</h2>
         </div>
@@ -214,7 +214,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
                   </div>
                   <div className="flex-1">
                     <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-tight">{t('vatFound')}</p>
-                    <h4 className="font-bold text-gray-900">{lookupResult.company.name}</h4>
+                    <h4 className="font-bold text-slate-900">{lookupResult.company.name}</h4>
                     <div className="flex gap-2 mt-1">
                       <span className="px-2 py-0.5 rounded-full bg-emerald-200/50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
                         {lookupResult.company.persona}
@@ -281,7 +281,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
 
       {/* AI Keywords */}
       <Card>
-        <div className="flex items-center gap-2 mb-5 text-gray-900">
+        <div className="flex items-center gap-2 mb-5 text-slate-900">
           <Brain size={18} className="text-teal-600" />
           <h2 className="font-bold text-base">{t('aiKeywords')}</h2>
         </div>
@@ -312,14 +312,14 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
               onChange={(val) => setProfile({ ...profile, major_competitors: val })}
             />
             <input type="hidden" name="major_competitors" value={JSON.stringify(profile.major_competitors)} />
-            <p className="text-[11px] text-gray-400 mt-1.5 ml-0.5">{t('competitorsHint')}</p>
+            <p className="text-[10px] text-slate-400 mt-1.5 ml-0.5">{t('competitorsHint')}</p>
           </div>
         </div>
       </Card>
 
       {/* Notifications */}
       <Card>
-        <div className="flex items-center gap-2 mb-5 text-gray-900">
+        <div className="flex items-center gap-2 mb-5 text-slate-900">
           <Bell size={18} className="text-teal-600" />
           <h2 className="font-bold text-base">Email Notifications</h2>
         </div>
@@ -327,14 +327,14 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-800">Daily match digest</p>
-              <p className="text-xs text-gray-400 mt-0.5">Receive a daily summary of your top-matching tenders by email</p>
+              <p className="text-sm font-medium text-slate-800">Daily match digest</p>
+              <p className="text-xs text-slate-400 mt-0.5">Receive a daily summary of your top-matching tenders by email</p>
             </div>
             <button
               type="button"
               onClick={() => setNotifPrefs(p => ({ ...p, email_digest_enabled: !p.email_digest_enabled }))}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 ${
-                notifPrefs.email_digest_enabled ? 'bg-teal-600' : 'bg-gray-200'
+                notifPrefs.email_digest_enabled ? 'bg-teal-600' : 'bg-slate-200'
               }`}
               aria-checked={notifPrefs.email_digest_enabled}
               role="switch"
@@ -349,13 +349,13 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
 
           {notifPrefs.email_digest_enabled && (
             <div>
-              <label className="text-xs font-medium text-gray-600 block mb-1.5">
+              <label className="text-xs font-medium text-slate-600 block mb-1.5">
                 Minimum match score to include
               </label>
               <select
                 value={notifPrefs.min_score_threshold}
                 onChange={e => setNotifPrefs(p => ({ ...p, min_score_threshold: Number(e.target.value) }))}
-                className="text-sm border border-gray-200 rounded-md px-3 py-1.5 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
               >
                 <option value={50}>50+ (more matches)</option>
                 <option value={60}>60+ (recommended)</option>

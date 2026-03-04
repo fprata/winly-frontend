@@ -71,8 +71,8 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
           <Sparkles className="w-6 h-6 text-amber-400 absolute -top-2 -right-2 animate-pulse" />
         </div>
-        <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">AI is Reading Document...</h3>
-        <p className="text-sm text-gray-500 max-w-xs text-center mt-3 font-medium">
+        <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">AI is Reading Document...</h3>
+        <p className="text-sm text-slate-500 max-w-xs text-center mt-3 font-medium">
           Extracting strategic bidding intelligence via the Winly Document Analytics microservice. This usually takes 15-30 seconds.
         </p>
       </Card>
@@ -191,7 +191,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           </div>
           <button
             onClick={runAnalysis}
-            className="flex items-center gap-1.5 text-[9px] font-black text-gray-400 hover:text-blue-600 transition-colors uppercase"
+            className="flex items-center gap-1.5 text-[9px] font-black text-slate-400 hover:text-blue-600 transition-colors uppercase"
           >
             <RefreshCw size={10} />
             Refresh Analysis
@@ -202,7 +202,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
   }
 
   return (
-    <Card className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-10 flex flex-col items-center text-center">
+    <Card className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-8 flex flex-col items-center text-center">
       <div className="w-16 h-16 rounded-3xl bg-blue-600 shadow-xl shadow-blue-200 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
         <Sparkles className="text-white" size={28} />
       </div>

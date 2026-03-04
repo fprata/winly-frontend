@@ -8,16 +8,16 @@ export default function Loading() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-8 space-y-8">
           {/* Header Card Skeleton */}
-          <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm overflow-hidden h-[300px] animate-pulse"></div>
+          <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden h-[300px] animate-pulse"></div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             <div className="h-64 bg-slate-200 rounded-[32px] animate-pulse"></div>
-             <div className="h-64 bg-slate-200 rounded-[32px] animate-pulse"></div>
+             <div className="h-64 bg-slate-200 rounded-2xl animate-pulse"></div>
+             <div className="h-64 bg-slate-200 rounded-2xl animate-pulse"></div>
           </div>
         </div>
 
         <div className="lg:col-span-4 space-y-6">
-          <div className="h-80 bg-slate-900 rounded-[32px] animate-pulse"></div>
+          <div className="h-80 bg-slate-900 rounded-2xl animate-pulse"></div>
         </div>
       </div>
     </div>

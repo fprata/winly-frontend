@@ -65,10 +65,10 @@ export function CompetitorEvolutionCharts({ yearlyStats }: CompetitorEvolutionCh
     return (
       <div className="space-y-8 mt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-6 h-[400px] flex items-center justify-center">
+          <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 h-[400px] flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
-          <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-6 h-[400px] flex items-center justify-center">
+          <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 h-[400px] flex items-center justify-center">
              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
           </div>
         </div>
@@ -81,7 +81,7 @@ export function CompetitorEvolutionCharts({ yearlyStats }: CompetitorEvolutionCh
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         {/* 1. Revenue & Market Share */}
-        <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-6 h-[400px] flex flex-col">
+        <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 h-[400px] flex flex-col">
             <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 ml-2">
                 {t('salesAndMarketShare')}
             </h3>
@@ -129,7 +129,7 @@ export function CompetitorEvolutionCharts({ yearlyStats }: CompetitorEvolutionCh
         </div>
 
         {/* 2. Win Efficiency */}
-        <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-6 h-[400px] flex flex-col">
+        <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 h-[400px] flex flex-col">
             <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 ml-2">
                 {t('winEfficiency')}
             </h3>

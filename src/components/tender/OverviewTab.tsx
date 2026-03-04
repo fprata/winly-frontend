@@ -52,7 +52,7 @@ function ProjectScope({ description }: { description: string }) {
   const displayText = isLong && !expanded ? text.slice(0, DESCRIPTION_CHAR_LIMIT) + '...' : text;
 
   return (
-    <section className="bg-white p-10 rounded-[32px] border border-slate-200/60 shadow-sm">
+    <section className="bg-white p-8 rounded-2xl border border-slate-200/60 shadow-sm">
       <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
         <FileText size={24} className="text-blue-600" />
         {t('projectScope')}
@@ -107,7 +107,7 @@ export function OverviewTab({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Win Probability & Match Card */}
         <div className="flex flex-col h-full">
-          <div className="bg-slate-900 rounded-[32px] p-8 text-white shadow-xl relative overflow-hidden flex-1 flex flex-col">
+          <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden flex-1 flex flex-col">
             <div className="absolute top-0 right-0 p-6 opacity-5"><Brain size={120} /></div>
             <div className="relative z-10 flex flex-col h-full">
               <div className="flex justify-between items-center mb-8">
@@ -178,7 +178,7 @@ export function OverviewTab({
 
         {/* Competition & Market Card */}
         <div className="flex flex-col h-full">
-          <div className="bg-white rounded-[32px] border border-slate-200 p-8 shadow-sm flex-1 flex flex-col">
+          <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm flex-1 flex flex-col">
             <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
               <Target size={20} className="text-rose-600" />
               {t('competitiveLandscape')}
@@ -248,7 +248,7 @@ export function OverviewTab({
                   <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                     <div className="flex justify-between items-center mb-1">
                       <p className="text-[10px] font-black text-slate-400 uppercase leading-none">{t('avgDiscount')}</p>
-                      {sectorStats && <span className="text-[8px] font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded uppercase">{tMatches('categories.sectorExpertise')}</span>}
+                      {sectorStats && <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded uppercase">{tMatches('categories.sectorExpertise')}</span>}
                     </div>
                     <p className={`text-xl font-black ${refinedAvgDiscount < 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
                       {refinedAvgDiscount ? `${refinedAvgDiscount.toFixed(1)}%` : '—'}
@@ -258,7 +258,7 @@ export function OverviewTab({
                   <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                     <div className="flex justify-between items-center mb-1">
                       <p className="text-[10px] font-black text-slate-400 uppercase leading-none">{t('marketDensity')}</p>
-                      {sectorStats && <span className="text-[8px] font-bold text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded uppercase">{tMatches('categories.sectorExpertise')}</span>}
+                      {sectorStats && <span className="text-[9px] font-bold text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded uppercase">{tMatches('categories.sectorExpertise')}</span>}
                     </div>
                     <p className="text-xl font-black text-slate-800">{typeof refinedBidderCount === 'number' && refinedBidderCount !== 0 ? refinedBidderCount.toFixed(1) : '—'}</p>
                     <p className="text-[9px] font-bold text-slate-400 mt-1 uppercase">{t('avgBidders')}</p>
@@ -271,7 +271,7 @@ export function OverviewTab({
       </div>
 
       {/* Pricing Analysis Section */}
-      <section className="bg-white p-10 rounded-[32px] border border-slate-200/60 shadow-sm">
+      <section className="bg-white p-8 rounded-2xl border border-slate-200/60 shadow-sm">
         <div className="flex justify-between items-center mb-8">
           <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
             <Target size={24} className="text-emerald-600" />
@@ -353,7 +353,7 @@ export function OverviewTab({
 
       {/* Related Opportunities */}
       {relatedTenders.length > 0 && (
-        <section className="bg-white p-10 rounded-[32px] border border-slate-200/60 shadow-sm">
+        <section className="bg-white p-8 rounded-2xl border border-slate-200/60 shadow-sm">
           <h3 className="text-xl font-bold text-slate-900 mb-8 flex items-center gap-2 uppercase tracking-tight text-sm">
             <Brain size={20} className="text-blue-600" />
             {t('relatedOpportunities')}

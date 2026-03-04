@@ -129,7 +129,7 @@ export function BuyerCompetitorAnalysis({ buyerName, selectedCpvs, initialTender
   if (!tenders.length) return null;
 
   return (
-    <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-8 mt-8">
+    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 mt-8">
       <div className="flex items-center justify-between mb-8">
         <div>
             <h3 className="text-xl font-black text-slate-900 flex items-center gap-2 uppercase tracking-tight text-sm">

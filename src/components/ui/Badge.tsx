@@ -31,7 +31,7 @@ export const Badge = React.memo(function Badge({
     <span
       className={twMerge(
         clsx(
-          "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-semibold tracking-wide border",
+          "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-semibold tracking-wide border",
           colorMap[color]
         ),
         className

@@ -136,21 +136,21 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
     <div className="max-w-6xl mx-auto">
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
 
-      <div className="bg-white p-1.5 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-1.5 mb-6">
+      <div className="bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-1.5 mb-6">
         <form onSubmit={handleSearch} className="flex-1 relative">
-          <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
           <input
             type="text"
             placeholder={t('searchPlaceholder')}
             value={query}
             onChange={e => setQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 bg-transparent text-gray-800 text-sm outline-none"
+            className="w-full pl-11 pr-4 py-2.5 bg-transparent text-slate-800 text-sm outline-none"
           />
         </form>
         <select
           value={country}
           onChange={e => handleCountryChange(e.target.value)}
-          className="px-3.5 py-2.5 bg-transparent text-gray-600 text-sm font-medium outline-none cursor-pointer min-w-[140px]"
+          className="px-3.5 py-2.5 bg-transparent text-slate-600 text-sm font-medium outline-none cursor-pointer min-w-[140px]"
         >
           <option value="All">{t('allCountries')}</option>
           <option value="PT">Portugal</option>
@@ -160,21 +160,21 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
         </Button>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="px-5 py-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">{t('tableInfo')}</th>
-                <th className="px-5 py-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider text-center">Match Score</th>
-                <th className="px-5 py-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider text-center">{t('tableValue')}</th>
-                <th className="px-5 py-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider text-right">{t('tableAction')}</th>
+              <tr className="bg-slate-50 border-b border-slate-100">
+                <th className="px-5 py-3 text-[10px] font-medium text-slate-400 uppercase tracking-wider">{t('tableInfo')}</th>
+                <th className="px-5 py-3 text-[10px] font-medium text-slate-400 uppercase tracking-wider text-center">Match Score</th>
+                <th className="px-5 py-3 text-[10px] font-medium text-slate-400 uppercase tracking-wider text-center">{t('tableValue')}</th>
+                <th className="px-5 py-3 text-[10px] font-medium text-slate-400 uppercase tracking-wider text-right">{t('tableAction')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-slate-50">
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="px-5 py-16 text-center text-gray-400 text-sm">{tCommon('loading')}</td>
+                  <td colSpan={4} className="px-5 py-16 text-center text-slate-400 text-sm">{tCommon('loading')}</td>
                 </tr>
               ) : error ? (
                 <tr>
@@ -185,7 +185,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                 </tr>
               ) : tenders.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-5 py-16 text-center text-gray-400 text-sm font-medium">{t('noResults')}</td>
+                  <td colSpan={4} className="px-5 py-16 text-center text-slate-400 text-sm font-medium">{t('noResults')}</td>
                 </tr>
               ) : (
                 tenders.map((tender) => {
@@ -193,21 +193,21 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                   return (
                     <tr
                       key={tender.tender_id}
-                      className="hover:bg-gray-50/60 transition-colors group cursor-pointer"
+                      className="hover:bg-slate-50/60 transition-colors group cursor-pointer"
                       onClick={() => router.push(`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`)}
                     >
                       <td className="px-5 py-4">
                         <Link
                           href={`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`}
-                          className="text-gray-800 font-medium line-clamp-1 group-hover:text-teal-700 transition-colors text-sm"
+                          className="text-slate-800 font-medium line-clamp-1 group-hover:text-teal-700 transition-colors text-sm"
                           onClick={(e) => e.stopPropagation()}
                         >
                           {tender.title}
                         </Link>
                         <div className="flex items-center gap-2 mt-1">
-                          <p className="text-[11px] text-gray-400 font-medium">{tender.buyer_name}</p>
-                          <span className="text-gray-200">|</span>
-                          <p className="text-[11px] text-gray-400 truncate max-w-[280px]" title={getCpvDescription(tender.cpv_code)}>
+                          <p className="text-[10px] text-slate-400 font-medium">{tender.buyer_name}</p>
+                          <span className="text-slate-200">|</span>
+                          <p className="text-[10px] text-slate-400 truncate max-w-[280px]" title={getCpvDescription(tender.cpv_code)}>
                             {getCpvDescription(tender.cpv_code)}
                           </p>
                         </div>
@@ -219,16 +219,16 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                               {Math.round(match.match_score)}%
                             </Badge>
                           ) : (
-                            <span className="text-[11px] text-gray-300">N/A</span>
+                            <span className="text-[10px] text-slate-300">N/A</span>
                           )}
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-center font-medium text-gray-700 tabular-nums text-sm">
+                      <td className="px-5 py-4 text-center font-medium text-slate-700 tabular-nums text-sm">
                         {tender.estimated_value ? `€${tender.estimated_value.toLocaleString()}` : "—"}
                       </td>
                       <td className="px-5 py-4 text-right">
                         <div className="flex justify-end">
-                          <div className="w-7 h-7 rounded-md bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-300 group-hover:bg-gray-900 group-hover:text-white group-hover:border-gray-900 transition-all">
+                          <div className="w-7 h-7 rounded-md bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all">
                             <ChevronRight size={14} />
                           </div>
                         </div>
@@ -240,8 +240,8 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
             </tbody>
           </table>
         </div>
-        <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-          <p className="text-xs text-gray-400 font-medium">{t('totalRecords', { count: total.toLocaleString() })}</p>
+        <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <p className="text-xs text-slate-400 font-medium">{t('totalRecords', { count: total.toLocaleString() })}</p>
           <div className="flex gap-1.5">
             <Button variant="ghost" size="sm" disabled={page === 0} onClick={() => handlePageChange(page - 1)}>
               <ChevronLeft size={16} />

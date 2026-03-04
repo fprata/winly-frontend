@@ -30,7 +30,7 @@ export function AwardTab({ tenderId, tender }: AwardTabProps) {
   };
 
   return (
-    <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-8">
+    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8">
       <div className="flex justify-between items-center mb-8">
         <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
           <Target size={24} className="text-amber-600" />

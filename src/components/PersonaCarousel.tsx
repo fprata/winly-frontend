@@ -44,7 +44,7 @@ export function PersonaCarousel({ personas }: PersonaCarouselProps) {
         {personas.map((p) => (
           <div 
             key={p.id} 
-            className={`min-w-[340px] max-w-[340px] h-[480px] snap-center p-8 rounded-[32px] border-2 ${p.color} hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group bg-white flex flex-col relative overflow-hidden`}
+            className={`min-w-[340px] max-w-[340px] h-[480px] snap-center p-8 rounded-2xl border-2 ${p.color} hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group bg-white flex flex-col relative overflow-hidden`}
           >
             <div className="mb-6 flex justify-between items-start">
               <div className="p-4 bg-slate-50 rounded-2xl shadow-sm group-hover:scale-110 transition-transform">

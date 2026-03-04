@@ -40,25 +40,25 @@ export async function DashboardHeader({ user, signOutAction }: DashboardHeaderPr
   }
 
   return (
-    <header className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-30">
+    <header className="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
       <div className="flex items-center gap-2">
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-        <span className="text-xs font-medium text-gray-500">{t('systemOperational')}</span>
+        <span className="text-xs font-medium text-slate-500">{t('systemOperational')}</span>
       </div>
 
       <div className="flex items-center gap-3">
         <LanguageSwitcher />
 
-        <Link href="/matches" className="relative p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-all">
+        <Link href="/matches" className="relative p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all">
           <Bell size={18} />
           {matchCount > 0 && (
-            <span className="absolute top-1 right-1 bg-teal-600 ring-2 ring-white text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center">
+            <span className="absolute top-1 right-1 bg-teal-600 ring-2 ring-white text-white text-[9px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center">
               {matchCount > 99 ? '99+' : matchCount}
             </span>
           )}
         </Link>
 
-        <div className="h-6 w-px bg-gray-200"></div>
+        <div className="h-6 w-px bg-slate-200"></div>
 
         <UserMenu
           initials={initials}
