@@ -3,14 +3,26 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useRouter, usePathname } from '@/navigation'
 import { useSearchParams } from 'next/navigation';
-import { Search as SearchIcon, ChevronRight, ChevronLeft } from 'lucide-react';
+import {
+  Search as SearchIcon,
+  ChevronRight,
+  ChevronLeft,
+  SlidersHorizontal,
+  X,
+  Building2,
+  Calendar,
+  Clock,
+  DollarSign,
+  Tag,
+  ArrowUpDown,
+  SearchX
+} from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useTranslations } from 'next-intl';
-import { getCpvDescription } from '@/utils/cpv-data';
+import { useTranslations, useLocale } from 'next-intl';
+import { getCpvDescription, CPV_DIVISIONS } from '@/utils/cpv-data';
 import { PageHeader } from './ui/PageHeader';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
-import { EmptyState } from './ui/EmptyState';
 import { PAGINATION } from '@/constants';
 
 interface Tender {
@@ -21,8 +33,11 @@ interface Tender {
   estimated_value: number;
   currency: string;
   publication_date: string;
+  submission_deadline?: string;
   country: string;
   cpv_code: string;
+  is_active?: boolean;
+  final_contract_value?: number;
   source_system?: string;
   procedure_documents_url?: string;
   document_urls?: string;
@@ -37,10 +52,50 @@ interface ExplorerClientProps {
   clientId: string | null;
 }
 
+const COUNTRY_OPTIONS = [
+  { value: "All", label: "All Countries", labelPt: "Todos os Países" },
+  { value: "PT", label: "Portugal", labelPt: "Portugal" },
+  { value: "ES", label: "Spain", labelPt: "Espanha" },
+  { value: "FR", label: "France", labelPt: "França" },
+  { value: "DE", label: "Germany", labelPt: "Alemanha" },
+  { value: "IT", label: "Italy", labelPt: "Itália" },
+  { value: "NL", label: "Netherlands", labelPt: "Países Baixos" },
+  { value: "BE", label: "Belgium", labelPt: "Bélgica" },
+  { value: "AT", label: "Austria", labelPt: "Áustria" },
+  { value: "IE", label: "Ireland", labelPt: "Irlanda" },
+  { value: "PL", label: "Poland", labelPt: "Polónia" },
+];
+
+const COUNTRY_FLAGS: Record<string, string> = {
+  PT: "🇵🇹", ES: "🇪🇸", FR: "🇫🇷", DE: "🇩🇪", IT: "🇮🇹",
+  NL: "🇳🇱", BE: "🇧🇪", AT: "🇦🇹", IE: "🇮🇪", PL: "🇵🇱",
+  UK: "🇬🇧", GR: "🇬🇷", SE: "🇸🇪", DK: "🇩🇰", FI: "🇫🇮",
+  CZ: "🇨🇿", RO: "🇷🇴", HU: "🇭🇺", BG: "🇧🇬", HR: "🇭🇷",
+  LU: "🇱🇺", SK: "🇸🇰", SI: "🇸🇮", LT: "🇱🇹", LV: "🇱🇻",
+  EE: "🇪🇪", CY: "🇨🇾", MT: "🇲🇹",
+};
+
+function getCountryFlag(code: string): string {
+  return COUNTRY_FLAGS[code] || "🌍";
+}
+
+function getDaysAgo(dateStr: string): number {
+  const date = new Date(dateStr);
+  const now = new Date();
+  return Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function getDaysUntil(dateStr: string): number {
+  const date = new Date(dateStr);
+  const now = new Date();
+  return Math.floor((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export function ExplorerClient({ initialTenders, initialTotal, clientId }: ExplorerClientProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const locale = useLocale();
 
   const [tenders, setTenders] = useState<Tender[]>(initialTenders);
   const [total, setTotal] = useState(initialTotal);
@@ -51,35 +106,79 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
   const initialQuery = searchParams.get('q') || "";
   const initialCountry = searchParams.get('country') || "All";
+  const initialCpv = searchParams.get('cpv') || "All";
+  const initialMinValue = searchParams.get('minValue') || "";
+  const initialMaxValue = searchParams.get('maxValue') || "";
+  const initialStatus = searchParams.get('status') || "All";
+  const initialSort = searchParams.get('sort') || "newest";
   const initialPage = parseInt(searchParams.get('page') || "0");
 
   const [query, setQuery] = useState(initialQuery);
   const [country, setCountry] = useState(initialCountry);
+  const [cpv, setCpv] = useState(initialCpv);
+  const [minValue, setMinValue] = useState(initialMinValue);
+  const [maxValue, setMaxValue] = useState(initialMaxValue);
+  const [status, setStatus] = useState(initialStatus);
+  const [sort, setSort] = useState(initialSort);
   const [page, setPage] = useState(initialPage);
+  const [showFilters, setShowFilters] = useState(false);
 
   const pageSize = PAGINATION.DEFAULT_PAGE_SIZE;
+
+  // Count active filters (excluding defaults)
+  const activeFilterCount = [
+    country !== "All",
+    cpv !== "All",
+    minValue !== "",
+    maxValue !== "",
+    status !== "All",
+  ].filter(Boolean).length;
 
   useEffect(() => {
     const urlQuery = searchParams.get('q') || "";
     const urlCountry = searchParams.get('country') || "All";
+    const urlCpv = searchParams.get('cpv') || "All";
+    const urlMinValue = searchParams.get('minValue') || "";
+    const urlMaxValue = searchParams.get('maxValue') || "";
+    const urlStatus = searchParams.get('status') || "All";
+    const urlSort = searchParams.get('sort') || "newest";
     const urlPage = parseInt(searchParams.get('page') || "0");
 
     setQuery(urlQuery);
     setCountry(urlCountry);
+    setCpv(urlCpv);
+    setMinValue(urlMinValue);
+    setMaxValue(urlMaxValue);
+    setStatus(urlStatus);
+    setSort(urlSort);
     setPage(urlPage);
-    fetchTenders(urlQuery, urlCountry, urlPage);
+    fetchTenders(urlQuery, urlCountry, urlCpv, urlMinValue, urlMaxValue, urlStatus, urlSort, urlPage);
   }, [searchParams]);
 
-  const updateUrl = (newQuery: string, newCountry: string, newPage: number) => {
-    const params = new URLSearchParams(searchParams);
-    if (newQuery) params.set('q', newQuery); else params.delete('q');
-    if (newCountry !== "All") params.set('country', newCountry); else params.delete('country');
-    if (newPage > 0) params.set('page', newPage.toString()); else params.delete('page');
+  const updateUrl = (
+    newQuery: string, newCountry: string, newCpv: string,
+    newMinValue: string, newMaxValue: string, newStatus: string,
+    newSort: string, newPage: number
+  ) => {
+    const params = new URLSearchParams();
+    if (newQuery) params.set('q', newQuery);
+    if (newCountry !== "All") params.set('country', newCountry);
+    if (newCpv !== "All") params.set('cpv', newCpv);
+    if (newMinValue) params.set('minValue', newMinValue);
+    if (newMaxValue) params.set('maxValue', newMaxValue);
+    if (newStatus !== "All") params.set('status', newStatus);
+    if (newSort !== "newest") params.set('sort', newSort);
+    if (newPage > 0) params.set('page', newPage.toString());
 
-    router.push(`${pathname}?${params.toString()}`);
+    const qs = params.toString();
+    router.push(qs ? `${pathname}?${qs}` : pathname);
   };
 
-  const fetchTenders = async (q: string, c: string, p: number) => {
+  const fetchTenders = async (
+    q: string, c: string, cpvFilter: string,
+    minVal: string, maxVal: string, statusFilter: string,
+    sortBy: string, p: number
+  ) => {
     setLoading(true);
     setError(null);
 
@@ -90,13 +189,35 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
     if (q) {
       supabaseQuery = supabaseQuery.or(`title.ilike.%${q}%,buyer_name.ilike.%${q}%,description.ilike.%${q}%`);
     }
-
     if (c !== "All") {
       supabaseQuery = supabaseQuery.eq('country', c);
     }
+    if (cpvFilter !== "All") {
+      supabaseQuery = supabaseQuery.ilike('cpv_code', `${cpvFilter}%`);
+    }
+    if (minVal) {
+      supabaseQuery = supabaseQuery.gte('estimated_value', parseFloat(minVal));
+    }
+    if (maxVal) {
+      supabaseQuery = supabaseQuery.lte('estimated_value', parseFloat(maxVal));
+    }
+    if (statusFilter === "active") {
+      supabaseQuery = supabaseQuery.eq('is_active', true);
+    } else if (statusFilter === "inactive") {
+      supabaseQuery = supabaseQuery.eq('is_active', false);
+    } else if (statusFilter === "awarded") {
+      supabaseQuery = supabaseQuery.not('final_contract_value', 'is', null);
+    }
+
+    if (sortBy === "valueDesc") {
+      supabaseQuery = supabaseQuery.order('estimated_value', { ascending: false, nullsFirst: false });
+    } else if (sortBy === "valueAsc") {
+      supabaseQuery = supabaseQuery.order('estimated_value', { ascending: true, nullsFirst: false });
+    } else {
+      supabaseQuery = supabaseQuery.order('publication_date', { ascending: false });
+    }
 
     const { data, count, error } = await supabaseQuery
-      .order('publication_date', { ascending: false })
       .range(p * pageSize, (p + 1) * pageSize - 1);
 
     if (error) {
@@ -113,17 +234,39 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    updateUrl(query, country, 0);
+    updateUrl(query, country, cpv, minValue, maxValue, status, sort, 0);
   };
 
-  const handleCountryChange = (newCountry: string) => {
-    setCountry(newCountry);
-    updateUrl(query, newCountry, 0);
+  const applyFilters = () => {
+    updateUrl(query, country, cpv, minValue, maxValue, status, sort, 0);
+  };
+
+  const clearFilters = () => {
+    setCountry("All");
+    setCpv("All");
+    setMinValue("");
+    setMaxValue("");
+    setStatus("All");
+    setSort("newest");
+    updateUrl(query, "All", "All", "", "", "All", "newest", 0);
+  };
+
+  const removeFilter = (filter: string) => {
+    const newCountry = filter === "country" ? "All" : country;
+    const newCpv = filter === "cpv" ? "All" : cpv;
+    const newMinValue = filter === "minValue" ? "" : minValue;
+    const newMaxValue = filter === "maxValue" ? "" : maxValue;
+    const newStatus = filter === "status" ? "All" : status;
+    updateUrl(query, newCountry, newCpv, newMinValue, newMaxValue, newStatus, sort, 0);
   };
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    updateUrl(query, country, newPage);
+    updateUrl(query, country, cpv, minValue, maxValue, status, sort, newPage);
+  };
+
+  const handleSortChange = (newSort: string) => {
+    setSort(newSort);
+    updateUrl(query, country, cpv, minValue, maxValue, status, newSort, 0);
   };
 
   const getScoreColor = (score: number): "emerald" | "amber" | "slate" => {
@@ -132,126 +275,413 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
     return 'slate';
   };
 
+  const getTenderStatus = (tender: Tender): { label: string; color: "emerald" | "amber" | "slate" } => {
+    if (tender.final_contract_value) return { label: t('awarded'), color: 'amber' };
+    if (tender.is_active) return { label: t('active'), color: 'emerald' };
+    return { label: t('inactive'), color: 'slate' };
+  };
+
+  const totalPages = Math.ceil(total / pageSize);
+  const from = page * pageSize + 1;
+  const to = Math.min((page + 1) * pageSize, total);
+
+  const cpvOptions = CPV_DIVISIONS.map(d => ({
+    value: d.value,
+    label: locale === 'pt' ? d.label_pt : d.label,
+  }));
+
+  // Active filter chips
+  const filterChips: { key: string; label: string }[] = [];
+  if (country !== "All") {
+    const c = COUNTRY_OPTIONS.find(o => o.value === country);
+    filterChips.push({ key: "country", label: c ? (locale === 'pt' ? c.labelPt : c.label) : country });
+  }
+  if (cpv !== "All") {
+    const div = cpvOptions.find(o => o.value === cpv);
+    filterChips.push({ key: "cpv", label: div ? div.label : cpv });
+  }
+  if (minValue) filterChips.push({ key: "minValue", label: `≥ €${Number(minValue).toLocaleString()}` });
+  if (maxValue) filterChips.push({ key: "maxValue", label: `≤ €${Number(maxValue).toLocaleString()}` });
+  if (status !== "All") filterChips.push({ key: "status", label: status === "active" ? t('active') : status === "inactive" ? t('inactive') : t('awarded') });
+
   return (
     <div className="max-w-6xl mx-auto">
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
 
-      <div className="bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-1.5 mb-6">
-        <form onSubmit={handleSearch} className="flex-1 relative">
-          <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-          <input
-            type="text"
-            placeholder={t('searchPlaceholder')}
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 bg-transparent text-slate-800 text-sm outline-none"
-          />
+      {/* Search Bar */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm mb-4">
+        <form onSubmit={handleSearch} className="flex items-center gap-2 p-2">
+          <div className="flex-1 relative">
+            <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <input
+              type="text"
+              placeholder={t('searchPlaceholder')}
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-transparent text-slate-800 text-sm font-medium outline-none placeholder:text-slate-400"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
+              showFilters || activeFilterCount > 0
+                ? 'bg-slate-900 text-white'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            }`}
+          >
+            <SlidersHorizontal size={14} />
+            {t('filters')}
+            {activeFilterCount > 0 && (
+              <span className="bg-white text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+          <Button onClick={handleSearch} size="md">
+            {t('searchButton')}
+          </Button>
         </form>
-        <select
-          value={country}
-          onChange={e => handleCountryChange(e.target.value)}
-          className="px-3.5 py-2.5 bg-transparent text-slate-600 text-sm font-medium outline-none cursor-pointer min-w-[140px]"
-        >
-          <option value="All">{t('allCountries')}</option>
-          <option value="PT">Portugal</option>
-        </select>
-        <Button onClick={handleSearch} size="md">
-          {t('searchButton')}
-        </Button>
+
+        {/* Collapsible Filters Panel */}
+        {showFilters && (
+          <div className="border-t border-slate-100 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              {/* Country */}
+              <div>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                  {t('allCountries').replace('All ', '')}
+                </label>
+                <select
+                  value={country}
+                  onChange={e => setCountry(e.target.value)}
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                >
+                  {COUNTRY_OPTIONS.map(opt => (
+                    <option key={opt.value} value={opt.value}>
+                      {locale === 'pt' ? opt.labelPt : opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* CPV Sector */}
+              <div>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                  {t('sector')}
+                </label>
+                <select
+                  value={cpv}
+                  onChange={e => setCpv(e.target.value)}
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                >
+                  <option value="All">{t('allSectors')}</option>
+                  {cpvOptions.map(opt => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label.length > 50 ? opt.label.slice(0, 50) + '…' : opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Value Range */}
+              <div>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                  {t('valueRange')}
+                </label>
+                <div className="flex gap-1.5">
+                  <input
+                    type="number"
+                    placeholder={t('minValue')}
+                    value={minValue}
+                    onChange={e => setMinValue(e.target.value)}
+                    className="w-1/2 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                  />
+                  <input
+                    type="number"
+                    placeholder={t('maxValue')}
+                    value={maxValue}
+                    onChange={e => setMaxValue(e.target.value)}
+                    className="w-1/2 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Status */}
+              <div>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                  {t('status')}
+                </label>
+                <select
+                  value={status}
+                  onChange={e => setStatus(e.target.value)}
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                >
+                  <option value="All">{t('allStatuses')}</option>
+                  <option value="active">{t('active')}</option>
+                  <option value="inactive">{t('inactive')}</option>
+                  <option value="awarded">{t('awarded')}</option>
+                </select>
+              </div>
+
+              {/* Sort */}
+              <div>
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                  {t('sortBy')}
+                </label>
+                <select
+                  value={sort}
+                  onChange={e => setSort(e.target.value)}
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                >
+                  <option value="newest">{t('sortNewest')}</option>
+                  <option value="valueDesc">{t('sortValueDesc')}</option>
+                  <option value="valueAsc">{t('sortValueAsc')}</option>
+                  <option value="matchScore">{t('sortMatchScore')}</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-slate-100">
+              {activeFilterCount > 0 && (
+                <button
+                  onClick={clearFilters}
+                  className="text-xs font-medium text-slate-500 hover:text-slate-700 transition-colors"
+                >
+                  {t('clearFilters')}
+                </button>
+              )}
+              <Button onClick={applyFilters} size="sm">
+                {t('searchButton')}
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-5 py-3 text-[10px] font-medium text-slate-400 uppercase tracking-wider">{t('tableInfo')}</th>
-                <th className="px-5 py-3 text-[10px] font-medium text-slate-400 uppercase tracking-wider text-center">Match Score</th>
-                <th className="px-5 py-3 text-[10px] font-medium text-slate-400 uppercase tracking-wider text-center">{t('tableValue')}</th>
-                <th className="px-5 py-3 text-[10px] font-medium text-slate-400 uppercase tracking-wider text-right">{t('tableAction')}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {loading ? (
-                <tr>
-                  <td colSpan={4} className="px-5 py-16 text-center text-slate-400 text-sm">{tCommon('loading')}</td>
-                </tr>
-              ) : error ? (
-                <tr>
-                  <td colSpan={4} className="px-5 py-16 text-center text-red-500 text-sm font-medium">
-                    {error} <br/>
-                    <button onClick={() => window.location.reload()} className="underline mt-2 text-red-700">{tCommon('tryAgain')}</button>
-                  </td>
-                </tr>
-              ) : tenders.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="px-5 py-16 text-center text-slate-400 text-sm font-medium">{t('noResults')}</td>
-                </tr>
-              ) : (
-                tenders.map((tender) => {
-                  const match = Array.isArray(tender.tender_matches) ? tender.tender_matches[0] : null;
-                  return (
-                    <tr
-                      key={tender.tender_id}
-                      className="hover:bg-slate-50/60 transition-colors group cursor-pointer"
-                      onClick={() => router.push(`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`)}
-                    >
-                      <td className="px-5 py-4">
-                        <Link
-                          href={`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`}
-                          className="text-slate-800 font-medium line-clamp-1 group-hover:text-teal-700 transition-colors text-sm"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {tender.title}
-                        </Link>
-                        <div className="flex items-center gap-2 mt-1">
-                          <p className="text-[10px] text-slate-400 font-medium">{tender.buyer_name}</p>
-                          <span className="text-slate-200">|</span>
-                          <p className="text-[10px] text-slate-400 truncate max-w-[280px]" title={getCpvDescription(tender.cpv_code)}>
-                            {getCpvDescription(tender.cpv_code)}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="px-5 py-4">
-                        <div className="flex flex-col items-center gap-1">
-                          {match ? (
-                            <Badge color={getScoreColor(match.match_score)}>
-                              {Math.round(match.match_score)}%
-                            </Badge>
-                          ) : (
-                            <span className="text-[10px] text-slate-300">N/A</span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-5 py-4 text-center font-medium text-slate-700 tabular-nums text-sm">
-                        {tender.estimated_value ? `€${tender.estimated_value.toLocaleString()}` : "—"}
-                      </td>
-                      <td className="px-5 py-4 text-right">
-                        <div className="flex justify-end">
-                          <div className="w-7 h-7 rounded-md bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all">
-                            <ChevronRight size={14} />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+      {/* Active Filter Chips + Results Count */}
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <div className="flex flex-wrap items-center gap-1.5">
+          {filterChips.map(chip => (
+            <span
+              key={chip.key}
+              className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-lg"
+            >
+              {chip.label}
+              <button onClick={() => removeFilter(chip.key)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                <X size={12} />
+              </button>
+            </span>
+          ))}
+          {filterChips.length > 1 && (
+            <button
+              onClick={clearFilters}
+              className="text-xs font-medium text-slate-400 hover:text-slate-600 transition-colors ml-1"
+            >
+              {t('clearFilters')}
+            </button>
+          )}
         </div>
-        <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-          <p className="text-xs text-slate-400 font-medium">{t('totalRecords', { count: total.toLocaleString() })}</p>
-          <div className="flex gap-1.5">
-            <Button variant="ghost" size="sm" disabled={page === 0} onClick={() => handlePageChange(page - 1)}>
-              <ChevronLeft size={16} />
+        {total > 0 && !loading && (
+          <p className="text-xs text-slate-400 font-medium">
+            {t('showingResults', { from: from.toLocaleString(), to: to.toLocaleString(), total: total.toLocaleString() })}
+          </p>
+        )}
+      </div>
+
+      {/* Sort Quick Toggle (visible when filters hidden) */}
+      {!showFilters && (
+        <div className="flex items-center justify-end gap-2 mb-4">
+          <ArrowUpDown size={12} className="text-slate-400" />
+          <select
+            value={sort}
+            onChange={e => handleSortChange(e.target.value)}
+            className="text-xs font-medium text-slate-500 bg-transparent outline-none cursor-pointer"
+          >
+            <option value="newest">{t('sortNewest')}</option>
+            <option value="valueDesc">{t('sortValueDesc')}</option>
+            <option value="valueAsc">{t('sortValueAsc')}</option>
+            <option value="matchScore">{t('sortMatchScore')}</option>
+          </select>
+        </div>
+      )}
+
+      {/* Results */}
+      {loading ? (
+        <div className="space-y-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-white rounded-2xl border border-slate-200 p-6 animate-pulse">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 space-y-3">
+                  <div className="h-4 bg-slate-100 rounded-lg w-3/4" />
+                  <div className="flex gap-2">
+                    <div className="h-3 bg-slate-100 rounded w-32" />
+                    <div className="h-3 bg-slate-100 rounded w-24" />
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="h-5 bg-slate-50 rounded-lg w-20" />
+                    <div className="h-5 bg-slate-50 rounded-lg w-16" />
+                  </div>
+                </div>
+                <div className="text-right space-y-2">
+                  <div className="h-5 bg-slate-100 rounded-lg w-24 ml-auto" />
+                  <div className="h-3 bg-slate-50 rounded w-16 ml-auto" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : error ? (
+        <div className="bg-white rounded-2xl border border-rose-200 p-8 text-center">
+          <p className="text-sm font-medium text-rose-600 mb-2">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-xs font-bold text-rose-700 underline hover:no-underline"
+          >
+            {tCommon('tryAgain')}
+          </button>
+        </div>
+      ) : tenders.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-12 text-center">
+          <SearchX size={40} className="text-slate-300 mx-auto mb-4" />
+          <p className="text-sm font-bold text-slate-700 mb-1">{t('noResults')}</p>
+          <p className="text-xs text-slate-400">{t('noResultsHint')}</p>
+          {activeFilterCount > 0 && (
+            <button
+              onClick={clearFilters}
+              className="mt-4 px-4 py-2 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-200 transition-all"
+            >
+              {t('clearFilters')}
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {tenders.map((tender) => {
+            const match = Array.isArray(tender.tender_matches) ? tender.tender_matches[0] : null;
+            const tenderStatus = getTenderStatus(tender);
+            const daysAgo = tender.publication_date ? getDaysAgo(tender.publication_date) : null;
+            const daysUntilDeadline = tender.submission_deadline ? getDaysUntil(tender.submission_deadline) : null;
+            const cpvLabel = getCpvDescription(tender.cpv_code, locale);
+
+            return (
+              <div
+                key={tender.tender_id}
+                className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:border-blue-200 hover:shadow-md transition-all cursor-pointer group"
+                onClick={() => router.push(`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`)}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  {/* Left: Tender Info */}
+                  <div className="flex-1 min-w-0">
+                    <Link
+                      href={`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`}
+                      className="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-2"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {tender.title}
+                    </Link>
+
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <span className="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                        <Building2 size={12} className="text-slate-400 shrink-0" />
+                        <span className="truncate max-w-[200px]">{tender.buyer_name}</span>
+                      </span>
+                      <span className="text-slate-200">·</span>
+                      <span className="text-xs text-slate-500">
+                        {getCountryFlag(tender.country)} {tender.country}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
+                      {/* CPV Badge */}
+                      <span className="inline-flex items-center gap-1 text-[9px] font-black text-purple-600 bg-purple-50 px-2 py-0.5 rounded uppercase border border-purple-100 truncate max-w-[220px]" title={cpvLabel}>
+                        <Tag size={10} className="shrink-0" />
+                        {cpvLabel.length > 35 ? cpvLabel.slice(0, 35) + '…' : cpvLabel}
+                      </span>
+
+                      {/* Status Badge */}
+                      <Badge color={tenderStatus.color}>
+                        {tenderStatus.label}
+                      </Badge>
+
+                      {/* Match Score */}
+                      {match && (
+                        <Badge color={getScoreColor(match.match_score)}>
+                          {Math.round(match.match_score)}% {t('matchScore').toLowerCase()}
+                        </Badge>
+                      )}
+
+                      {/* Publication Date */}
+                      {daysAgo !== null && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-400">
+                          <Calendar size={10} />
+                          {daysAgo === 0 ? t('publishedToday') : t('publishedAgo', { days: daysAgo })}
+                        </span>
+                      )}
+
+                      {/* Deadline */}
+                      {daysUntilDeadline !== null && (
+                        <span className={`inline-flex items-center gap-1 text-[10px] font-bold ${
+                          daysUntilDeadline <= 0 ? 'text-rose-500' :
+                          daysUntilDeadline <= 7 ? 'text-amber-500' : 'text-slate-400'
+                        }`}>
+                          <Clock size={10} />
+                          {daysUntilDeadline <= 0 ? t('deadlineExpired') : t('deadlineIn', { days: daysUntilDeadline })}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right: Value + Action */}
+                  <div className="text-right shrink-0">
+                    {tender.estimated_value ? (
+                      <p className="text-sm font-bold text-slate-800 tabular-nums">
+                        €{tender.estimated_value.toLocaleString()}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-slate-300 font-medium">{t('noValue')}</p>
+                    )}
+                    <div className="mt-2 flex justify-end">
+                      <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all">
+                        <ChevronRight size={14} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {total > pageSize && !loading && (
+        <div className="flex items-center justify-between mt-6 bg-white rounded-2xl border border-slate-200 shadow-sm px-5 py-3">
+          <p className="text-xs text-slate-400 font-medium">
+            {t('pageOf', { current: page + 1, total: totalPages })}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={page === 0}
+              onClick={() => handlePageChange(page - 1)}
+            >
+              <ChevronLeft size={14} className="mr-1" />
+              {t('previous')}
             </Button>
-            <Button variant="ghost" size="sm" disabled={(page + 1) * pageSize >= total} onClick={() => handlePageChange(page + 1)}>
-              <ChevronRight size={16} />
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={(page + 1) * pageSize >= total}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              {t('next')}
+              <ChevronRight size={14} className="ml-1" />
             </Button>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

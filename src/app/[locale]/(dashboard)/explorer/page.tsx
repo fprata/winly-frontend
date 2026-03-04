@@ -8,11 +8,25 @@ export const revalidate = 0;
 export default async function ExplorerPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; country?: string; page?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    country?: string;
+    cpv?: string;
+    minValue?: string;
+    maxValue?: string;
+    status?: string;
+    sort?: string;
+    page?: string;
+  }>;
 }) {
   const params = await searchParams;
   const query = params.q || "";
   const country = params.country || "All";
+  const cpv = params.cpv || "All";
+  const minValue = params.minValue ? parseFloat(params.minValue) : null;
+  const maxValue = params.maxValue ? parseFloat(params.maxValue) : null;
+  const status = params.status || "All";
+  const sort = params.sort || "newest";
   const page = parseInt(params.page || "0");
   const pageSize = 15;
 
@@ -39,8 +53,37 @@ export default async function ExplorerPage({
     supabaseQuery = supabaseQuery.eq('country', country);
   }
 
+  if (cpv !== "All") {
+    supabaseQuery = supabaseQuery.ilike('cpv_code', `${cpv}%`);
+  }
+
+  if (minValue !== null) {
+    supabaseQuery = supabaseQuery.gte('estimated_value', minValue);
+  }
+
+  if (maxValue !== null) {
+    supabaseQuery = supabaseQuery.lte('estimated_value', maxValue);
+  }
+
+  if (status === "active") {
+    supabaseQuery = supabaseQuery.eq('is_active', true);
+  } else if (status === "inactive") {
+    supabaseQuery = supabaseQuery.eq('is_active', false);
+  } else if (status === "awarded") {
+    supabaseQuery = supabaseQuery.not('final_contract_value', 'is', null);
+  }
+
+  // Sort
+  if (sort === "valueDesc") {
+    supabaseQuery = supabaseQuery.order('estimated_value', { ascending: false, nullsFirst: false });
+  } else if (sort === "valueAsc") {
+    supabaseQuery = supabaseQuery.order('estimated_value', { ascending: true, nullsFirst: false });
+  } else {
+    // Default: newest first
+    supabaseQuery = supabaseQuery.order('publication_date', { ascending: false });
+  }
+
   const { data, count, error } = await supabaseQuery
-    .order('publication_date', { ascending: false })
     .range(page * pageSize, (page + 1) * pageSize - 1);
 
   if (error) {
@@ -48,9 +91,9 @@ export default async function ExplorerPage({
   }
 
   return (
-    <ExplorerClient 
-      initialTenders={data || []} 
-      initialTotal={count || 0} 
+    <ExplorerClient
+      initialTenders={data || []}
+      initialTotal={count || 0}
       clientId={profile?.id || null}
     />
   );
