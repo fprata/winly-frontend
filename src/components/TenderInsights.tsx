@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FileText, Loader2, CheckCircle2, Sparkles, Clock, ShieldCheck, Scale, RefreshCw, AlertTriangle, Zap, Coins } from 'lucide-react';
+import { FileText, Loader2, CheckCircle2, Sparkles, Clock, ShieldCheck, Scale, RefreshCw, AlertTriangle, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
@@ -11,7 +11,7 @@ interface TenderInsightsProps {
   tenderId: string;
   initialInsights?: any;
   derivedDocLink?: string | null;
-  userTier?: string;
+  onInsightsGenerated?: (insights: any) => void;
 }
 
 // Safely render any insight value (string, object, or array) as readable text
@@ -35,7 +35,7 @@ function renderInsightValue(val: any): string {
   return String(val);
 }
 
-export function TenderInsights({ tenderId, initialInsights, derivedDocLink, userTier }: TenderInsightsProps) {
+export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onInsightsGenerated }: TenderInsightsProps) {
   const t = useTranslations('tender');
   const [insights, setInsights] = useState<any>(initialInsights);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -52,6 +52,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, user
       const data = await response.json();
       if (data.success) {
         setInsights(data.insights);
+        onInsightsGenerated?.(data.insights);
         toast("success", "AI Analysis complete!");
       } else {
         toast("error", data.error || "Failed to analyze document");
@@ -64,31 +65,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, user
   };
 
   if (isAnalyzing) {
-  
-  if (!insights && (userTier === 'Explorer' || !userTier || userTier === 'Free')) {
     return (
-      <Card className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-10 flex flex-col items-center text-center">
-        <div className="w-16 h-16 rounded-3xl bg-slate-800 shadow-xl shadow-slate-200 flex items-center justify-center mb-6">
-          <ShieldCheck className="text-white" size={28} />
-        </div>
-        <h3 className="text-xl font-black text-slate-900 mb-2 uppercase tracking-tight italic">Professional Insight Required</h3>
-        <p className="text-sm text-slate-500 max-w-sm mb-8 font-medium">
-          Strategic document extraction and LLM risk analysis are available exclusively on the <strong>Professional</strong> plan and above.
-        </p>
-        <Button 
-          type="button" 
-          variant="secondary"
-          size="lg"
-          onClick={() => window.location.href = '/profile'}
-          className="px-10 py-6 rounded-2xl shadow-lg shadow-teal-200 font-black tracking-widest text-xs transition-all hover:scale-105 active:scale-95"
-        >
-          UPGRADE TO UNLOCK
-        </Button>
-      </Card>
-    );
-  }
-
-  return (
       <Card className="flex flex-col items-center justify-center py-16 border-2 border-dashed border-blue-200 bg-blue-50/20">
         <div className="relative mb-6">
           <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
@@ -105,31 +82,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, user
   if (insights) {
     // If it's the old schema, fallback to old display (for backwards compatibility)
     if (insights.executive_summary && !insights.project_summary) {
-     
-  if (!insights && (userTier === 'Explorer' || !userTier || userTier === 'Free')) {
-    return (
-      <Card className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-10 flex flex-col items-center text-center">
-        <div className="w-16 h-16 rounded-3xl bg-slate-800 shadow-xl shadow-slate-200 flex items-center justify-center mb-6">
-          <ShieldCheck className="text-white" size={28} />
-        </div>
-        <h3 className="text-xl font-black text-slate-900 mb-2 uppercase tracking-tight italic">Professional Insight Required</h3>
-        <p className="text-sm text-slate-500 max-w-sm mb-8 font-medium">
-          Strategic document extraction and LLM risk analysis are available exclusively on the <strong>Professional</strong> plan and above.
-        </p>
-        <Button 
-          type="button" 
-          variant="secondary"
-          size="lg"
-          onClick={() => window.location.href = '/profile'}
-          className="px-10 py-6 rounded-2xl shadow-lg shadow-teal-200 font-black tracking-widest text-xs transition-all hover:scale-105 active:scale-95"
-        >
-          UPGRADE TO UNLOCK
-        </Button>
-      </Card>
-    );
-  }
-
-  return (
+       return (
         <div className="space-y-6 animate-in fade-in duration-700">
            <Card className="border-l-4 border-l-blue-600 bg-white/80 shadow-sm p-4">
              <h4 className="font-black text-xs uppercase tracking-widest text-blue-700 mb-2">Legacy Analysis</h4>
@@ -140,31 +93,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, user
        );
     }
 
-  
-  if (!insights && (userTier === 'Explorer' || !userTier || userTier === 'Free')) {
     return (
-      <Card className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-10 flex flex-col items-center text-center">
-        <div className="w-16 h-16 rounded-3xl bg-slate-800 shadow-xl shadow-slate-200 flex items-center justify-center mb-6">
-          <ShieldCheck className="text-white" size={28} />
-        </div>
-        <h3 className="text-xl font-black text-slate-900 mb-2 uppercase tracking-tight italic">Professional Insight Required</h3>
-        <p className="text-sm text-slate-500 max-w-sm mb-8 font-medium">
-          Strategic document extraction and LLM risk analysis are available exclusively on the <strong>Professional</strong> plan and above.
-        </p>
-        <Button 
-          type="button" 
-          variant="secondary"
-          size="lg"
-          onClick={() => window.location.href = '/profile'}
-          className="px-10 py-6 rounded-2xl shadow-lg shadow-teal-200 font-black tracking-widest text-xs transition-all hover:scale-105 active:scale-95"
-        >
-          UPGRADE TO UNLOCK
-        </Button>
-      </Card>
-    );
-  }
-
-  return (
       <div className="space-y-6 animate-in fade-in duration-700">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Executive Summary & Scope */}
@@ -254,13 +183,13 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, user
             </div>
           </Card>
         </div>
-        
+
         <div className="flex justify-center gap-4">
           <div className="flex items-center gap-1.5 text-[9px] font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
             <CheckCircle2 size={12} />
             VERIFIED BY WINLY MULTI-AGENT AI
           </div>
-          <button 
+          <button
             onClick={runAnalysis}
             className="flex items-center gap-1.5 text-[9px] font-black text-gray-400 hover:text-blue-600 transition-colors uppercase"
           >
@@ -269,30 +198,6 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, user
           </button>
         </div>
       </div>
-    );
-  }
-
-
-  if (!insights && (userTier === 'Explorer' || !userTier || userTier === 'Free')) {
-    return (
-      <Card className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-10 flex flex-col items-center text-center">
-        <div className="w-16 h-16 rounded-3xl bg-slate-800 shadow-xl shadow-slate-200 flex items-center justify-center mb-6">
-          <ShieldCheck className="text-white" size={28} />
-        </div>
-        <h3 className="text-xl font-black text-slate-900 mb-2 uppercase tracking-tight italic">Professional Insight Required</h3>
-        <p className="text-sm text-slate-500 max-w-sm mb-8 font-medium">
-          Strategic document extraction and LLM risk analysis are available exclusively on the <strong>Professional</strong> plan and above.
-        </p>
-        <Button 
-          type="button" 
-          variant="secondary"
-          size="lg"
-          onClick={() => window.location.href = '/profile'}
-          className="px-10 py-6 rounded-2xl shadow-lg shadow-teal-200 font-black tracking-widest text-xs transition-all hover:scale-105 active:scale-95"
-        >
-          UPGRADE TO UNLOCK
-        </Button>
-      </Card>
     );
   }
 
@@ -305,8 +210,8 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, user
       <p className="text-sm text-slate-500 max-w-sm mb-8 font-medium">
         Use the Winly Document Analytics Engine to instantly read the tender PDF and extract scoring criteria, SLAs, and hidden requirements.
       </p>
-      <Button 
-        type="button" 
+      <Button
+        type="button"
         variant="accent"
         size="lg"
         onClick={runAnalysis}
