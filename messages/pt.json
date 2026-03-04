@@ -578,7 +578,16 @@
         "requirements": "Quais são os requisitos principais?"
       }
     },
-    "riskMiniCard": "Pontuação de Risco"
+    "riskMiniCard": "Pontuação de Risco",
+    "sectorClassification": "Classificação Setorial (CPV)",
+    "syncedVia": "Sincronizado via Winly AI Core",
+    "relatedOpportunities": "Oportunidades Relacionadas (IA Semântica)",
+    "avgDiscountLabel": "Desc. Médio",
+    "publicationDate": "Data de Publicação",
+    "noMatchData": "Dados de correspondência indisponíveis",
+    "noMatchDataDesc": "Este concurso ainda não foi avaliado em relação ao seu perfil.",
+    "readMore": "Ler mais",
+    "readLess": "Ler menos"
   },
   "profile": {
     "title": "Perfil de Licitação",

@@ -40,11 +40,6 @@ export function InsightsTab({ tenderId, initialInsights, derivedDocLink, tier, o
         <RiskScoreHero score={riskScore} level={riskLevel} factors={riskFactors} />
       )}
 
-      {/* Export Actions (only for pro users with insights) */}
-      {currentInsights && isPro && (
-        <ExportActions tenderId={tenderId} tier={tier} />
-      )}
-
       {/* Insights Content or Paywall */}
       <InsightsPaywall
         tenderId={tenderId}
@@ -53,6 +48,11 @@ export function InsightsTab({ tenderId, initialInsights, derivedDocLink, tier, o
         tier={tier}
         onInsightsGenerated={handleInsightsGenerated}
       />
+
+      {/* Export Actions (below insights content, only for pro users with insights) */}
+      {currentInsights && isPro && (
+        <ExportActions tenderId={tenderId} tier={tier} />
+      )}
     </div>
   );
 }

@@ -575,7 +575,16 @@
         "requirements": "What are the key requirements?"
       }
     },
-    "riskMiniCard": "Risk Score"
+    "riskMiniCard": "Risk Score",
+    "sectorClassification": "Sector Classification (CPV)",
+    "syncedVia": "Synced via Winly AI Core",
+    "relatedOpportunities": "Related Opportunities (AI Semantic)",
+    "avgDiscountLabel": "Avg. Discount",
+    "publicationDate": "Publication Date",
+    "noMatchData": "No match data available",
+    "noMatchDataDesc": "This tender hasn't been scored against your profile yet.",
+    "readMore": "Read more",
+    "readLess": "Read less"
   },
   "profile": {
     "title": "Bidding Profile",

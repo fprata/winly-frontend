@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ArrowRight,
   Brain,
@@ -40,6 +40,36 @@ interface OverviewTabProps {
   discountPct: number;
   incumbent: string | null;
   relatedTenders: any[];
+}
+
+const DESCRIPTION_CHAR_LIMIT = 500;
+
+function ProjectScope({ description }: { description: string }) {
+  const t = useTranslations('tenders');
+  const [expanded, setExpanded] = useState(false);
+  const text = description || t('noDescription');
+  const isLong = text.length > DESCRIPTION_CHAR_LIMIT;
+  const displayText = isLong && !expanded ? text.slice(0, DESCRIPTION_CHAR_LIMIT) + '...' : text;
+
+  return (
+    <section className="bg-white p-10 rounded-[32px] border border-slate-200/60 shadow-sm">
+      <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <FileText size={24} className="text-blue-600" />
+        {t('projectScope')}
+      </h3>
+      <div className="text-slate-600 text-lg leading-relaxed whitespace-pre-wrap font-medium">
+        {displayText}
+      </div>
+      {isLong && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="mt-4 text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          {expanded ? t('readLess') : t('readMore')}
+        </button>
+      )}
+    </section>
+  );
 }
 
 export function OverviewTab({
@@ -85,51 +115,63 @@ export function OverviewTab({
                 <div className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest">{t('mlModel')}</div>
               </div>
 
-              <div className="grid grid-cols-1 gap-8 mb-10">
-                <div className="text-center group">
-                  <div className="w-32 h-32 rounded-full border-4 border-slate-800 flex items-center justify-center relative mx-auto mb-3 transition-transform group-hover:scale-105">
-                    <svg className="absolute inset-0 w-full h-full -rotate-90">
-                      <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-800" />
-                      <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="4" fill="transparent" strokeDasharray={377} strokeDashoffset={377 - (377 * (match?.match_score || 0)) / 100} className="text-blue-500 transition-all duration-1000" strokeLinecap="round" />
-                    </svg>
-                    <span className="text-4xl font-black">{Math.round(match?.match_score || 0)}%</span>
+              {match?.match_score != null ? (
+                <>
+                  <div className="grid grid-cols-1 gap-8 mb-10">
+                    <div className="text-center group">
+                      <div className="w-32 h-32 rounded-full border-4 border-slate-800 flex items-center justify-center relative mx-auto mb-3 transition-transform group-hover:scale-105">
+                        <svg className="absolute inset-0 w-full h-full -rotate-90">
+                          <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-slate-800" />
+                          <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="4" fill="transparent" strokeDasharray={377} strokeDashoffset={377 - (377 * match.match_score) / 100} className="text-blue-500 transition-all duration-1000" strokeLinecap="round" />
+                        </svg>
+                        <span className="text-4xl font-black">{Math.round(match.match_score)}%</span>
+                      </div>
+                      <p className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('companyFit')}</p>
+                    </div>
                   </div>
-                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest">{t('companyFit')}</p>
-                </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-8 border-t border-slate-800 pt-8">
-                <div className="flex justify-between items-center text-[10px] font-bold">
-                  <span className="text-slate-500 uppercase">{t('sectorExpertise')}</span>
-                  <span className="text-purple-400">+{match?.score_cpv || (match?.match_score ? t('pending') : '0')}</span>
-                </div>
-                <div className="flex justify-between items-center text-[10px] font-bold">
-                  <span className="text-slate-500 uppercase">{t('strategicAlignment')}</span>
-                  <span className="text-blue-400">+{match?.score_strategic || (match?.match_score ? t('pending') : '0')}</span>
-                </div>
-                <div className="flex justify-between items-center text-[10px] font-bold">
-                  <span className="text-slate-500 uppercase">{t('aiSemanticMatch')}</span>
-                  <span className="text-indigo-400">+{match?.score_semantic || (match?.match_score ? t('pending') : '0')}</span>
-                </div>
-                <div className="flex justify-between items-center text-[10px] font-bold">
-                  <span className="text-slate-500 uppercase">{t('capacityFit')}</span>
-                  <span className="text-emerald-400">+{match?.score_capacity || (match?.match_score ? t('pending') : '0')}</span>
-                </div>
-              </div>
+                  <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-8 border-t border-slate-800 pt-8">
+                    <div className="flex justify-between items-center text-[10px] font-bold">
+                      <span className="text-slate-500 uppercase">{t('sectorExpertise')}</span>
+                      <span className="text-purple-400">+{match.score_cpv || t('pending')}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] font-bold">
+                      <span className="text-slate-500 uppercase">{t('strategicAlignment')}</span>
+                      <span className="text-blue-400">+{match.score_strategic || t('pending')}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] font-bold">
+                      <span className="text-slate-500 uppercase">{t('aiSemanticMatch')}</span>
+                      <span className="text-indigo-400">+{match.score_semantic || t('pending')}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] font-bold">
+                      <span className="text-slate-500 uppercase">{t('capacityFit')}</span>
+                      <span className="text-emerald-400">+{match.score_capacity || t('pending')}</span>
+                    </div>
+                  </div>
 
-              <div className="flex-1"></div>
+                  <div className="flex-1"></div>
 
-              <div className="pt-6 border-t border-slate-800">
-                <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-4">{t('fitAnalysis')}</p>
-                <ul className="space-y-3">
-                  {match?.match_reasons?.split('|').filter((r: string) => r.trim()).map((reason: string, i: number) => (
-                    <li key={i} className="flex items-start gap-3 text-xs text-slate-300 leading-tight">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
-                      {reason.trim()}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                  <div className="pt-6 border-t border-slate-800">
+                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-4">{t('fitAnalysis')}</p>
+                    <ul className="space-y-3">
+                      {match.match_reasons?.split('|').filter((r: string) => r.trim()).map((reason: string, i: number) => (
+                        <li key={i} className="flex items-start gap-3 text-xs text-slate-300 leading-tight">
+                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
+                          {reason.trim()}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
+                  <div className="w-20 h-20 rounded-full border-4 border-slate-800 flex items-center justify-center mb-4">
+                    <Brain size={32} className="text-slate-600" />
+                  </div>
+                  <p className="text-sm font-bold text-slate-400 mb-2">{t('noMatchData')}</p>
+                  <p className="text-xs text-slate-500 max-w-[240px]">{t('noMatchDataDesc')}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -182,7 +224,7 @@ export function OverviewTab({
                           <div>
                             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-600 transition-colors block leading-tight">{w.winner_name}</span>
                             {w.avg_discount > 0 && (
-                              <span className="text-[9px] font-medium text-slate-400">Avg. Discount: <span className="text-emerald-600 font-bold">{w.avg_discount.toFixed(1)}%</span></span>
+                              <span className="text-[9px] font-medium text-slate-400">{t('avgDiscountLabel')}: <span className="text-emerald-600 font-bold">{w.avg_discount.toFixed(1)}%</span></span>
                             )}
                           </div>
                         </div>
@@ -307,22 +349,14 @@ export function OverviewTab({
       </section>
 
       {/* Project Scope */}
-      <section className="bg-white p-10 rounded-[32px] border border-slate-200/60 shadow-sm">
-        <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-          <FileText size={24} className="text-blue-600" />
-          {t('projectScope')}
-        </h3>
-        <div className="text-slate-600 text-lg leading-relaxed whitespace-pre-wrap font-medium">
-          {tender.description || t('noDescription')}
-        </div>
-      </section>
+      <ProjectScope description={tender.description} />
 
       {/* Related Opportunities */}
       {relatedTenders.length > 0 && (
         <section className="bg-white p-10 rounded-[32px] border border-slate-200/60 shadow-sm">
           <h3 className="text-xl font-bold text-slate-900 mb-8 flex items-center gap-2 uppercase tracking-tight text-sm">
             <Brain size={20} className="text-blue-600" />
-            Related Opportunities (AI Semantic)
+            {t('relatedOpportunities')}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {relatedTenders.map((rt: any) => (

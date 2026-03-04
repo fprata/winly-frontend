@@ -12,7 +12,9 @@ import {
   Briefcase,
   History,
   ChevronRight,
-  AlertTriangle
+  AlertTriangle,
+  Calendar,
+  Gavel
 } from 'lucide-react';
 import { createClient } from '@/utils/supabase/server';
 import { getTranslations, getLocale } from 'next-intl/server';
@@ -297,12 +299,6 @@ export default async function TenderDetailsPage({
       ),
       hidden: isAwarded,
     },
-    {
-      id: 'award',
-      label: t('tabs.awardDetails'),
-      content: <AwardTab tenderId={id} tender={tenderForAward} />,
-      hidden: !isAwarded,
-    },
   ];
 
   const isPro = userTier === 'Pro' || userTier === 'Enterprise';
@@ -387,12 +383,31 @@ export default async function TenderDetailsPage({
                   </div>
                 </div>
 
-                <div className="md:col-span-3 p-6 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-4">
+                {tender.procedure_type && (
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('procedureType')}</p>
+                    <div className="flex items-center gap-2 text-slate-800 font-bold text-sm">
+                      <Gavel size={18} className="text-violet-600" />
+                      {tender.procedure_type}
+                    </div>
+                  </div>
+                )}
+                {tender.publication_date && (
+                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('publicationDate')}</p>
+                    <div className="flex items-center gap-2 text-slate-800 font-bold text-sm tabular-nums">
+                      <Calendar size={18} className="text-sky-600" />
+                      {new Date(tender.publication_date).toLocaleDateString(locale === 'pt' ? 'pt-PT' : 'en-GB')}
+                    </div>
+                  </div>
+                )}
+
+                <div className="md:col-span-4 p-6 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0">
                     <Target size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Sector Classification (CPV)</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('sectorClassification')}</p>
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-sm font-bold text-slate-800">{tender.cpv_code || "N/A"}</span>
                     </div>
@@ -417,117 +432,180 @@ export default async function TenderDetailsPage({
 
         {/* Sidebar Column */}
         <div className="lg:col-span-4 h-full">
-          {!isAwarded && (
-            <div className="sticky top-28 space-y-6">
-              {/* Deadline Card */}
-              <div className="bg-slate-900 text-white p-8 rounded-[32px] shadow-xl">
-                <h3 className="text-xs font-black text-blue-400 uppercase tracking-widest mb-6">{t('submissionDeadline')}</h3>
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
-                    <Clock className="text-blue-400" size={28} />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-black tabular-nums">
-                      {tender.submission_deadline ? new Date(tender.submission_deadline).toLocaleDateString(locale === 'pt' ? 'pt-PT' : 'en-GB') : t('contactAuthority')}
-                    </p>
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">{t('localTime')}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <button className="w-full py-4 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/40 uppercase tracking-widest text-xs">
-                    {t('trackThisBid')}
-                  </button>
-                  <button className="w-full py-4 bg-white/5 text-white font-black rounded-2xl hover:bg-white/10 transition-all border border-white/10 uppercase tracking-widest text-xs">
-                    {t('ignoreTender')}
-                  </button>
-                </div>
-
-                <div className="mt-8 pt-8 border-t border-white/10">
-                  <div className="flex items-center gap-3 text-slate-400">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 border border-emerald-500/20">
-                       <ShieldCheck size={18} />
+          <div className="sticky top-28 space-y-6">
+            {isAwarded ? (
+              <>
+                {/* Award Summary Card */}
+                <div className="bg-amber-900 text-white p-8 rounded-[32px] shadow-xl">
+                  <h3 className="text-xs font-black text-amber-300 uppercase tracking-widest mb-6">{t('awardDetails')}</h3>
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                      <History size={28} className="text-amber-300" />
                     </div>
                     <div>
-                       <p className="text-[10px] font-black text-white uppercase tracking-wider leading-none mb-1">{t('verifiedIntelligence')}</p>
-                       <p className="text-[9px] font-bold text-slate-500 uppercase">Synced via Winly AI Core</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Risk Score Mini Card */}
-              {riskScore != null && (
-                <div className={`rounded-[32px] p-6 shadow-sm border ${
-                  riskScore <= 3 ? 'bg-emerald-50 border-emerald-200' :
-                  riskScore <= 6 ? 'bg-amber-50 border-amber-200' :
-                  'bg-rose-50 border-rose-200'
-                }`}>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('riskMiniCard')}</p>
-                      <p className={`text-3xl font-black ${
-                        riskScore <= 3 ? 'text-emerald-600' :
-                        riskScore <= 6 ? 'text-amber-600' :
-                        'text-rose-600'
-                      }`}>
-                        {riskScore}/10
+                      <p className="text-2xl font-black tabular-nums">
+                        {tender.award_decision_date ? new Date(tender.award_decision_date).toLocaleDateString(locale === 'pt' ? 'pt-PT' : 'en-GB') : t('dateNotSpecified')}
                       </p>
-                    </div>
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                      riskScore <= 3 ? 'bg-emerald-100 text-emerald-600' :
-                      riskScore <= 6 ? 'bg-amber-100 text-amber-600' :
-                      'bg-rose-100 text-rose-600'
-                    }`}>
-                      <AlertTriangle size={24} />
+                      <p className="text-[10px] font-black text-amber-400/60 uppercase tracking-widest mt-1">{t('awardDate')}</p>
                     </div>
                   </div>
-                  <p className={`text-xs font-black uppercase tracking-widest mt-2 ${
-                    riskScore <= 3 ? 'text-emerald-600' :
-                    riskScore <= 6 ? 'text-amber-600' :
-                    'text-rose-600'
-                  }`}>
-                    {riskScore <= 3 ? t('risk.low') : riskScore <= 6 ? t('risk.medium') : t('risk.high')}
-                  </p>
-                </div>
-              )}
 
-              {/* Company Fit Card */}
-              <div className="bg-white rounded-[32px] border border-slate-200 p-8 shadow-sm">
-                 <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+                  {tender.final_contract_value ? (
+                    <div className="p-4 bg-white/10 rounded-2xl border border-white/10 mb-4">
+                      <p className="text-[10px] font-black text-amber-300/80 uppercase tracking-widest mb-1">{t('finalContractValue')}</p>
+                      <p className="text-xl font-black">{formatValue(tender.final_contract_value, tender.currency)}</p>
+                      {tender.estimated_value && (
+                        <p className="text-xs font-bold text-amber-300/60 mt-1">
+                          {tender.final_contract_value < tender.estimated_value
+                            ? `${Math.round(((tender.estimated_value - tender.final_contract_value) / tender.estimated_value) * 100)}% ${t('belowEstimate')}`
+                            : `${Math.round(((tender.final_contract_value - tender.estimated_value) / tender.estimated_value) * 100)}% ${t('aboveEstimate')}`
+                          }
+                        </p>
+                      )}
+                    </div>
+                  ) : null}
+
+                  {tender.winners_list && tender.winners_list.length > 0 && (
+                    <div className="pt-4 border-t border-white/10">
+                      <p className="text-[10px] font-black text-amber-300/80 uppercase tracking-widest mb-3">{t('winningEntity')}</p>
+                      {tender.winners_list.map((w: any, i: number) => (
+                        <div key={i} className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 text-xs font-black">W</div>
+                          <p className="text-sm font-bold">{w.winner_name}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Company Fit Card (also useful for awarded tenders) */}
+                <div className="bg-white rounded-[32px] border border-slate-200 p-8 shadow-sm">
+                  <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                     <Briefcase size={18} className="text-indigo-600" />
                     {t('companyProfileFit')}
-                 </h3>
-                 <div className="space-y-6">
+                  </h3>
+                  <div className="space-y-6">
                     <div className="group">
-                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 leading-none">{t('yourServices')}</p>
-                       <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group-hover:border-indigo-200 transition-colors">
-                          <p className="text-xs font-bold text-slate-700 leading-relaxed">{profile?.services || "—"}</p>
-                       </div>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 leading-none">{t('yourServices')}</p>
+                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group-hover:border-indigo-200 transition-colors">
+                        <p className="text-xs font-bold text-slate-700 leading-relaxed">{profile?.services || "—"}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Deadline Card */}
+                <div className="bg-slate-900 text-white p-8 rounded-[32px] shadow-xl">
+                  <h3 className="text-xs font-black text-blue-400 uppercase tracking-widest mb-6">{t('submissionDeadline')}</h3>
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                      <Clock className="text-blue-400" size={28} />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-black tabular-nums">
+                        {tender.submission_deadline ? new Date(tender.submission_deadline).toLocaleDateString(locale === 'pt' ? 'pt-PT' : 'en-GB') : t('contactAuthority')}
+                      </p>
+                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">{t('localTime')}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <button className="w-full py-4 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/40 uppercase tracking-widest text-xs">
+                      {t('trackThisBid')}
+                    </button>
+                    <button className="w-full py-4 bg-white/5 text-white font-black rounded-2xl hover:bg-white/10 transition-all border border-white/10 uppercase tracking-widest text-xs">
+                      {t('ignoreTender')}
+                    </button>
+                  </div>
+
+                  <div className="mt-8 pt-8 border-t border-white/10">
+                    <div className="flex items-center gap-3 text-slate-400">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 border border-emerald-500/20">
+                        <ShieldCheck size={18} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-white uppercase tracking-wider leading-none mb-1">{t('verifiedIntelligence')}</p>
+                        <p className="text-[9px] font-bold text-slate-500 uppercase">{t('syncedVia')}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Risk Score Mini Card */}
+                {riskScore != null && (
+                  <div className={`rounded-[32px] p-6 shadow-sm border ${
+                    riskScore <= 3 ? 'bg-emerald-50 border-emerald-200' :
+                    riskScore <= 6 ? 'bg-amber-50 border-amber-200' :
+                    'bg-rose-50 border-rose-200'
+                  }`}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('riskMiniCard')}</p>
+                        <p className={`text-3xl font-black ${
+                          riskScore <= 3 ? 'text-emerald-600' :
+                          riskScore <= 6 ? 'text-amber-600' :
+                          'text-rose-600'
+                        }`}>
+                          {riskScore}/10
+                        </p>
+                      </div>
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
+                        riskScore <= 3 ? 'bg-emerald-100 text-emerald-600' :
+                        riskScore <= 6 ? 'bg-amber-100 text-amber-600' :
+                        'bg-rose-100 text-rose-600'
+                      }`}>
+                        <AlertTriangle size={24} />
+                      </div>
+                    </div>
+                    <p className={`text-xs font-black uppercase tracking-widest mt-2 ${
+                      riskScore <= 3 ? 'text-emerald-600' :
+                      riskScore <= 6 ? 'text-amber-600' :
+                      'text-rose-600'
+                    }`}>
+                      {riskScore <= 3 ? t('risk.low') : riskScore <= 6 ? t('risk.medium') : t('risk.high')}
+                    </p>
+                  </div>
+                )}
+
+                {/* Company Fit Card */}
+                <div className="bg-white rounded-[32px] border border-slate-200 p-8 shadow-sm">
+                  <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+                    <Briefcase size={18} className="text-indigo-600" />
+                    {t('companyProfileFit')}
+                  </h3>
+                  <div className="space-y-6">
+                    <div className="group">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 leading-none">{t('yourServices')}</p>
+                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group-hover:border-indigo-200 transition-colors">
+                        <p className="text-xs font-bold text-slate-700 leading-relaxed">{profile?.services || "—"}</p>
+                      </div>
                     </div>
 
                     <div className="group">
-                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 leading-none">{t('budgetAlignment')}</p>
-                       <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group-hover:border-emerald-200 transition-colors">
-                          <div className="flex justify-between items-center mb-2">
-                             <p className="text-xs font-black text-slate-800 tabular-nums">
-                                {profile?.max_budget ? formatValue(profile.max_budget) : "—"}
-                             </p>
-                             {tender.estimated_value <= (profile?.max_budget || 1000000000) ? (
-                                <span className="text-[9px] font-black text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded uppercase">{t('inRange')}</span>
-                             ) : (
-                                <span className="text-[9px] font-black text-orange-600 bg-orange-100 px-2 py-0.5 rounded uppercase">{t('outOfRange')}</span>
-                             )}
-                          </div>
-                          <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                             <div className="h-full bg-emerald-500" style={{ width: `${Math.min(100, (tender.estimated_value / (profile?.max_budget || 1)) * 100)}%` }}></div>
-                          </div>
-                       </div>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 leading-none">{t('budgetAlignment')}</p>
+                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group-hover:border-emerald-200 transition-colors">
+                        <div className="flex justify-between items-center mb-2">
+                          <p className="text-xs font-black text-slate-800 tabular-nums">
+                            {profile?.max_budget ? formatValue(profile.max_budget) : "—"}
+                          </p>
+                          {tender.estimated_value <= (profile?.max_budget || 1000000000) ? (
+                            <span className="text-[9px] font-black text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded uppercase">{t('inRange')}</span>
+                          ) : (
+                            <span className="text-[9px] font-black text-orange-600 bg-orange-100 px-2 py-0.5 rounded uppercase">{t('outOfRange')}</span>
+                          )}
+                        </div>
+                        <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                          <div className="h-full bg-emerald-500" style={{ width: `${Math.min(100, (tender.estimated_value / (profile?.max_budget || 1)) * 100)}%` }}></div>
+                        </div>
+                      </div>
                     </div>
-                 </div>
-              </div>
-            </div>
-          )}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 

@@ -65,7 +65,7 @@ export function TenderDetailsTabs({ tabs, riskScore, riskLevel }: TenderDetailsT
   return (
     <div className="space-y-8">
       {/* Tab Bar */}
-      <div className="flex items-center gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit">
+      <div className="flex items-center gap-2 p-1.5 bg-slate-100 rounded-2xl w-full sm:w-fit overflow-x-auto">
         {visibleTabs.map(tab => (
           <button
             key={tab.id}
