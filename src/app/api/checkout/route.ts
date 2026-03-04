@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/server';
 
 export async function POST(req: Request) {
   try {
-    const { priceId, tier } = await req.json();
+    const { tier } = await req.json();
     const supabase = await createClient();
     
     const { data: { user } } = await supabase.auth.getUser();
@@ -14,11 +14,22 @@ export async function POST(req: Request) {
     }
 
     // Determine price dynamically based on tier selection
-    // In a real app, you would use real Stripe Price IDs
-    const unitAmount = tier === 'Pro' ? 4900 : 0; 
-    
-    // For Enterprise, we might want to just contact sales, but let's assume a placeholder price
-    // or handle it differently. Here we handle "Pro" subscription.
+    let unitAmount = 0;
+    let description = '';
+
+    if (tier === 'Professional') {
+      unitAmount = 14900; // €149.00
+      description = 'Unlimited AI matching, Document Insights (LLM), and daily alerts.';
+    } else if (tier === 'Business') {
+      unitAmount = 39900; // €399.00
+      description = 'Win Probability Score, Price Recommendation Engine, and multi-market access.';
+    } else if (tier === 'Enterprise') {
+      unitAmount = 99900; // €999.00
+      description = 'API Access, custom LLM training, and dedicated support.';
+    } else {
+      // Free / Explorer tier - should probably not hit checkout
+      return new NextResponse('Bad Request: Explorer tier is free.', { status: 400 });
+    }
     
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -27,8 +38,8 @@ export async function POST(req: Request) {
           price_data: {
             currency: 'eur',
             product_data: {
-              name: `Winly AI - ${tier} Plan`,
-              description: tier === 'Pro' ? 'Advanced matching and priority support.' : 'Enterprise Plan',
+              name: `Winly AI -  Plan`,
+              description: description,
             },
             unit_amount: unitAmount,
             recurring: {

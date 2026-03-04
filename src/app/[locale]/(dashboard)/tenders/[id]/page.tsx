@@ -62,6 +62,7 @@ interface ClientProfile {
   tech_stack: string;
   min_budget: number;
   max_budget: number;
+  tier?: string;
 }
 
 interface MarketPricing {
@@ -472,8 +473,22 @@ export default async function TenderDetailsPage({
           {/* Strategic Dashboard */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
              {/* Win Probability & Match Card */}
-             <div className="flex flex-col h-full">
-               <div className="bg-slate-900 rounded-[32px] p-8 text-white shadow-xl relative overflow-hidden flex-1 flex flex-col">
+             {!(profile?.tier === 'Business' || profile?.tier === 'Enterprise') ? (
+                <div className="flex flex-col h-full">
+                  <div className="bg-slate-900 rounded-[32px] p-8 text-white shadow-xl relative overflow-hidden flex-1 flex flex-col items-center justify-center text-center">
+                     <Brain size=48 className="text-slate-700 mb-4" />
+                     <h3 className="text-lg font-bold mb-2">{t('predictiveIntelligence')}</h3>
+                     <p className="text-sm text-slate-400 max-w-xs mb-6">
+                        Win Probability and Strategic Match Scoring are available exclusively on the <strong>Business</strong> plan.
+                     </p>
+                     <Link href="/profile" className="px-6 py-3 bg-blue-600 text-white text-xs font-black rounded-xl uppercase tracking-widest hover:bg-blue-500 transition-all">
+                        Upgrade to Business
+                     </Link>
+                  </div>
+                </div>
+             ) : (
+               <div className="flex flex-col h-full">
+                 <div className="bg-slate-900 rounded-[32px] p-8 text-white shadow-xl relative overflow-hidden flex-1 flex flex-col">
                   <div className="absolute top-0 right-0 p-6 opacity-5"><Brain size={120} /></div>
                   <div className="relative z-10 flex flex-col h-full">
                       <div className="flex justify-between items-center mb-8">
@@ -529,6 +544,8 @@ export default async function TenderDetailsPage({
                   </div>
                </div>
              </div>
+
+             ) }
 
              {/* Competition & Market Card */}
              <div className="flex flex-col h-full">
@@ -625,7 +642,21 @@ export default async function TenderDetailsPage({
           </div>
 
           {/* Pricing Analysis Section */}
-          <section className="bg-white p-10 rounded-[32px] border border-slate-200/60 shadow-sm">
+          {!(profile?.tier === 'Business' || profile?.tier === 'Enterprise') ? (
+            <section className="bg-slate-50 p-10 rounded-[32px] border border-dashed border-slate-200 flex flex-col items-center justify-center text-center">
+               <div className="w-16 h-16 rounded-3xl bg-white border border-slate-100 shadow-sm flex items-center justify-center text-emerald-600 mb-6">
+                  <DollarSign size=32 />
+               </div>
+               <h3 className="text-xl font-black text-slate-900 mb-2 uppercase tracking-tight italic">{t('priceEngine')}</h3>
+               <p className="text-sm text-slate-500 max-w-md mb-8 font-medium">
+                  Our AI Price Recommendation Engine calculates the optimal bid value to maximize your win chance while preserving margins. Available on the <strong>Business</strong> plan.
+               </p>
+               <Link href="/profile" className="px-10 py-5 bg-emerald-600 text-white text-xs font-black rounded-2xl shadow-lg shadow-emerald-100 uppercase tracking-widest hover:bg-emerald-500 transition-all">
+                  Unlock Price Intelligence
+               </Link>
+            </section>
+          ) : (
+            <section className="bg-white p-10 rounded-[32px] border border-slate-200/60 shadow-sm">
              <div className="flex justify-between items-center mb-8">
                 <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                    <Target size={24} className="text-emerald-600" />
@@ -701,6 +732,7 @@ export default async function TenderDetailsPage({
                 </div>
              </div>
           </section>
+          )}
 
             </>
           )}
@@ -711,7 +743,7 @@ export default async function TenderDetailsPage({
                 <Brain size={20} className="text-teal-600" />
                 <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight italic">AI-Extracted Strategic Insights</h3>
               </div>
-              <TenderInsights tenderId={id} initialInsights={tender.insights} derivedDocLink={derivedDocLink} />
+              <TenderInsights tenderId={id} initialInsights={tender.insights} derivedDocLink={derivedDocLink} userTier={profile?.tier} />
             </section>
           )}
 

@@ -528,7 +528,54 @@
     "belowEstimate": "Below Estimate",
     "aboveEstimate": "Above Estimate",
     "winnerDetailsUnavailable": "Winner details not available",
-    "dateNotSpecified": "Date not specified"
+    "dateNotSpecified": "Date not specified",
+    "tabs": {
+      "overview": "Overview",
+      "aiInsights": "AI Insights",
+      "awardDetails": "Award Details"
+    },
+    "risk": {
+      "title": "Risk Assessment",
+      "score": "Risk Score",
+      "low": "Low Risk",
+      "medium": "Medium Risk",
+      "high": "High Risk",
+      "keyFactors": "Key Risk Factors",
+      "noScore": "No risk data available"
+    },
+    "paywall": {
+      "title": "Premium AI Insights",
+      "subtitle": "Unlock strategic intelligence powered by AI document analysis",
+      "upgradeTitle": "Upgrade to Pro",
+      "upgradeDesc": "Get full access to AI-extracted insights, risk assessments, and strategic recommendations.",
+      "upgradeCta": "Upgrade to Pro",
+      "previewLabel": "Preview",
+      "generateLocked": "Generate Insights (Pro Feature)",
+      "blurredPreview": "Full insights available with Pro plan"
+    },
+    "export": {
+      "pdf": "Export PDF",
+      "questions": "Export Questions",
+      "exporting": "Exporting...",
+      "downloadReady": "Download ready",
+      "exportError": "Export failed. Please try again.",
+      "proOnly": "Pro feature"
+    },
+    "chatbot": {
+      "title": "Tender Assistant",
+      "welcome": "Hi! I'm your AI assistant for this tender. Ask me anything about the requirements, risks, or competition.",
+      "placeholder": "Ask about this tender...",
+      "send": "Send",
+      "thinking": "Thinking...",
+      "error": "Sorry, I couldn't process your question. Please try again.",
+      "quickQuestions": {
+        "risks": "What are the main risks?",
+        "competitors": "Who are the likely competitors?",
+        "price": "What price should I bid?",
+        "requirements": "What are the key requirements?"
+      }
+    },
+    "riskMiniCard": "Risk Score"
   },
   "profile": {
     "title": "Bidding Profile",
@@ -560,7 +607,7 @@
     "saveChanges": "Sync Changes",
     "updating": "Updating Cloud...",
     "updateSuccess": "Profile updated in Supabase!",
-    "enterpriseContactAlert": "For Enterprise plans, please contact our sales team.",
+    "enterpriseContactAlert": "Please contact sales for Enterprise setup.",
     "upgradeError": "Something went wrong with the upgrade process.",
     "errorSaving": "Error saving profile. Check console for details.",
     "companyNamePlaceholder": "Acme Inc.",
@@ -570,7 +617,12 @@
     "maxBudget": "Max Budget (€)",
     "minBudgetPlaceholder": "10000",
     "maxBudgetPlaceholder": "500000",
-    "saveAndContinue": "Save Changes & Continue"
+    "saveAndContinue": "Save Changes & Continue",
+    "explorerDesc": "Basic search and manual discovery.",
+    "professionalDesc": "Advanced AI matching & Document Insights.",
+    "businessDesc": "Price recommendations and win probability.",
+    "upgradeToProfessional": "Upgrade to Professional",
+    "upgradeToBusiness": "Upgrade to Business"
   },
   "about": {
     "heroTitle": "Democratizing Access to",

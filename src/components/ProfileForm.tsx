@@ -142,18 +142,24 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <p className="text-xs text-gray-400 uppercase tracking-wider font-medium mb-1">{t('currentPlan')}</p>
-            <h3 className="text-3xl font-extrabold text-gray-900">{profile?.tier || 'Free'}</h3>
+            <h3 className="text-3xl font-extrabold text-gray-900">{profile?.tier || 'Explorer'}</h3>
             <p className="text-sm text-gray-500 mt-1">
               {profile?.tier === 'Enterprise' ? t('enterpriseDesc') :
-                profile?.tier === 'Pro' ? t('proDesc') :
-                t('freeDesc')}
+                profile?.tier === 'Business' ? t('businessDesc') :
+                profile?.tier === 'Professional' ? t('professionalDesc') :
+                t('explorerDesc')}
             </p>
           </div>
 
-          <div className="flex gap-3">
-            {profile?.tier !== 'Pro' && profile?.tier !== 'Enterprise' && (
-              <Button variant="secondary" type="button" onClick={() => handleUpgrade('Pro')}>
-                {t('upgradeToPro')}
+          <div className="flex flex-wrap gap-3">
+            {(profile?.tier === 'Explorer' || !profile?.tier) && (
+              <Button variant="secondary" type="button" onClick={() => handleUpgrade('Professional')}>
+                {t('upgradeToProfessional')}
+              </Button>
+            )}
+            {(profile?.tier === 'Explorer' || !profile?.tier || profile?.tier === 'Professional') && (
+              <Button variant="secondary" type="button" onClick={() => handleUpgrade('Business')}>
+                {t('upgradeToBusiness')}
               </Button>
             )}
             {profile?.tier !== 'Enterprise' && (

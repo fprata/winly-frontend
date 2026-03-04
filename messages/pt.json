@@ -316,7 +316,7 @@
       "avgDisc": "Desc. Méd.",
       "sectorSpecialization": "Especialização por Sector",
       "salesAndMarketShare": "Vendas e Quota de Mercado",
-      "buyerDiversity":"Diversidade de Compradores",
+      "buyerDiversity": "Diversidade de Compradores",
       "winRate": "Taxa de Vitória",
       "avgDiscount": "Desconto Médio",
       "totalBids": "Licitações Totais",
@@ -531,7 +531,54 @@
     "belowEstimate": "Abaixo da Estimativa",
     "aboveEstimate": "Acima da Estimativa",
     "winnerDetailsUnavailable": "Detalhes do vencedor não disponíveis",
-    "dateNotSpecified": "Data não especificada"
+    "dateNotSpecified": "Data não especificada",
+    "tabs": {
+      "overview": "Visão Geral",
+      "aiInsights": "Insights IA",
+      "awardDetails": "Detalhes da Adjudicação"
+    },
+    "risk": {
+      "title": "Avaliação de Risco",
+      "score": "Pontuação de Risco",
+      "low": "Risco Baixo",
+      "medium": "Risco Médio",
+      "high": "Risco Alto",
+      "keyFactors": "Principais Fatores de Risco",
+      "noScore": "Dados de risco não disponíveis"
+    },
+    "paywall": {
+      "title": "Insights IA Premium",
+      "subtitle": "Desbloqueie inteligência estratégica alimentada por análise de documentos IA",
+      "upgradeTitle": "Upgrade para Pro",
+      "upgradeDesc": "Obtenha acesso total a insights extraídos por IA, avaliações de risco e recomendações estratégicas.",
+      "upgradeCta": "Upgrade para Pro",
+      "previewLabel": "Pré-visualização",
+      "generateLocked": "Gerar Insights (Funcionalidade Pro)",
+      "blurredPreview": "Insights completos disponíveis com o plano Pro"
+    },
+    "export": {
+      "pdf": "Exportar PDF",
+      "questions": "Exportar Perguntas",
+      "exporting": "A exportar...",
+      "downloadReady": "Download pronto",
+      "exportError": "Exportação falhou. Tente novamente.",
+      "proOnly": "Funcionalidade Pro"
+    },
+    "chatbot": {
+      "title": "Assistente de Concurso",
+      "welcome": "Olá! Sou o seu assistente IA para este concurso. Pergunte-me sobre requisitos, riscos ou concorrência.",
+      "placeholder": "Pergunte sobre este concurso...",
+      "send": "Enviar",
+      "thinking": "A pensar...",
+      "error": "Desculpe, não consegui processar a sua pergunta. Tente novamente.",
+      "quickQuestions": {
+        "risks": "Quais são os principais riscos?",
+        "competitors": "Quem são os concorrentes prováveis?",
+        "price": "Que preço devo licitar?",
+        "requirements": "Quais são os requisitos principais?"
+      }
+    },
+    "riskMiniCard": "Pontuação de Risco"
   },
   "profile": {
     "title": "Perfil de Licitação",
@@ -563,7 +610,7 @@
     "saveChanges": "Sincronizar Alterações",
     "updating": "A atualizar na Cloud...",
     "updateSuccess": "Perfil atualizado no Supabase!",
-    "enterpriseContactAlert": "Para planos Enterprise, por favor contacte a nossa equipa de vendas.",
+    "enterpriseContactAlert": "Por favor contacte as vendas para o plano Enterprise.",
     "upgradeError": "Ocorreu um erro no processo de upgrade.",
     "errorSaving": "Erro ao guardar perfil. Consulte a consola para mais detalhes.",
     "companyNamePlaceholder": "Acme Inc.",
@@ -573,7 +620,12 @@
     "maxBudget": "Orçamento Máximo (€)",
     "minBudgetPlaceholder": "10000",
     "maxBudgetPlaceholder": "500000",
-    "saveAndContinue": "Guardar Alterações e Continuar"
+    "saveAndContinue": "Guardar Alterações e Continuar",
+    "explorerDesc": "Pesquisa básica e descoberta manual.",
+    "professionalDesc": "Correspondência avançada e Document Insights.",
+    "businessDesc": "Recomendações de preço e probabilidade de vitória.",
+    "upgradeToProfessional": "Upgrade para Professional",
+    "upgradeToBusiness": "Upgrade para Business"
   },
   "about": {
     "heroTitle": "Democratizando o Acesso à",
