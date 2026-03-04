@@ -86,7 +86,11 @@ export function CompetitorIntelligenceClient({
 
   const navigateToProfile = (id: string) => {
     setLoading(true);
-    router.push(`/intelligence/competitors/${encodeURIComponent(id)}`);
+    const params = new URLSearchParams();
+    if (fromTender) params.set('fromTender', fromTender);
+    if (backUrl) params.set('backUrl', backUrl);
+    const qs = params.toString();
+    router.push(`/intelligence/competitors/${encodeURIComponent(id)}${qs ? `?${qs}` : ''}`);
   };
 
   const clearProfile = () => {
@@ -174,7 +178,7 @@ export function CompetitorIntelligenceClient({
               className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors font-bold text-sm"
             >
               <ArrowLeft size={16} />
-              {backUrl ? 'Back' : t('backToSearch')}
+              {backUrl ? t('back') : t('backToSearch')}
             </button>
           </div>
           <div className="bg-white/70 backdrop-blur-sm rounded-[32px] border border-slate-200/60 shadow-sm p-8 lg:p-12">
@@ -361,13 +365,15 @@ export function CompetitorIntelligenceClient({
                     </thead>
                     <tbody className="divide-y divide-slate-50">
                       {wonTenders.length > 0 ? (
-                        wonTenders.map((tender, i) => (
-                          <tr 
-                            key={i} 
+                        wonTenders.map((tender, i) => {
+                          const tenderBackUrl = `${pathname}?${searchParams.toString()}`;
+                          return (
+                          <tr
+                            key={i}
                             className="hover:bg-blue-50/30 transition-colors group"
                           >
                             <td className="px-6 py-4">
-                              <Link href={`/tenders/${tender.tender_uuid}`} className="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition-colors line-clamp-2" title={tender.title}>
+                              <Link href={`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent(tenderBackUrl)}`} className="font-bold text-slate-800 text-sm group-hover:text-blue-700 transition-colors line-clamp-2" title={tender.title}>
                                 {tender.title || "No Title"}
                               </Link>
                             </td>
@@ -392,13 +398,13 @@ export function CompetitorIntelligenceClient({
                             </td>
                             <td className="px-6 py-4 text-right">
                               <div className="flex justify-end">
-                                <Link href={`/tenders/${tender.tender_uuid}`} className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                <Link href={`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent(tenderBackUrl)}`} className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-blue-600 group-hover:text-white transition-all">
                                   <ArrowUpRight size={16} />
                                 </Link>
                               </div>
                             </td>
                           </tr>
-                        ))
+                        );})
                       ) : (
                         <tr>
                           <td colSpan={5} className="px-6 py-12 text-center text-slate-400 font-medium italic">

@@ -94,7 +94,11 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
 
   const navigateToProfile = (id: string) => {
     setLoading(true);
-    router.push(`/intelligence/buyers/${encodeURIComponent(id)}`);
+    const params = new URLSearchParams();
+    if (fromTender) params.set('fromTender', fromTender);
+    if (backUrl) params.set('backUrl', backUrl);
+    const qs = params.toString();
+    router.push(`/intelligence/buyers/${encodeURIComponent(id)}${qs ? `?${qs}` : ''}`);
   };
 
   const clearProfile = () => {
@@ -349,7 +353,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
               className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors font-bold text-sm"
             >
               <ArrowLeft size={16} />
-              {backUrl ? 'Back' : t('backToSearch')}
+              {backUrl ? t('back') : t('backToSearch')}
             </button>
 
             {/* Global Sector Filter */}
@@ -607,6 +611,9 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
           )}
 
           {/* Latest Activity Lists */}
+          {(() => {
+            const tenderBackUrl = encodeURIComponent(`${pathname}?${searchParams.toString()}`);
+            return (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
              {/* Active Tenders */}
              <div className="bg-white rounded-[32px] border border-slate-200/60 shadow-sm p-8">
@@ -615,18 +622,18 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                     {t('analysis.activeTenders')}
                 </h3>
                 <div className="space-y-4">
-                    {metrics.activeTenders?.length > 0 ? metrics.activeTenders.map((t: any, i: number) => (
+                    {metrics.activeTenders?.length > 0 ? metrics.activeTenders.map((td: any, i: number) => (
                         <div key={i} className="p-4 bg-slate-50 rounded-2xl border border-transparent hover:border-blue-100 hover:bg-white transition-all">
                             <div className="flex justify-between items-start mb-1">
-                                <Link href={`/tenders/${t.tender_uuid}`} className="text-xs font-black text-slate-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={t.title}>
-                                    {t.title || "No Title"}
+                                <Link href={`/tenders/${td.tender_uuid}?backUrl=${tenderBackUrl}`} className="text-xs font-black text-slate-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={td.title}>
+                                    {td.title || "No Title"}
                                 </Link>
                                 <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap">
-                                    {t.submission_deadline ? new Date(t.submission_deadline).toLocaleDateString() : 'Open'}
+                                    {td.submission_deadline ? new Date(td.submission_deadline).toLocaleDateString() : 'Open'}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center mt-2">
-                                <p className="text-[10px] font-bold text-slate-500">{formatValue(t.estimated_value)} (Est)</p>
+                                <p className="text-[10px] font-bold text-slate-500">{formatValue(td.estimated_value)} (Est)</p>
                                 <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 uppercase">Active</span>
                             </div>
                         </div>
@@ -643,24 +650,24 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                     {t('analysis.latestAwards')}
                 </h3>
                 <div className="space-y-4">
-                    {metrics.awardedTenders?.length > 0 ? metrics.awardedTenders.map((t: any, i: number) => (
+                    {metrics.awardedTenders?.length > 0 ? metrics.awardedTenders.map((td: any, i: number) => (
                         <div key={i} className="p-4 bg-slate-50 rounded-2xl border border-transparent hover:border-emerald-100 hover:bg-white transition-all">
                             <div className="flex justify-between items-start mb-1">
-                                <Link href={`/tenders/${t.tender_uuid}`} className="text-xs font-black text-slate-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={t.title}>
-                                    {t.title || "No Title"}
+                                <Link href={`/tenders/${td.tender_uuid}?backUrl=${tenderBackUrl}`} className="text-xs font-black text-slate-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={td.title}>
+                                    {td.title || "No Title"}
                                 </Link>
                                 <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap">
-                                    {t.publication_date ? new Date(t.publication_date).getFullYear() : ''}
+                                    {td.publication_date ? new Date(td.publication_date).getFullYear() : ''}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center mt-2">
                                 <div className="flex items-center gap-3">
-                                    <p className="text-[10px] font-bold text-slate-500">{formatValue(t.final_contract_value)}</p>
-                                    <p className="text-[10px] font-medium text-slate-400 border-l border-slate-200 pl-3">Est. {formatValue(t.estimated_value)}</p>
+                                    <p className="text-[10px] font-bold text-slate-500">{formatValue(td.final_contract_value)}</p>
+                                    <p className="text-[10px] font-medium text-slate-400 border-l border-slate-200 pl-3">Est. {formatValue(td.estimated_value)}</p>
                                 </div>
-                                {t.estimated_value && t.final_contract_value < t.estimated_value && (
+                                {td.estimated_value && td.final_contract_value < td.estimated_value && (
                                     <span className="text-[9px] font-bold text-emerald-600">
-                                        -{Math.round(((t.estimated_value - t.final_contract_value)/t.estimated_value)*100)}% Disc.
+                                        -{Math.round(((td.estimated_value - td.final_contract_value)/td.estimated_value)*100)}% Disc.
                                     </span>
                                 )}
                             </div>
@@ -671,8 +678,10 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                 </div>
              </div>
           </div>
+            );
+          })()}
 
-          <BuyerCompetitorAnalysis  
+          <BuyerCompetitorAnalysis
             buyerName={profile.name} 
             selectedCpvs={selectedCpvs}
             initialTenders={tenders} 

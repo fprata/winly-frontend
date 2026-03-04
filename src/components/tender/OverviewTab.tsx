@@ -360,7 +360,7 @@ export function OverviewTab({
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {relatedTenders.map((rt: any) => (
-              <Link key={rt.tender_id} href={`/tenders/${rt.tender_uuid}`} className="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:bg-white transition-all flex flex-col h-full">
+              <Link key={rt.tender_id} href={`/tenders/${rt.tender_uuid}?backUrl=${encodeURIComponent('/tenders/' + tenderId)}`} className="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-blue-200 hover:bg-white transition-all flex flex-col h-full">
                 <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">{rt.buyer_name}</p>
                 <h4 className="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-3 mb-4 flex-1">{rt.title}</h4>
                 <div className="flex justify-between items-center pt-4 border-t border-slate-100 mt-auto">

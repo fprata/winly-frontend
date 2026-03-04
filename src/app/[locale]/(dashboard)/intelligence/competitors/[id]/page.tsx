@@ -5,11 +5,14 @@ import { CompetitorIntelligenceClient } from '@/components/CompetitorIntelligenc
 export const revalidate = 300;
 
 export default async function CompetitorProfilePage({
-  params
+  params,
+  searchParams
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ fromTender?: string }>;
 }) {
   const { id } = await params;
+  const { fromTender } = await searchParams;
   const decodedId = decodeURIComponent(id);
   const supabase = await createClient();
 
@@ -25,11 +28,11 @@ export default async function CompetitorProfilePage({
   }
 
   return (
-    <CompetitorIntelligenceClient 
-      initialProfile={initialProfile} 
+    <CompetitorIntelligenceClient
+      initialProfile={initialProfile}
       initialSearchResults={[]}
-      initialName={null} 
-      fromTender={null} 
+      initialName={null}
+      fromTender={fromTender || null}
     />
   );
 }

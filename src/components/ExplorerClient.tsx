@@ -194,11 +194,11 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                     <tr
                       key={tender.tender_id}
                       className="hover:bg-gray-50/60 transition-colors group cursor-pointer"
-                      onClick={() => router.push(`/tenders/${tender.tender_uuid}`)}
+                      onClick={() => router.push(`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`)}
                     >
                       <td className="px-5 py-4">
                         <Link
-                          href={`/tenders/${tender.tender_uuid}`}
+                          href={`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`}
                           className="text-gray-800 font-medium line-clamp-1 group-hover:text-teal-700 transition-colors text-sm"
                           onClick={(e) => e.stopPropagation()}
                         >

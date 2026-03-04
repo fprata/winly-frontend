@@ -71,11 +71,14 @@ interface MarketPricing {
 }
 
 export default async function TenderDetailsPage({
-  params
+  params,
+  searchParams
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ backUrl?: string }>;
 }) {
   const { id } = await params;
+  const { backUrl } = await searchParams;
 
   const supabase = await createClient();
   const t = await getTranslations('tenders');
@@ -305,9 +308,9 @@ export default async function TenderDetailsPage({
 
   return (
     <div className="max-w-6xl mx-auto pb-20 px-4">
-      <Link href="/matches" className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-8 font-bold group text-sm w-fit">
+      <Link href={backUrl || '/matches'} className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-8 font-bold group text-sm w-fit">
         <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-        {t('backToMatches')}
+        {backUrl ? t('back') : t('backToMatches')}
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

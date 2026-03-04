@@ -5,11 +5,14 @@ import { BuyerIntelligenceClient } from '@/components/BuyerIntelligenceClient';
 export const revalidate = 300;
 
 export default async function BuyerProfilePage({
-  params
+  params,
+  searchParams
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ fromTender?: string }>;
 }) {
   const { id } = await params;
+  const { fromTender } = await searchParams;
   const decodedId = decodeURIComponent(id);
   const supabase = await createClient();
 
@@ -24,13 +27,12 @@ export default async function BuyerProfilePage({
     initialProfile = data;
   }
 
-  // We pass empty search results because this is a detail page
   return (
-    <BuyerIntelligenceClient 
-      initialProfile={initialProfile} 
+    <BuyerIntelligenceClient
+      initialProfile={initialProfile}
       initialSearchResults={[]}
-      initialName={null} 
-      fromTender={null} 
+      initialName={null}
+      fromTender={fromTender || null}
     />
   );
 }
