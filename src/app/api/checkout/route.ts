@@ -17,18 +17,17 @@ export async function POST(req: Request) {
     let unitAmount = 0;
     let description = '';
 
-    if (tier === 'Professional') {
+    if (tier === 'Starter') {
       unitAmount = 14900; // €149.00
-      description = 'Unlimited AI matching, Document Insights (LLM), and daily alerts.';
-    } else if (tier === 'Business') {
+      description = 'Up to 50 matches/month, basic search algorithms, daily email digest, 1 seat, PT & ES markets.';
+    } else if (tier === 'Professional') {
       unitAmount = 39900; // €399.00
-      description = 'Win Probability Score, Price Recommendation Engine, and multi-market access.';
+      description = 'Unlimited matches, full V3 AI algorithm, real-time updates, win probability, price recommendations, competitor intelligence, 5 seats.';
     } else if (tier === 'Enterprise') {
       unitAmount = 99900; // €999.00
-      description = 'API Access, custom LLM training, and dedicated support.';
+      description = 'Everything in Professional, Bid/No-Bid assistant, team collaboration, pipeline CRM, API access & integrations, unlimited seats, white-label options.';
     } else {
-      // Free / Explorer tier - should probably not hit checkout
-      return new NextResponse('Bad Request: Explorer tier is free.', { status: 400 });
+      return new NextResponse('Bad Request: Invalid tier.', { status: 400 });
     }
     
     const session = await stripe.checkout.sessions.create({
@@ -38,7 +37,7 @@ export async function POST(req: Request) {
           price_data: {
             currency: 'eur',
             product_data: {
-              name: `Winly AI -  Plan`,
+              name: `Winly AI - ${tier} Plan`,
               description: description,
             },
             unit_amount: unitAmount,

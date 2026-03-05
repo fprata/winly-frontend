@@ -31,7 +31,7 @@ export function InsightsTab({ tenderId, initialInsights, derivedDocLink, tier, o
   const riskLevel = currentInsights?.risk_assessment?.risk_level;
   const riskFactors = currentInsights?.risk_assessment?.key_risk_factors;
 
-  const isPro = tier === 'Pro' || tier === 'Enterprise';
+  const isPro = tier === 'Professional' || tier === 'Enterprise';
 
   return (
     <div className="space-y-8">

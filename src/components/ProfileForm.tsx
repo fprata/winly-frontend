@@ -135,7 +135,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
       {/* Subscription Tier */}
       <Card>
         <div className="flex items-center gap-2 mb-5 text-slate-900">
-          <CreditCard size={18} className="text-teal-600" />
+          <CreditCard size={18} className="text-blue-600" />
           <h2 className="font-bold text-base">{t('subscriptionPlan')}</h2>
         </div>
 
@@ -145,21 +145,21 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
             <h3 className="text-3xl font-extrabold text-slate-900">{profile?.tier || 'Explorer'}</h3>
             <p className="text-sm text-slate-500 mt-1">
               {profile?.tier === 'Enterprise' ? t('enterpriseDesc') :
-                profile?.tier === 'Business' ? t('businessDesc') :
                 profile?.tier === 'Professional' ? t('professionalDesc') :
+                profile?.tier === 'Starter' ? t('starterDesc') :
                 t('explorerDesc')}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {(profile?.tier === 'Explorer' || !profile?.tier) && (
-              <Button variant="secondary" type="button" onClick={() => handleUpgrade('Professional')}>
-                {t('upgradeToProfessional')}
+            {(!profile?.tier || profile?.tier === 'Explorer') && (
+              <Button variant="secondary" type="button" onClick={() => handleUpgrade('Starter')}>
+                {t('upgradeToStarter')}
               </Button>
             )}
-            {(profile?.tier === 'Explorer' || !profile?.tier || profile?.tier === 'Professional') && (
-              <Button variant="secondary" type="button" onClick={() => handleUpgrade('Business')}>
-                {t('upgradeToBusiness')}
+            {(!profile?.tier || profile?.tier === 'Explorer' || profile?.tier === 'Starter') && (
+              <Button variant="secondary" type="button" onClick={() => handleUpgrade('Professional')}>
+                {t('upgradeToProfessional')}
               </Button>
             )}
             {profile?.tier !== 'Enterprise' && (
@@ -174,7 +174,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
       {/* General Info */}
       <Card>
         <div className="flex items-center gap-2 mb-5 text-slate-900">
-          <Building2 size={18} className="text-teal-600" />
+          <Building2 size={18} className="text-blue-600" />
           <h2 className="font-bold text-base">{t('generalInfo')}</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
@@ -282,7 +282,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
       {/* AI Keywords */}
       <Card>
         <div className="flex items-center gap-2 mb-5 text-slate-900">
-          <Brain size={18} className="text-teal-600" />
+          <Brain size={18} className="text-blue-600" />
           <h2 className="font-bold text-base">{t('aiKeywords')}</h2>
         </div>
 
@@ -320,7 +320,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
       {/* Notifications */}
       <Card>
         <div className="flex items-center gap-2 mb-5 text-slate-900">
-          <Bell size={18} className="text-teal-600" />
+          <Bell size={18} className="text-blue-600" />
           <h2 className="font-bold text-base">Email Notifications</h2>
         </div>
 
@@ -333,8 +333,8 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
             <button
               type="button"
               onClick={() => setNotifPrefs(p => ({ ...p, email_digest_enabled: !p.email_digest_enabled }))}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 ${
-                notifPrefs.email_digest_enabled ? 'bg-teal-600' : 'bg-slate-200'
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${
+                notifPrefs.email_digest_enabled ? 'bg-blue-600' : 'bg-slate-200'
               }`}
               aria-checked={notifPrefs.email_digest_enabled}
               role="switch"
@@ -355,7 +355,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
               <select
                 value={notifPrefs.min_score_threshold}
                 onChange={e => setNotifPrefs(p => ({ ...p, min_score_threshold: Number(e.target.value) }))}
-                className="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="text-sm border border-slate-200 rounded-md px-3 py-1.5 text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value={50}>50+ (more matches)</option>
                 <option value={60}>60+ (recommended)</option>

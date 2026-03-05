@@ -17,7 +17,7 @@ interface InsightsPaywallProps {
 
 export function InsightsPaywall({ tenderId, initialInsights, derivedDocLink, tier, onInsightsGenerated }: InsightsPaywallProps) {
   const t = useTranslations('tenders');
-  const isPro = tier === 'Pro' || tier === 'Enterprise';
+  const isPro = tier === 'Professional' || tier === 'Enterprise';
 
   // Pro/Enterprise users get full access
   if (isPro) {
@@ -103,7 +103,7 @@ function UpgradeCTA() {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier: 'Pro' }),
+        body: JSON.stringify({ tier: 'Professional' }),
       });
       const data = await res.json();
       if (data.url) {

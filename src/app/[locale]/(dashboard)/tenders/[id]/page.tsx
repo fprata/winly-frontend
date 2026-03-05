@@ -304,7 +304,7 @@ export default async function TenderDetailsPage({
     },
   ];
 
-  const isPro = userTier === 'Pro' || userTier === 'Enterprise';
+  const isPro = userTier === 'Professional' || userTier === 'Enterprise';
 
   return (
     <div className="max-w-6xl mx-auto pb-20 px-4">

@@ -33,14 +33,14 @@ const jsonLd = {
       price: '399',
       priceCurrency: 'EUR',
       name: 'Professional Plan',
-      description: 'Unlimited matches, full V3 AI algorithm, real-time updates',
+      description: 'Unlimited matches, full V3 AI algorithm, real-time updates, win probability scores, price recommendations, competitor intelligence, 5 user seats',
     },
     {
       '@type': 'Offer',
       price: '999',
       priceCurrency: 'EUR',
       name: 'Enterprise Plan',
-      description: 'Everything in Pro plus team collaboration, CRM, and API access',
+      description: 'Everything in Professional plus Bid/No-Bid assistant, team collaboration, pipeline CRM, API access & integrations, unlimited seats, white-label options',
     },
   ],
   aggregateRating: {
@@ -254,37 +254,37 @@ export default async function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-24 px-6 bg-white border-t border-gray-200">
+      <section className="py-24 px-6 bg-white border-t border-slate-200">
         <div className="max-w-7xl mx-auto">
            <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">{tPricing('title')}</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto text-lg">{tPricing('subtitle')}</p>
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4">{tPricing('title')}</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto text-lg">{tPricing('subtitle')}</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
              {/* Starter Tier */}
-            <div className="p-8 rounded-3xl bg-white border border-gray-200 relative flex flex-col">
-               <h3 className="text-xl font-bold text-gray-900 mb-2">{tPricing('starter')}</h3>
-               <p className="text-gray-500 text-sm mb-6">{tPricing('starterDesc')}</p>
-               <div className="text-4xl font-black text-gray-900 mb-6">{tPricing('starterPrice')}<span className="text-base font-medium text-gray-400">/mo</span></div>
+            <div className="p-8 rounded-3xl bg-white border border-slate-200 relative flex flex-col">
+               <h3 className="text-xl font-bold text-slate-900 mb-2">{tPricing('starter')}</h3>
+               <p className="text-slate-500 text-sm mb-6">{tPricing('starterDesc')}</p>
+               <div className="text-4xl font-black text-slate-900 mb-6">{tPricing('starterPrice')}<span className="text-base font-medium text-slate-400">/mo</span></div>
                <ul className="space-y-4 mb-8 flex-1">
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature1')}</li>
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature2')}</li>
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature3')}</li>
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature4')}</li>
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature5')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature1')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature2')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature3')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature4')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature5')}</li>
                </ul>
-               <Link href="/login" className="block w-full py-4 px-4 bg-gray-100 text-gray-700 font-bold text-center rounded-xl hover:bg-gray-200 transition-all">{tCommon('startTrial')}</Link>
+               <Link href="/login" className="block w-full py-4 px-4 bg-slate-100 text-slate-700 font-bold text-center rounded-xl hover:bg-slate-200 transition-all">{tCommon('startTrial')}</Link>
             </div>
 
             {/* Professional Tier */}
-             <div className="p-8 rounded-3xl bg-gray-900 border border-gray-800 relative transform md:-translate-y-4 shadow-2xl flex flex-col">
+             <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 relative transform md:-translate-y-4 shadow-2xl flex flex-col">
                <div className="absolute top-0 right-0 p-4">
                  <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg shadow-blue-900/50">{tPricing('popular')}</span>
                </div>
                <h3 className="text-xl font-bold text-white mb-2">{tPricing('professional')}</h3>
-               <p className="text-gray-400 text-sm mb-6">{tPricing('professionalDesc')}</p>
-               <div className="text-5xl font-black text-white mb-6">{tPricing('professionalPrice')}<span className="text-base font-medium text-gray-50">/mo</span></div>
+               <p className="text-slate-400 text-sm mb-6">{tPricing('professionalDesc')}</p>
+               <div className="text-5xl font-black text-white mb-6">{tPricing('professionalPrice')}<span className="text-base font-medium text-slate-50">/mo</span></div>
                <ul className="space-y-4 mb-8 flex-1">
                  <li className="flex items-center gap-3 text-white font-medium"><Check size={18} className="text-blue-400" /> {tPricing('professionalFeature1')}</li>
                  <li className="flex items-center gap-3 text-white font-medium"><Check size={18} className="text-blue-400" /> {tPricing('professionalFeature2')}</li>
@@ -298,20 +298,20 @@ export default async function LandingPage() {
             </div>
 
             {/* Enterprise Tier */}
-            <div className="p-8 rounded-3xl bg-white border border-gray-200 relative flex flex-col">
-               <h3 className="text-xl font-bold text-gray-900 mb-2">{tPricing('enterprise')}</h3>
-               <p className="text-gray-500 text-sm mb-6">{tPricing('enterpriseDesc')}</p>
-               <div className="text-4xl font-black text-gray-900 mb-6">{tPricing('enterprisePrice')}<span className="text-base font-medium text-gray-400">/mo</span></div>
+            <div className="p-8 rounded-3xl bg-white border border-slate-200 relative flex flex-col">
+               <h3 className="text-xl font-bold text-slate-900 mb-2">{tPricing('enterprise')}</h3>
+               <p className="text-slate-500 text-sm mb-6">{tPricing('enterpriseDesc')}</p>
+               <div className="text-4xl font-black text-slate-900 mb-6">{tPricing('enterprisePrice')}<span className="text-base font-medium text-slate-400">/mo</span></div>
                <ul className="space-y-4 mb-8 flex-1">
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature1')}</li>
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature2')}</li>
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature3')}</li>
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature4')}</li>
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature5')}</li>
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature6')}</li>
-                 <li className="flex items-center gap-3 text-gray-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature7')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature1')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature2')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature3')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature4')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature5')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature6')}</li>
+                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature7')}</li>
                </ul>
-               <Link href="/login" className="block w-full py-4 px-4 bg-gray-100 text-gray-700 font-bold text-center rounded-xl hover:bg-gray-200 transition-all">{tCommon('contactSales')}</Link>
+               <Link href="/login" className="block w-full py-4 px-4 bg-slate-100 text-slate-700 font-bold text-center rounded-xl hover:bg-slate-200 transition-all">{tCommon('contactSales')}</Link>
             </div>
           </div>
         </div>
