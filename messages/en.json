@@ -294,7 +294,8 @@
       },
       "trends": {
         "title": "Spending & Transparency History",
-        "sectorFocus": "Procurement Mix"
+        "sectorFocus": "Procurement Mix",
+        "noTrendHistory": "No trend history available."
       },
       "analysis": {
         "competitorAnalysis": "Competitor Analysis",
@@ -329,6 +330,7 @@
       "pricePositioningLabel": "Price positioning",
       "pricePositioningText": "Typical bid variation relative to market benchmarks.",
       "searchPrompt": "Search for a company to analyze their competitive footprint.",
+      "avgDisc": "Avg. Disc.",
       "topCompetitors": "Top Competitors",
       "searchResults": "Search Results",
       "noResultsFound": "No companies found",
@@ -503,6 +505,7 @@
     "companyProfileFit": "Company Profile Fit",
     "yourServices": "Your Services",
     "budgetAlignment": "Budget Alignment",
+    "yourBudget": "Your Budget",
     "inRange": "In Range",
     "outOfRange": "Out of Range",
     "technologies": "Technologies",
