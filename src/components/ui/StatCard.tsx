@@ -43,7 +43,7 @@ export const StatCard = React.memo(function StatCard({
   return (
     <div
       className={twMerge(
-        `bg-white p-6 rounded-xl border border-gray-200 border-l-4 ${c.accentBorder} shadow-sm hover:shadow-md transition-all duration-300`,
+        `bg-white p-6 rounded-xl border border-slate-200 border-l-4 ${c.accentBorder} shadow-sm hover:shadow-md transition-all duration-300`,
         className
       )}
     >
@@ -59,11 +59,11 @@ export const StatCard = React.memo(function StatCard({
           {label}
         </span>
       </div>
-      <h3 className="text-3xl font-extrabold text-gray-900 mb-1 tracking-tight">
+      <h3 className="text-3xl font-extrabold text-slate-900 mb-1 tracking-tight">
         {value}
       </h3>
       {subtitle && (
-        <div className="text-sm text-gray-500">{subtitle}</div>
+        <div className="text-sm text-slate-500">{subtitle}</div>
       )}
     </div>
   );

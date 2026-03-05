@@ -47,11 +47,11 @@ export function Select({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3.5 py-2.5 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:border-gray-300 transition-all shadow-sm group cursor-pointer"
+        className="w-full flex items-center justify-between px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:border-slate-300 transition-all shadow-sm group cursor-pointer"
       >
         <div className="flex items-center gap-2.5">
           {icon && (
-            <span className="text-gray-400 group-hover:text-teal-600 transition-colors">
+            <span className="text-slate-400 group-hover:text-blue-600 transition-colors">
               {icon}
             </span>
           )}
@@ -59,12 +59,12 @@ export function Select({
         </div>
         <ChevronDown
           size={16}
-          className={`text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full mt-1.5 w-full max-h-64 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg z-30 p-1 animate-scale-in styled-scrollbar">
+        <div className="absolute left-0 top-full mt-1.5 w-full max-h-64 overflow-y-auto bg-white border border-slate-200 rounded-lg shadow-lg z-30 p-1 animate-scale-in styled-scrollbar">
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -75,12 +75,12 @@ export function Select({
               }}
               className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium flex items-center justify-between transition-colors cursor-pointer ${
                 value === opt.value
-                  ? "bg-teal-50 text-teal-700"
-                  : "text-gray-700 hover:bg-gray-50"
+                  ? "bg-blue-50 text-blue-700"
+                  : "text-slate-700 hover:bg-slate-50"
               }`}
             >
               <span className="truncate pr-3">{opt.label}</span>
-              {value === opt.value && <Check size={14} className="text-teal-600 shrink-0" />}
+              {value === opt.value && <Check size={14} className="text-blue-600 shrink-0" />}
             </button>
           ))}
         </div>

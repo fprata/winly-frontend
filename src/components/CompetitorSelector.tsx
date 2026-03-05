@@ -17,7 +17,7 @@ export function CompetitorSelector({ value, onChange }: CompetitorSelectorProps)
     const { data, error } = await supabase
       .from('intel_competitors')
       .select('name, persona_name')
-      .ilike('name', `%${query}%`)
+      .textSearch('search_vector', query, { type: 'websearch', config: 'public.simple_unaccent' })
       .limit(10);
 
     if (error || !data) return [];

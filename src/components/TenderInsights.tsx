@@ -1,11 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { FileText, Loader2, CheckCircle2, Sparkles, Clock, ShieldCheck, Scale, RefreshCw, AlertTriangle, Zap } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
 import { toast } from './ui/Toast';
+
+const LOCALE_MAP: Record<string, string> = { pt: 'pt-PT', en: 'en-US' };
+
+function resolveLocalizedInsights(insights: any, locale: string): any {
+  const localeKey = LOCALE_MAP[locale] || 'en-US';
+  // New format: insights keyed by locale
+  if (insights?.['pt-PT'] || insights?.['en-US']) {
+    return insights[localeKey] || insights['en-US'] || insights['pt-PT'];
+  }
+  // Legacy flat format
+  return insights;
+}
 
 interface TenderInsightsProps {
   tenderId: string;
@@ -37,8 +49,13 @@ function renderInsightValue(val: any): string {
 
 export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onInsightsGenerated }: TenderInsightsProps) {
   const t = useTranslations('tender');
-  const [insights, setInsights] = useState<any>(initialInsights);
+  const locale = useLocale();
+  const [rawInsights, setRawInsights] = useState<any>(initialInsights);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  // Resolve locale-specific insights (supports both new locale-keyed and legacy flat format)
+  const insights = useMemo(() => resolveLocalizedInsights(rawInsights, locale), [rawInsights, locale]);
+  const categoryDetected = rawInsights?.tender_category_detected;
 
   const runAnalysis = async () => {
     setIsAnalyzing(true);
@@ -51,7 +68,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
 
       const data = await response.json();
       if (data.success) {
-        setInsights(data.insights);
+        setRawInsights(data.insights);
         onInsightsGenerated?.(data.insights);
         toast("success", "AI Analysis complete!");
       } else {
@@ -79,9 +96,9 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
     );
   }
 
-  if (insights) {
+  if (rawInsights) {
     // If it's the old schema, fallback to old display (for backwards compatibility)
-    if (insights.executive_summary && !insights.project_summary) {
+    if (insights?.executive_summary && !insights?.project_summary) {
        return (
         <div className="space-y-6 animate-in fade-in duration-700">
            <Card className="border-l-4 border-l-blue-600 bg-white/80 shadow-sm p-4">
@@ -103,9 +120,9 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
               <h4 className="font-black text-xs uppercase tracking-widest">Project Summary</h4>
             </div>
             <p className="text-sm text-slate-700 leading-relaxed font-medium whitespace-pre-line">{renderInsightValue(insights.project_summary)}</p>
-            {insights.tender_category_detected && (
+            {categoryDetected && (
                <div className="mt-3 inline-block px-2 py-1 bg-blue-100 text-blue-800 text-[10px] font-bold rounded uppercase">
-                 Category: {insights.tender_category_detected}
+                 Category: {categoryDetected}
                </div>
             )}
           </Card>

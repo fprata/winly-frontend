@@ -26,11 +26,11 @@ export default async function BuyerIntelligencePage({
     if (exactMatches && exactMatches.length > 0) {
       initialProfile = exactMatches[0];
     } else {
-      // Fallback: populate search results with partial matches
+      // Fallback: populate search results with full-text search (accent-insensitive)
       const { data } = await supabase
         .from('intel_buyers')
         .select('name, country, total_contracts, buyer_company_id')
-        .ilike('name', `%${name}%`)
+        .textSearch('search_vector', name, { type: 'websearch', config: 'public.simple_unaccent' })
         .order('total_contracts', { ascending: false })
         .limit(10);
       initialSearchResults = data || [];

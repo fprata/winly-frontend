@@ -46,7 +46,7 @@ export default async function ExplorerPage({
     .select('*, tender_matches(match_score)', { count: 'estimated' });
 
   if (query) {
-    supabaseQuery = supabaseQuery.or(`title.ilike.%${query}%,buyer_name.ilike.%${query}%,description.ilike.%${query}%`);
+    supabaseQuery = supabaseQuery.textSearch('search_vector', query, { type: 'websearch', config: 'public.portuguese_unaccent' });
   }
 
   if (country !== "All") {

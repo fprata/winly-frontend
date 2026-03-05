@@ -23,6 +23,9 @@ import { getCpvDescription, CPV_DIVISIONS } from '@/utils/cpv-data';
 import { PageHeader } from './ui/PageHeader';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
+import { Input } from './ui/Input';
+import { Card } from './ui/Card';
+import { EmptyState } from './ui/EmptyState';
 import { PAGINATION } from '@/constants';
 
 interface Tender {
@@ -187,8 +190,9 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
       .select('*, tender_matches(match_score)', { count: 'estimated' });
 
     if (q) {
-      supabaseQuery = supabaseQuery.or(`title.ilike.%${q}%,buyer_name.ilike.%${q}%,description.ilike.%${q}%`);
+      supabaseQuery = supabaseQuery.textSearch('search_vector', q, { type: 'websearch', config: 'public.portuguese_unaccent' });
     }
+
     if (c !== "All") {
       supabaseQuery = supabaseQuery.eq('country', c);
     }
@@ -309,18 +313,15 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
 
       {/* Search Bar */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm mb-4">
-        <form onSubmit={handleSearch} className="flex items-center gap-2 p-2">
-          <div className="flex-1 relative">
-            <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <input
-              type="text"
-              placeholder={t('searchPlaceholder')}
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-transparent text-slate-800 text-sm font-medium outline-none placeholder:text-slate-400"
-            />
-          </div>
+      <Card className="p-2 mb-4">
+        <form onSubmit={handleSearch} className="flex items-center gap-2">
+          <Input
+            icon={<SearchIcon size={18} />}
+            placeholder={t('searchPlaceholder')}
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            className="border-0 shadow-none focus:ring-0"
+          />
           <button
             type="button"
             onClick={() => setShowFilters(!showFilters)}
@@ -345,7 +346,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
         {/* Collapsible Filters Panel */}
         {showFilters && (
-          <div className="border-t border-slate-100 p-4">
+          <div className="border-t border-slate-100 p-4 mt-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               {/* Country */}
               <div>
@@ -457,7 +458,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
             </div>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Active Filter Chips + Results Count */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
@@ -542,19 +543,19 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
           </button>
         </div>
       ) : tenders.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-12 text-center">
-          <SearchX size={40} className="text-slate-300 mx-auto mb-4" />
-          <p className="text-sm font-bold text-slate-700 mb-1">{t('noResults')}</p>
-          <p className="text-xs text-slate-400">{t('noResultsHint')}</p>
-          {activeFilterCount > 0 && (
+        <EmptyState
+          icon={<SearchX size={36} />}
+          title={t('noResults')}
+          subtitle={t('noResultsHint')}
+          action={activeFilterCount > 0 ? (
             <button
               onClick={clearFilters}
               className="mt-4 px-4 py-2 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-200 transition-all"
             >
               {t('clearFilters')}
             </button>
-          )}
-        </div>
+          ) : undefined}
+        />
       ) : (
         <div className="space-y-3">
           {tenders.map((tender) => {

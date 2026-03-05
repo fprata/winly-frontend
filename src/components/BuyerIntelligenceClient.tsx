@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search as SearchIcon, Building2, TrendingUp, Users, ArrowUpRight, ArrowLeft, ShieldCheck, Filter, Check, ChevronDown, Activity, HeartHandshake, Lock, PieChart } from 'lucide-react';
+import { Search as SearchIcon, Building2, TrendingUp, Users, ArrowUpRight, ArrowLeft, ArrowRight, ShieldCheck, Filter, Check, ChevronDown, Activity, HeartHandshake, Lock, PieChart, SearchX } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/navigation';
@@ -10,6 +10,11 @@ import { BuyerCompetitorAnalysis } from './BuyerCompetitorAnalysis';
 import { PersonaBadge } from './PersonaBadge';
 import { BuyerEvolutionCharts } from './BuyerEvolutionCharts';
 import { SectorMixChart } from './SectorMixChart';
+import { PageHeader } from './ui/PageHeader';
+import { Input } from './ui/Input';
+import { Card } from './ui/Card';
+import { Badge } from './ui/Badge';
+import { EmptyState } from './ui/EmptyState';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
@@ -86,7 +91,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
     const { data } = await supabase
       .from('intel_buyers')
       .select('name, country, total_contracts, buyer_company_id')
-      .ilike('name', `%${query}%`)
+      .textSearch('search_vector', query, { type: 'websearch', config: 'public.simple_unaccent' })
       .limit(10);
     
     setSearchResults(data || []);
@@ -291,42 +296,36 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
         </Link>
       )}
 
-      <div className="mb-10 text-slate-800">
-        <h1 className="text-4xl font-black tracking-tight flex items-center gap-3">
-          <Building2 className="text-blue-600" size={32} />
-          {t('title')}
-        </h1>
-        <div className="flex items-center gap-4 mt-2">
-          <p className="text-slate-500 font-medium">{t('subtitle')}</p>
-          <div className="h-4 w-px bg-slate-300"></div>
-          <Link href="/personas" className="text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1">
-            {t('buyerPersonasGuide')} <ArrowUpRight size={14} />
-          </Link>
-        </div>
-      </div>
+      <PageHeader
+        title={t('title')}
+        subtitle={t('subtitle')}
+        icon={<Building2 size={18} />}
+        subtitleLink={{ label: t('buyerPersonasGuide'), href: '/personas' }}
+      />
 
       {!profile && (
         <div className="relative mb-12 max-w-2xl">
-          <form onSubmit={searchBuyers}>
-            <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-            <input 
-              type="text" 
-              placeholder={t('searchPlaceholder')}
-              value={query}
-              onChange={e => {
-                  setQuery(e.target.value);
-                  if (e.target.value.length >= 3) searchBuyers();
-                  else if (e.target.value.length === 0) setSearchResults(initialSearchResults);
-                  else setSearchResults([]);
-              }}
-              className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl shadow-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500/20"
-            />
-          </form>
+          <Card className="p-2 mb-4">
+            <form onSubmit={searchBuyers} className="flex items-center gap-2">
+              <Input
+                icon={<SearchIcon size={18} />}
+                placeholder={t('searchPlaceholder')}
+                value={query}
+                onChange={e => {
+                    setQuery(e.target.value);
+                    if (e.target.value.length >= 3) searchBuyers();
+                    else if (e.target.value.length === 0) setSearchResults(initialSearchResults);
+                    else setSearchResults([]);
+                }}
+                className="border-0 shadow-none focus:ring-0"
+              />
+            </form>
+          </Card>
 
           {searchResults.length > 0 && query.length >= 3 && (
             <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl z-20 overflow-hidden">
               {searchResults.map((b, i) => (
-                <button 
+                <button
                   key={i}
                   onClick={() => navigateToProfile(b.buyer_company_id)}
                   className="w-full text-left px-6 py-4 hover:bg-slate-50 border-b border-slate-50 last:border-0 flex items-center justify-between group"
@@ -695,55 +694,40 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
               {query.length >= 3 ? t('searchResults') : t('topAuthorities')}
             </h3>
           </div>
-          
-          <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-50/50 border-b border-slate-100">
-                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('nameLabel', { defaultValue: 'Authority Name' })}</th>
-                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest w-24">{t('countryLabel', { defaultValue: 'Region' })}</th>
-                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest w-40 text-right">{t('stats.totalAwards')}</th>
-                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest w-24"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50">
-                  {searchResults.length > 0 ? (
-                    searchResults.map((b, i) => (
-                      <tr 
-                        key={i} 
-                        className="hover:bg-blue-50/30 transition-colors group cursor-pointer"
-                        onClick={() => navigateToProfile(b.buyer_company_id)}
-                      >
-                        <td className="px-6 py-5">
-                          <p className="font-bold text-slate-800 group-hover:text-blue-700 transition-colors">{b.name}</p>
-                        </td>
-                        <td className="px-6 py-5">
-                          <span className="px-2 py-1 bg-slate-100 text-slate-500 rounded text-[10px] font-black uppercase">{b.country}</span>
-                        </td>
-                        <td className="px-6 py-5 text-right font-black text-slate-700">
-                          {b.total_contracts?.toLocaleString()}
-                        </td>
-                        <td className="px-6 py-5 text-right">
-                          <div className="flex justify-end">
-                            <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                              <ArrowUpRight size={16} />
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={4} className="px-6 py-20 text-center text-slate-400 font-medium">
-                        {t('noResultsFound')}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+
+          {searchResults.length > 0 ? (
+            <div className="space-y-3">
+              {searchResults.map((b, i) => (
+                <div
+                  key={i}
+                  className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:border-blue-200 hover:shadow-md transition-all cursor-pointer group"
+                  onClick={() => navigateToProfile(b.buyer_company_id)}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors truncate">
+                        {b.name}
+                      </h3>
+                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                        <Badge color="slate">{b.country}</Badge>
+                        <span className="text-[10px] text-slate-400">{b.total_contracts?.toLocaleString()} {t('stats.totalAwards')}</span>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 group-hover:bg-slate-900 group-hover:text-white transition-all">
+                        <ArrowRight size={14} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
+          ) : (
+            <EmptyState
+              icon={<SearchX size={36} />}
+              title={t('noResultsFound')}
+            />
+          )}
         </div>
       )}
     </div>

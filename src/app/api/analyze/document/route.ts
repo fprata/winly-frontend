@@ -97,11 +97,17 @@ export async function POST(request: Request) {
 
     const insights = await analyticsResponse.json();
 
-    // Remove raw_text or session_id to only store structured fields
+    // Guard against error responses returned with 200 status
+    if (insights.error && !insights['pt-PT']) {
+      console.error('[AnalyzeAPI] Microservice returned error:', insights.error);
+      return NextResponse.json({ error: insights.error }, { status: 502 });
+    }
+
+    // Store both locale keys + category; strip session_id and raw_text
     const { session_id, raw_text, ...cleanInsights } = insights;
 
     await supabase.from('tenders').update({ insights: cleanInsights }).eq('tender_uuid', tenderId);
-    return NextResponse.json({ success: true, insights: cleanInsights, fetchedFrom });
+    return NextResponse.json({ success: true, insights: cleanInsights, fetchedFrom, session_id });
 
   } catch (err: any) {
     console.error('[AnalyzeAPI] Fatal:', err);

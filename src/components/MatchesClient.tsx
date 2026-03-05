@@ -125,7 +125,7 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
             market: { label: t('categories.marketRelevance'), icon: <Globe size={13} />, color: "text-sky-600", bg: "bg-sky-50" },
             budget: { label: t('categories.financialAlignment'), icon: <DollarSign size={13} />, color: "text-emerald-600", bg: "bg-emerald-50" },
             sector: { label: t('categories.sectorExpertise'), icon: <Target size={13} />, color: "text-violet-600", bg: "bg-violet-50" },
-            ai: { label: t('categories.aiMatchConfidence'), icon: <Brain size={13} />, color: "text-teal-600", bg: "bg-teal-50" },
+            ai: { label: t('categories.aiMatchConfidence'), icon: <Brain size={13} />, color: "text-blue-600", bg: "bg-blue-50" },
             process: { label: t('categories.proceduralExperience'), icon: <FileText size={13} />, color: "text-slate-600", bg: "bg-slate-50" }
           };
           categories[key] = { ...configs[key] };
@@ -192,29 +192,32 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
       />
 
       {/* Filter Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-8">
-        <div className="md:col-span-8">
-          <Input
-            icon={<SearchIcon size={18} />}
-            placeholder={t('searchPlaceholder')}
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
+      <Card className="p-2 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+          <div className="md:col-span-8">
+            <Input
+              icon={<SearchIcon size={18} />}
+              placeholder={t('searchPlaceholder')}
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="border-0 shadow-none focus:ring-0"
+            />
+          </div>
+          <div className="md:col-span-4">
+            <Select
+              options={countryOptions}
+              value={selectedCountry}
+              onChange={setSelectedCountry}
+              icon={<Globe size={16} />}
+            />
+          </div>
         </div>
-        <div className="md:col-span-4">
-          <Select
-            options={countryOptions}
-            value={selectedCountry}
-            onChange={setSelectedCountry}
-            icon={<Globe size={16} />}
-          />
-        </div>
-      </div>
+      </Card>
 
       {/* Score Legend */}
       <div className="mb-8 flex flex-wrap items-center gap-y-3 gap-x-6 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
         <div className="flex items-center gap-2 mr-2">
-          <Brain size={16} className="text-teal-600" />
+          <Brain size={16} className="text-blue-600" />
           <span className="text-xs font-black text-slate-900 uppercase tracking-widest">{t('scoreLegend.title')}</span>
         </div>
         <div className="flex items-center gap-2">
@@ -268,7 +271,7 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
             const reasons = getCategorizedReasons(match.match_reasons);
 
             return (
-              <Card key={match.tender_id} className="p-0 flex flex-col md:flex-row items-stretch group hover:border-slate-300 hover:shadow-md transition-all duration-300 overflow-hidden">
+              <Card key={match.tender_id} className="p-0 flex flex-col md:flex-row items-stretch group hover:border-blue-200 hover:shadow-md transition-all duration-300 overflow-hidden">
 
                 {/* Score Column */}
                 <div className="md:w-40 bg-slate-50 flex flex-col items-center justify-center p-5 border-b md:border-b-0 md:border-r border-slate-100">
@@ -279,7 +282,7 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                         cx="40" cy="40" r="36" stroke="currentColor" strokeWidth="5" fill="transparent"
                         strokeDasharray={226.2}
                         strokeDashoffset={226.2 - (226.2 * match.match_score) / 100}
-                        className={`${match.match_score >= 75 ? 'text-teal-600' : match.match_score >= 50 ? 'text-amber-500' : 'text-slate-400'} transition-all duration-700`}
+                        className={`${match.match_score >= 75 ? 'text-blue-600' : match.match_score >= 50 ? 'text-amber-500' : 'text-slate-400'} transition-all duration-700`}
                         strokeLinecap="round"
                       />
                     </svg>
@@ -301,7 +304,7 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                 <div className="flex-1 p-5 md:p-6">
                   <div className="flex flex-wrap items-center gap-2 mb-3">
                     <Badge
-                      color={(match.priority || 'Low') === 'High' ? 'teal' : (match.priority || 'Low') === 'Medium' ? 'amber' : 'slate'}
+                      color={(match.priority || 'Low') === 'High' ? 'blue' : (match.priority || 'Low') === 'Medium' ? 'amber' : 'slate'}
                     >
                       {t(`matchTypes.${(match.priority || 'low').toLowerCase()}`)}
                     </Badge>
@@ -322,7 +325,7 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                   </div>
 
                   <Link href={`/tenders/${match.tender_uuid}`}>
-                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors leading-snug mb-1.5 pr-4">
+                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug mb-1.5 pr-4">
                       {match.title}
                     </h3>
                   </Link>
@@ -373,7 +376,7 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                 <div className="flex flex-row md:flex-col items-center justify-center gap-2 p-4 border-t md:border-t-0 md:border-l border-slate-100">
                   <Link
                     href={`/tenders/${match.tender_uuid}`}
-                    className="flex-1 md:flex-none w-full md:w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center hover:bg-teal-700 transition-all group/btn"
+                    className="flex-1 md:flex-none w-full md:w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-all group/btn"
                     title={t('viewReport')}
                   >
                     <ArrowRight size={18} className="group-hover/btn:translate-x-0.5 transition-transform" />

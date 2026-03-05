@@ -8,7 +8,7 @@ const colorMap = {
   purple: "bg-violet-50 border-violet-200/60 text-violet-700",
   amber: "bg-amber-50 border-amber-200/60 text-amber-700",
   rose: "bg-rose-50 border-rose-200/60 text-rose-700",
-  slate: "bg-gray-50 border-gray-200/60 text-gray-600",
+  slate: "bg-slate-50 border-slate-200/60 text-slate-600",
   indigo: "bg-indigo-50 border-indigo-200/60 text-indigo-700",
   orange: "bg-orange-50 border-orange-200/60 text-orange-700",
   teal: "bg-teal-50 border-teal-200/60 text-teal-700",

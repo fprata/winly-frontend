@@ -32,8 +32,9 @@ export function InsightsPaywall({ tenderId, initialInsights, derivedDocLink, tie
   }
 
   // Free tier with existing insights - show blurred preview
-  if (initialInsights?.project_summary) {
-    const truncatedSummary = initialInsights.project_summary.substring(0, 200) + '...';
+  const projectSummary = initialInsights?.['pt-PT']?.project_summary || initialInsights?.['en-US']?.project_summary || initialInsights?.project_summary;
+  if (projectSummary) {
+    const truncatedSummary = projectSummary.substring(0, 200) + '...';
 
     return (
       <div className="space-y-6">

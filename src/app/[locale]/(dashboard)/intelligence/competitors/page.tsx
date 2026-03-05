@@ -44,7 +44,7 @@ export default async function CompetitorIntelligencePage({
 
           .select('name, country, total_wins, competitor_id')
 
-          .ilike('name', `%${name}%`)
+          .textSearch('search_vector', name, { type: 'websearch', config: 'public.simple_unaccent' })
 
           .order('total_wins', { ascending: false })
 
