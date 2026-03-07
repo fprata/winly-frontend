@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   FileText, Loader2, Sparkles, Clock, ShieldCheck, Scale,
-  RefreshCw, AlertTriangle, Zap, CheckCircle2, Target,
+  RefreshCw, Zap, CheckCircle2,
 } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Button } from './ui/Button';
@@ -239,69 +239,6 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
             </p>
           </InsightCard>
         </div>
-
-        {/* Risk Assessment — full width (mirrors design-preview layout) */}
-        {insights.risk_assessment && (
-          <InsightCard>
-            <CardHeader
-              icon={
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                  (insights.risk_assessment.overall_risk_score ?? 5) <= 3
-                    ? 'bg-emerald-50 text-emerald-600'
-                    : (insights.risk_assessment.overall_risk_score ?? 5) <= 6
-                    ? 'bg-amber-50 text-amber-600'
-                    : 'bg-red-50 text-red-600'
-                }`}>
-                  <AlertTriangle size={16} />
-                </div>
-              }
-              title="Risk Assessment"
-            />
-            <div className="flex gap-6 items-start">
-              <div className="shrink-0 pr-6 border-r border-zinc-200">
-                <div
-                  className="text-[48px] font-extrabold leading-none"
-                  style={{
-                    color: (insights.risk_assessment.overall_risk_score ?? 5) <= 3
-                      ? '#10b981'
-                      : (insights.risk_assessment.overall_risk_score ?? 5) <= 6
-                      ? '#f59e0b'
-                      : '#dc2626',
-                  }}
-                >
-                  {insights.risk_assessment.overall_risk_score ?? '—'}
-                  <span className="text-[18px] font-medium text-zinc-400">/10</span>
-                </div>
-                <span
-                  className="inline-block mt-2 px-3 py-1 rounded text-white text-[13px] font-bold"
-                  style={{
-                    backgroundColor: (insights.risk_assessment.overall_risk_score ?? 5) <= 3
-                      ? '#10b981'
-                      : (insights.risk_assessment.overall_risk_score ?? 5) <= 6
-                      ? '#f59e0b'
-                      : '#dc2626',
-                  }}
-                >
-                  {(insights.risk_assessment.risk_level || 'UNKNOWN').toUpperCase()} RISK
-                </span>
-              </div>
-              <div className="flex-1">
-                <h4 className="text-[14px] font-bold text-zinc-700 mb-3">Key Risk Factors</h4>
-                {Array.isArray(insights.risk_assessment.key_risk_factors) && insights.risk_assessment.key_risk_factors.length > 0 ? (
-                  <ul className="space-y-2 pl-4 list-disc text-[14px] text-zinc-500 leading-relaxed">
-                    {insights.risk_assessment.key_risk_factors.slice(0, 6).map((f: string, i: number) => (
-                      <li key={i}>{f}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-[14px] text-zinc-600 leading-relaxed whitespace-pre-line">
-                    {renderInsightValue(insights.risk_assessment.key_risk_factors)}
-                  </p>
-                )}
-              </div>
-            </div>
-          </InsightCard>
-        )}
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-2">
