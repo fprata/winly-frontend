@@ -17,14 +17,25 @@ export default async function CompetitorProfilePage({
   const supabase = await createClient();
 
   let initialProfile = null;
+  let initialWonTenders: any[] = [];
 
   if (decodedId) {
-    const { data } = await supabase
+    const { data: profile } = await supabase
       .from('intel_competitors')
       .select('*')
       .eq('competitor_id', decodedId)
       .single();
-    initialProfile = data;
+    initialProfile = profile;
+
+    if (profile?.name) {
+      const { data: tenders } = await supabase
+        .from('tenders')
+        .select('tender_id, tender_uuid, title, estimated_value, final_contract_value, publication_date, winners_list, procedure_type, buyer_name')
+        .eq('is_active', false)
+        .contains('winners_list', [{ winner_name: profile.name }])
+        .order('publication_date', { ascending: false });
+      initialWonTenders = tenders || [];
+    }
   }
 
   return (
@@ -32,6 +43,7 @@ export default async function CompetitorProfilePage({
       initialProfile={initialProfile}
       initialSearchResults={[]}
       initialName={null}
+      initialWonTenders={initialWonTenders}
       fromTender={fromTender || null}
     />
   );

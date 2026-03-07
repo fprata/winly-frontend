@@ -20,14 +20,16 @@ interface CompetitorIntelligenceClientProps {
   initialProfile: any;
   initialSearchResults: any[];
   initialName: string | null;
+  initialWonTenders?: any[];
   fromTender: string | null;
 }
 
-export function CompetitorIntelligenceClient({ 
-  initialProfile, 
+export function CompetitorIntelligenceClient({
+  initialProfile,
   initialSearchResults,
-  initialName, 
-  fromTender 
+  initialName,
+  initialWonTenders = [],
+  fromTender
 }: CompetitorIntelligenceClientProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -37,7 +39,7 @@ export function CompetitorIntelligenceClient({
   const [searchResults, setSearchResults] = useState<any[]>(initialSearchResults);
   const [profile, setProfile] = useState<any>(initialProfile);
   const [loading, setLoading] = useState(false);
-  const [wonTenders, setWonTenders] = useState<any[]>([]);
+  const [wonTenders, setWonTenders] = useState<any[]>(initialWonTenders);
   const t = useTranslations('intelligence.competitors');
   const locale = useLocale();
 
@@ -54,26 +56,6 @@ export function CompetitorIntelligenceClient({
     }
   }, [initialProfile, initialSearchResults]);
 
-  // Fetch wins for the competitor
-  useEffect(() => {
-    const fetchWins = async () => {
-      if (!profile?.name) return;
-      
-      const { data } = await supabase
-        .from('tenders')
-        .select('tender_id, tender_uuid, title, estimated_value, final_contract_value, publication_date, winners_list, procedure_type, buyer_name')
-        .eq('is_active', false)
-        // Check if competitor name is in winners_list JSON array
-        .contains('winners_list', [{ winner_name: profile.name }])
-        .order('publication_date', { ascending: false });
-
-      if (data) {
-        setWonTenders(data);
-      }
-    };
-
-    fetchWins();
-  }, [profile?.name]);
 
   const searchCompetitors = async (value: string) => {
     if (value.length < 3) return;
