@@ -49,7 +49,7 @@ export function SectorMixChart({ sectorStats }: SectorMixChartProps) {
   if (!isMounted) {
     return (
       <div className="flex items-center justify-center h-[220px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -79,7 +79,7 @@ export function SectorMixChart({ sectorStats }: SectorMixChartProps) {
                         formatter={(value: number | string | Array<number | string> | undefined, name: number | string | undefined, props: any) => [
                             <div key={String(name)} className="flex flex-col gap-1">
                                 <span>{formatValue(Number(value) || 0)}</span>
-                                <span className="text-[10px] text-slate-500">
+                                <span className="text-[10px] text-zinc-500">
                                     {props.payload.count} {props.payload.isBuyer ? t('contracts') : t('wins')} • {
                                         props.payload.isBuyer 
                                             ? `${props.payload.secondaryMetric.toFixed(1)} ${t('bidders')}` 
@@ -101,12 +101,12 @@ export function SectorMixChart({ sectorStats }: SectorMixChartProps) {
                     <div key={index} className="flex items-center justify-between group">
                         <div className="flex items-center gap-2 overflow-hidden">
                             <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                            <span className="text-xs font-bold text-slate-700 truncate" title={entry.name}>
+                            <span className="text-xs font-bold text-zinc-700 truncate" title={entry.name}>
                                 {entry.name}
                             </span>
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
-                            <span className="text-[10px] font-bold text-slate-400">{entry.count} {entry.isBuyer ? t('awards') : t('wins')}</span>
+                            <span className="text-[10px] font-bold text-zinc-400">{entry.count} {entry.isBuyer ? t('awards') : t('wins')}</span>
                             {entry.isBuyer ? (
                                 <span className="text-[10px] font-black w-12 text-right text-blue-600">
                                     {entry.secondaryMetric.toFixed(1)} avg

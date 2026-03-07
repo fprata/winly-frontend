@@ -152,10 +152,10 @@ export function MarketOverviewClient() {
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 animate-pulse">
-          {[1, 2, 3].map(i => <div key={i} className="h-36 bg-slate-100 rounded-xl" />)}
+          {[1, 2, 3].map(i => <div key={i} className="h-36 bg-zinc-100 rounded-xl" />)}
         </div>
       ) : error ? (
-        <div className="p-8 text-center rounded-2xl bg-red-50 border border-red-100">
+        <div className="p-8 text-center rounded-xl bg-red-50 border border-red-100">
           <p className="text-red-600 font-medium mb-2">{error}</p>
           <button 
             onClick={() => window.location.reload()}
@@ -178,14 +178,14 @@ export function MarketOverviewClient() {
               label={t('stats.activeMatches')}
               value={formatNumber(data.total_active)}
               subtitle={t('activeTenders')}
-              color="teal"
+              color="blue"
             />
             <StatCard
               icon={<DollarSign size={18} />}
               label={t('stats.pipelineValue')}
               value={formatValue(data.total_value)}
               subtitle={t('totalMarketOpportunity')}
-              color="navy"
+              color="indigo"
             />
             <StatCard
               icon={<Globe size={18} />}
@@ -199,8 +199,8 @@ export function MarketOverviewClient() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* Sector Chart */}
             <Card className="h-[520px]">
-              <h3 className="text-base font-bold text-slate-900 mb-5 flex items-center gap-2">
-                <PieChart size={18} className="text-teal-600" />
+              <h3 className="text-base font-bold text-zinc-900 mb-5 flex items-center gap-2">
+                <PieChart size={18} className="text-blue-600" />
                 {t('activeMarketBySector')}
               </h3>
               <SectorMixChart sectorStats={sectorStats} />
@@ -208,7 +208,7 @@ export function MarketOverviewClient() {
 
             {/* Monthly Volume */}
             <Card className="h-[520px] flex flex-col">
-              <h3 className="text-base font-bold text-slate-900 mb-5 flex items-center gap-2">
+              <h3 className="text-base font-bold text-zinc-900 mb-5 flex items-center gap-2">
                 <BarChart3 size={18} className="text-amber-600" />
                 {t('marketVolumeTrend')}
               </h3>
@@ -229,7 +229,7 @@ export function MarketOverviewClient() {
                     />
                     <Bar
                       dataKey="value"
-                      fill="#0d9488"
+                      fill="#2563eb"
                       radius={[4, 4, 0, 0]}
                       barSize={36}
                     />
@@ -242,11 +242,11 @@ export function MarketOverviewClient() {
           {/* Top Buyers */}
           <Card>
             <div className="flex justify-between items-center mb-5">
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Building2 size={18} className="text-teal-600" />
+              <h3 className="text-base font-bold text-zinc-900 flex items-center gap-2">
+                <Building2 size={18} className="text-blue-600" />
                 {t('topActiveBuyers')}
               </h3>
-              <Link href="/intelligence/buyers" className="text-xs font-medium text-teal-600 hover:text-teal-700 flex items-center gap-1">
+              <Link href="/intelligence/buyers" className="text-xs font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1">
                 {tCommon('viewAll')} <ArrowUpRight size={13} />
               </Link>
             </div>
@@ -257,20 +257,20 @@ export function MarketOverviewClient() {
                   <Link 
                     key={i} 
                     href={`/intelligence/buyers?name=${encodeURIComponent(buyer.buyer_name)}&backUrl=${encodeURIComponent('/dashboard')}`} 
-                    className="p-4 bg-slate-50 rounded-lg border border-transparent hover:border-slate-200 hover:bg-white transition-all group"
+                    className="p-4 bg-zinc-50 rounded-lg border border-transparent hover:border-zinc-200 hover:bg-white transition-all group"
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <div className="font-medium text-slate-800 text-sm line-clamp-1 pr-3 group-hover:text-teal-700 transition-colors">{buyer.buyer_name}</div>
-                      <ArrowUpRight size={14} className="text-slate-300 group-hover:text-teal-600 opacity-0 group-hover:opacity-100 transition-all shrink-0" />
+                      <div className="font-medium text-zinc-800 text-sm line-clamp-1 pr-3 group-hover:text-blue-700 transition-colors">{buyer.buyer_name}</div>
+                      <ArrowUpRight size={14} className="text-zinc-300 group-hover:text-blue-600 opacity-0 group-hover:opacity-100 transition-all shrink-0" />
                     </div>
                     <div className="flex justify-between items-end">
                       <div>
-                        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">{t('volume')}</p>
-                        <p className="text-sm font-bold text-slate-900">{formatValue(buyer.value)}</p>
+                        <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">{t('volume')}</p>
+                        <p className="text-sm font-bold text-zinc-900">{formatValue(buyer.value)}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">{tCommon('active')}</p>
-                        <p className="text-sm font-bold text-slate-900">{buyer.count}</p>
+                        <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">{tCommon('active')}</p>
+                        <p className="text-sm font-bold text-zinc-900">{buyer.count}</p>
                       </div>
                     </div>
                   </Link>

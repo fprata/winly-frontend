@@ -88,8 +88,8 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
           <Sparkles className="w-6 h-6 text-amber-400 absolute -top-2 -right-2 animate-pulse" />
         </div>
-        <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">AI is Reading Document...</h3>
-        <p className="text-sm text-slate-500 max-w-xs text-center mt-3 font-medium">
+        <h3 className="text-xl font-black text-zinc-900 uppercase tracking-tight">AI is Reading Document...</h3>
+        <p className="text-sm text-zinc-500 max-w-xs text-center mt-3 font-medium">
           Extracting strategic bidding intelligence via the Winly Document Analytics microservice. This usually takes 15-30 seconds.
         </p>
       </Card>
@@ -103,7 +103,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
         <div className="space-y-6 animate-in fade-in duration-700">
            <Card className="border-l-4 border-l-blue-600 bg-white/80 shadow-sm p-4">
              <h4 className="font-black text-xs uppercase tracking-widest text-blue-700 mb-2">Legacy Analysis</h4>
-             <p className="text-sm text-slate-700 whitespace-pre-line">{insights.executive_summary}</p>
+             <p className="text-sm text-zinc-700 whitespace-pre-line">{insights.executive_summary}</p>
              <button onClick={runAnalysis} className="mt-4 text-xs font-bold text-blue-600 underline">Rerun Analysis for New Structured Format</button>
            </Card>
         </div>
@@ -119,7 +119,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
               <FileText size={20} />
               <h4 className="font-black text-xs uppercase tracking-widest">Project Summary</h4>
             </div>
-            <p className="text-sm text-slate-700 leading-relaxed font-medium whitespace-pre-line">{renderInsightValue(insights.project_summary)}</p>
+            <p className="text-sm text-zinc-700 leading-relaxed font-medium whitespace-pre-line">{renderInsightValue(insights.project_summary)}</p>
             {categoryDetected && (
                <div className="mt-3 inline-block px-2 py-1 bg-blue-100 text-blue-800 text-[10px] font-bold rounded uppercase">
                  Category: {categoryDetected}
@@ -128,12 +128,12 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           </Card>
 
           {/* Strategic Intelligence */}
-          <Card className="border-l-4 border-l-teal-500 bg-teal-50/20 shadow-sm md:col-span-2">
-            <div className="flex items-center gap-2 mb-3 text-teal-700">
+          <Card className="border-l-4 border-l-blue-500 bg-blue-50/20 shadow-sm md:col-span-2">
+            <div className="flex items-center gap-2 mb-3 text-blue-700">
               <Zap size={20} />
-              <h4 className="font-black text-xs uppercase tracking-widest text-teal-800">Strategic Intelligence</h4>
+              <h4 className="font-black text-xs uppercase tracking-widest text-blue-800">Strategic Intelligence</h4>
             </div>
-            <div className="bg-white/60 p-4 rounded-xl border border-teal-100 text-slate-800 text-sm font-semibold leading-relaxed shadow-inner">
+            <div className="bg-white/60 p-4 rounded-xl border border-blue-100 text-zinc-800 text-sm font-semibold leading-relaxed shadow-inner">
               <ul className="list-disc pl-4 space-y-1">
                 {insights.strategic_intelligence?.incumbent_vendor_mentions?.length > 0 && (
                   <li><span className="font-black">Incumbents Mentioned:</span> {insights.strategic_intelligence.incumbent_vendor_mentions.join(', ')}</li>
@@ -153,7 +153,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
               <Scale size={18} />
               <h4 className="font-black text-[10px] uppercase tracking-widest">Financials & Scoring</h4>
             </div>
-            <p className="text-sm text-slate-700 font-medium whitespace-pre-line">
+            <p className="text-sm text-zinc-700 font-medium whitespace-pre-line">
               <span className="font-black">Budget:</span> {insights.financials?.base_budget_value} {insights.financials?.base_budget_currency}
               <br/>
               <span className="font-black">Price Weight:</span> {insights.evaluation_criteria?.price_weight_percent}%
@@ -168,7 +168,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
               <ShieldCheck size={18} />
               <h4 className="font-black text-[10px] uppercase tracking-widest">Mandatory Certifications</h4>
             </div>
-            <p className="text-sm text-slate-700 font-medium whitespace-pre-line">
+            <p className="text-sm text-zinc-700 font-medium whitespace-pre-line">
               • {renderInsightValue(insights.mandatory_certifications_and_licenses)}
             </p>
           </Card>
@@ -179,7 +179,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
               <Clock size={18} />
               <h4 className="font-black text-[10px] uppercase tracking-widest">Timeline & Constraints</h4>
             </div>
-            <p className="text-sm text-slate-700 font-medium whitespace-pre-line">
+            <p className="text-sm text-zinc-700 font-medium whitespace-pre-line">
               <span className="font-black">Contract Duration:</span> {insights.proposal_timeline?.contract_duration_months} months
               <br/>
               <span className="font-black">Submission Deadline:</span> {insights.proposal_timeline?.submission_deadline_iso || 'Not Specified'}
@@ -208,7 +208,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           </div>
           <button
             onClick={runAnalysis}
-            className="flex items-center gap-1.5 text-[9px] font-black text-slate-400 hover:text-blue-600 transition-colors uppercase"
+            className="flex items-center gap-1.5 text-[9px] font-black text-zinc-400 hover:text-blue-600 transition-colors uppercase"
           >
             <RefreshCw size={10} />
             Refresh Analysis
@@ -219,12 +219,12 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
   }
 
   return (
-    <Card className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 p-8 flex flex-col items-center text-center">
+    <Card className="bg-gradient-to-br from-zinc-50 to-white border border-zinc-200 p-8 flex flex-col items-center text-center">
       <div className="w-16 h-16 rounded-3xl bg-blue-600 shadow-xl shadow-blue-200 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
         <Sparkles className="text-white" size={28} />
       </div>
-      <h3 className="text-xl font-black text-slate-900 mb-2 uppercase tracking-tight italic">Strategic Document Analysis</h3>
-      <p className="text-sm text-slate-500 max-w-sm mb-8 font-medium">
+      <h3 className="text-xl font-black text-zinc-900 mb-2 uppercase tracking-tight italic">Strategic Document Analysis</h3>
+      <p className="text-sm text-zinc-500 max-w-sm mb-8 font-medium">
         Use the Winly Document Analytics Engine to instantly read the tender PDF and extract scoring criteria, SLAs, and hidden requirements.
       </p>
       <Button
@@ -232,11 +232,11 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
         variant="accent"
         size="lg"
         onClick={runAnalysis}
-        className="px-10 py-6 rounded-2xl shadow-lg shadow-teal-200 font-black tracking-widest text-xs transition-all hover:scale-105 active:scale-95"
+        className="px-10 py-6 rounded-xl shadow-lg shadow-blue-200 font-black tracking-widest text-xs transition-all hover:scale-105 active:scale-95"
       >
         GENERATE STRATEGIC INSIGHTS
       </Button>
-      <p className="mt-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Powered by Google Gemini 2.5 Flash</p>
+      <p className="mt-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Powered by Google Gemini 2.5 Flash</p>
     </Card>
   );
 }

@@ -27,7 +27,7 @@ export function MarketShareChart({ marketSharePct }: MarketShareChartProps) {
   if (!isMounted) {
     return (
       <div className="flex items-center justify-center h-[200px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -58,15 +58,15 @@ export function MarketShareChart({ marketSharePct }: MarketShareChartProps) {
             </ResponsiveContainer>
             {/* Centered Label */}
             <div className="absolute inset-0 flex flex-col items-center justify-center mt-8">
-                <span className="text-3xl font-black text-slate-900 tracking-tight">
+                <span className="text-3xl font-black text-zinc-900 tracking-tight">
                     {share.toFixed(1)}%
                 </span>
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
+                <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest mt-1">
                     Global Share
                 </span>
             </div>
         </div>
-        <p className="text-center text-xs text-slate-400 px-8 mt-[-20px]">
+        <p className="text-center text-xs text-zinc-400 px-8 mt-[-20px]">
             Based on total awarded value vs total market volume in active sectors.
         </p>
     </div>
