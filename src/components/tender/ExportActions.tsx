@@ -77,8 +77,8 @@ export function ExportActions({ tenderId, tier }: ExportActionsProps) {
         className={`
           flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all
           ${isPro
-            ? 'bg-slate-900 text-white hover:bg-slate-800 shadow-sm'
-            : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+            ? 'bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm'
+            : 'bg-zinc-100 text-zinc-400 cursor-not-allowed'
           }
         `}
       >
@@ -92,8 +92,8 @@ export function ExportActions({ tenderId, tier }: ExportActionsProps) {
         className={`
           flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all
           ${isPro
-            ? 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 shadow-sm'
-            : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+            ? 'bg-white text-zinc-700 border border-zinc-200 hover:bg-zinc-50 shadow-sm'
+            : 'bg-zinc-100 text-zinc-400 cursor-not-allowed'
           }
         `}
       >
@@ -102,7 +102,7 @@ export function ExportActions({ tenderId, tier }: ExportActionsProps) {
       </button>
 
       {!isPro && (
-        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{t('export.proOnly')}</span>
+        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">{t('export.proOnly')}</span>
       )}
     </div>
   );

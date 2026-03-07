@@ -226,6 +226,8 @@
     "deadlineIn": "{days}d restantes",
     "deadlineExpired": "Expirado",
     "noValue": "Não especificado",
+    "estValue": "Val. Est.",
+    "finalValue": "Val. Final",
     "viewTender": "Ver"
   },
   "intelligence": {
@@ -282,6 +284,8 @@
       "procurementMix": "Mix de Contratação",
       "sector": "Setor",
       "projects": "projetos",
+      "viewProfile": "Ver perfil",
+      "publicAuthority": "Autoridade Pública",
       "nameLabel": "Nome da Autoridade",
       "countryLabel": "Região",
       "verifiedProfileLabel": "Autoridade Verificada",
@@ -373,6 +377,9 @@
       "noWonTenders": "Nenhum concurso ganho encontrado nos registos.",
       "marketPosition": "Posição de Mercado",
       "noTrendHistory": "Sem histórico de tendências disponível",
+      "viewProfile": "Ver perfil",
+      "activeCompetitor": "Concorrente Ativo",
+      "competitor": "Concorrente",
       "nameLabel": "Nome da Empresa",
       "countryLabel": "Região",
       "stats": {

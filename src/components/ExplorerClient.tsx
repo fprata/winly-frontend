@@ -273,16 +273,16 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
     updateUrl(query, country, cpv, minValue, maxValue, status, newSort, 0);
   };
 
-  const getScoreColor = (score: number): "emerald" | "amber" | "slate" => {
-    if (score >= 70) return 'emerald';
+  const getScoreColor = (score: number): "green" | "amber" | "zinc" => {
+    if (score >= 70) return 'green';
     if (score >= 40) return 'amber';
-    return 'slate';
+    return 'zinc';
   };
 
-  const getTenderStatus = (tender: Tender): { label: string; color: "emerald" | "amber" | "slate" } => {
+  const getTenderStatus = (tender: Tender): { label: string; color: "green" | "amber" | "zinc" } => {
     if (tender.final_contract_value) return { label: t('awarded'), color: 'amber' };
-    if (tender.is_active) return { label: t('active'), color: 'emerald' };
-    return { label: t('inactive'), color: 'slate' };
+    if (tender.is_active) return { label: t('active'), color: 'green' };
+    return { label: t('inactive'), color: 'zinc' };
   };
 
   const totalPages = Math.ceil(total / pageSize);
@@ -327,14 +327,14 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
             onClick={() => setShowFilters(!showFilters)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
               showFilters || activeFilterCount > 0
-                ? 'bg-slate-900 text-white'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-zinc-900 text-white'
+                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
             }`}
           >
             <SlidersHorizontal size={14} />
             {t('filters')}
             {activeFilterCount > 0 && (
-              <span className="bg-white text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+              <span className="bg-white text-zinc-900 text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
                 {activeFilterCount}
               </span>
             )}
@@ -346,17 +346,17 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
         {/* Collapsible Filters Panel */}
         {showFilters && (
-          <div className="border-t border-slate-100 p-4 mt-2">
+          <div className="border-t border-zinc-100 p-4 mt-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               {/* Country */}
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                <label className="block text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1.5">
                   {t('allCountries').replace('All ', '')}
                 </label>
                 <select
                   value={country}
                   onChange={e => setCountry(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                  className="w-full px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm font-medium text-zinc-700 outline-none focus:border-blue-300 transition-all"
                 >
                   {COUNTRY_OPTIONS.map(opt => (
                     <option key={opt.value} value={opt.value}>
@@ -368,13 +368,13 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
               {/* CPV Sector */}
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                <label className="block text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1.5">
                   {t('sector')}
                 </label>
                 <select
                   value={cpv}
                   onChange={e => setCpv(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                  className="w-full px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm font-medium text-zinc-700 outline-none focus:border-blue-300 transition-all"
                 >
                   <option value="All">{t('allSectors')}</option>
                   {cpvOptions.map(opt => (
@@ -387,7 +387,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
               {/* Value Range */}
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                <label className="block text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1.5">
                   {t('valueRange')}
                 </label>
                 <div className="flex gap-1.5">
@@ -396,27 +396,27 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                     placeholder={t('minValue')}
                     value={minValue}
                     onChange={e => setMinValue(e.target.value)}
-                    className="w-1/2 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                    className="w-1/2 px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm font-medium text-zinc-700 outline-none focus:border-blue-300 transition-all"
                   />
                   <input
                     type="number"
                     placeholder={t('maxValue')}
                     value={maxValue}
                     onChange={e => setMaxValue(e.target.value)}
-                    className="w-1/2 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                    className="w-1/2 px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm font-medium text-zinc-700 outline-none focus:border-blue-300 transition-all"
                   />
                 </div>
               </div>
 
               {/* Status */}
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                <label className="block text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1.5">
                   {t('status')}
                 </label>
                 <select
                   value={status}
                   onChange={e => setStatus(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                  className="w-full px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm font-medium text-zinc-700 outline-none focus:border-blue-300 transition-all"
                 >
                   <option value="All">{t('allStatuses')}</option>
                   <option value="active">{t('active')}</option>
@@ -427,13 +427,13 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
               {/* Sort */}
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">
+                <label className="block text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1.5">
                   {t('sortBy')}
                 </label>
                 <select
                   value={sort}
                   onChange={e => setSort(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 outline-none focus:border-blue-300 transition-all"
+                  className="w-full px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm font-medium text-zinc-700 outline-none focus:border-blue-300 transition-all"
                 >
                   <option value="newest">{t('sortNewest')}</option>
                   <option value="valueDesc">{t('sortValueDesc')}</option>
@@ -443,11 +443,11 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-zinc-100">
               {activeFilterCount > 0 && (
                 <button
                   onClick={clearFilters}
-                  className="text-xs font-medium text-slate-500 hover:text-slate-700 transition-colors"
+                  className="text-xs font-medium text-zinc-500 hover:text-zinc-700 transition-colors"
                 >
                   {t('clearFilters')}
                 </button>
@@ -466,10 +466,10 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
           {filterChips.map(chip => (
             <span
               key={chip.key}
-              className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-lg"
+              className="inline-flex items-center gap-1 px-2.5 py-1 bg-zinc-100 text-zinc-700 text-xs font-medium rounded-lg"
             >
               {chip.label}
-              <button onClick={() => removeFilter(chip.key)} className="text-slate-400 hover:text-slate-600 transition-colors">
+              <button onClick={() => removeFilter(chip.key)} className="text-zinc-400 hover:text-zinc-600 transition-colors">
                 <X size={12} />
               </button>
             </span>
@@ -477,14 +477,14 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
           {filterChips.length > 1 && (
             <button
               onClick={clearFilters}
-              className="text-xs font-medium text-slate-400 hover:text-slate-600 transition-colors ml-1"
+              className="text-xs font-medium text-zinc-400 hover:text-zinc-600 transition-colors ml-1"
             >
               {t('clearFilters')}
             </button>
           )}
         </div>
         {total > 0 && !loading && (
-          <p className="text-xs text-slate-400 font-medium">
+          <p className="text-xs text-zinc-400 font-medium">
             {t('showingResults', { from: from.toLocaleString(), to: to.toLocaleString(), total: total.toLocaleString() })}
           </p>
         )}
@@ -493,11 +493,11 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
       {/* Sort Quick Toggle (visible when filters hidden) */}
       {!showFilters && (
         <div className="flex items-center justify-end gap-2 mb-4">
-          <ArrowUpDown size={12} className="text-slate-400" />
+          <ArrowUpDown size={12} className="text-zinc-400" />
           <select
             value={sort}
             onChange={e => handleSortChange(e.target.value)}
-            className="text-xs font-medium text-slate-500 bg-transparent outline-none cursor-pointer"
+            className="text-xs font-medium text-zinc-500 bg-transparent outline-none cursor-pointer"
           >
             <option value="newest">{t('sortNewest')}</option>
             <option value="valueDesc">{t('sortValueDesc')}</option>
@@ -511,29 +511,29 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
       {loading ? (
         <div className="space-y-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl border border-slate-200 p-6 animate-pulse">
+            <div key={i} className="bg-white rounded-xl border border-zinc-200 p-6 animate-pulse">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 space-y-3">
-                  <div className="h-4 bg-slate-100 rounded-lg w-3/4" />
+                  <div className="h-4 bg-zinc-100 rounded-lg w-3/4" />
                   <div className="flex gap-2">
-                    <div className="h-3 bg-slate-100 rounded w-32" />
-                    <div className="h-3 bg-slate-100 rounded w-24" />
+                    <div className="h-3 bg-zinc-100 rounded w-32" />
+                    <div className="h-3 bg-zinc-100 rounded w-24" />
                   </div>
                   <div className="flex gap-2">
-                    <div className="h-5 bg-slate-50 rounded-lg w-20" />
-                    <div className="h-5 bg-slate-50 rounded-lg w-16" />
+                    <div className="h-5 bg-zinc-50 rounded-lg w-20" />
+                    <div className="h-5 bg-zinc-50 rounded-lg w-16" />
                   </div>
                 </div>
                 <div className="text-right space-y-2">
-                  <div className="h-5 bg-slate-100 rounded-lg w-24 ml-auto" />
-                  <div className="h-3 bg-slate-50 rounded w-16 ml-auto" />
+                  <div className="h-5 bg-zinc-100 rounded-lg w-24 ml-auto" />
+                  <div className="h-3 bg-zinc-50 rounded w-16 ml-auto" />
                 </div>
               </div>
             </div>
           ))}
         </div>
       ) : error ? (
-        <div className="bg-white rounded-2xl border border-rose-200 p-8 text-center">
+        <div className="bg-white rounded-xl border border-rose-200 p-8 text-center">
           <p className="text-sm font-medium text-rose-600 mb-2">{error}</p>
           <button
             onClick={() => window.location.reload()}
@@ -550,7 +550,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
           action={activeFilterCount > 0 ? (
             <button
               onClick={clearFilters}
-              className="mt-4 px-4 py-2 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-200 transition-all"
+              className="mt-4 px-4 py-2 bg-zinc-100 text-zinc-600 text-xs font-bold rounded-xl hover:bg-zinc-200 transition-all"
             >
               {t('clearFilters')}
             </button>
@@ -568,7 +568,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
             return (
               <div
                 key={tender.tender_id}
-                className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:border-blue-200 hover:shadow-md transition-all cursor-pointer group"
+                className="bg-white rounded-xl border border-zinc-200 shadow-sm p-5 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer group"
                 onClick={() => router.push(`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`)}
               >
                 <div className="flex items-start justify-between gap-4">
@@ -576,19 +576,19 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`}
-                      className="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-2"
+                      className="text-[17px] font-bold text-zinc-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {tender.title}
                     </Link>
 
                     <div className="flex items-center gap-2 mt-1.5">
-                      <span className="flex items-center gap-1 text-xs text-slate-500 font-medium">
-                        <Building2 size={12} className="text-slate-400 shrink-0" />
+                      <span className="flex items-center gap-1 text-xs text-zinc-500 font-medium">
+                        <Building2 size={12} className="text-zinc-400 shrink-0" />
                         <span className="truncate max-w-[200px]">{tender.buyer_name}</span>
                       </span>
-                      <span className="text-slate-200">·</span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-zinc-200">·</span>
+                      <span className="text-xs text-zinc-500">
                         {getCountryFlag(tender.country)} {tender.country}
                       </span>
                     </div>
@@ -614,7 +614,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
                       {/* Publication Date */}
                       {daysAgo !== null && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-400">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-medium text-zinc-400">
                           <Calendar size={10} />
                           {daysAgo === 0 ? t('publishedToday') : t('publishedAgo', { days: daysAgo })}
                         </span>
@@ -624,7 +624,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                       {daysUntilDeadline !== null && (
                         <span className={`inline-flex items-center gap-1 text-[10px] font-bold ${
                           daysUntilDeadline <= 0 ? 'text-rose-500' :
-                          daysUntilDeadline <= 7 ? 'text-amber-500' : 'text-slate-400'
+                          daysUntilDeadline <= 7 ? 'text-amber-500' : 'text-zinc-400'
                         }`}>
                           <Clock size={10} />
                           {daysUntilDeadline <= 0 ? t('deadlineExpired') : t('deadlineIn', { days: daysUntilDeadline })}
@@ -634,17 +634,24 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                   </div>
 
                   {/* Right: Value + Action */}
-                  <div className="text-right shrink-0">
-                    {tender.estimated_value ? (
-                      <p className="text-sm font-bold text-slate-800 tabular-nums">
-                        €{tender.estimated_value.toLocaleString()}
-                      </p>
-                    ) : (
-                      <p className="text-xs text-slate-300 font-medium">{t('noValue')}</p>
-                    )}
-                    <div className="mt-2 flex justify-end">
-                      <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all">
-                        <ChevronRight size={14} />
+                  <div className="text-right shrink-0 flex flex-col justify-between gap-2">
+                    <div>
+                      <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
+                        {tender.final_contract_value ? t('finalValue') : t('estValue')}
+                      </div>
+                      <div className={`text-[20px] font-extrabold leading-tight tabular-nums ${tender.final_contract_value ? 'text-emerald-600' : 'text-zinc-900'}`}>
+                        {(tender.final_contract_value || tender.estimated_value)
+                          ? `€${((tender.final_contract_value || tender.estimated_value) as number).toLocaleString()}`
+                          : <span className="text-sm text-zinc-300 font-medium">{t('noValue')}</span>
+                        }
+                      </div>
+                      {tender.final_contract_value && tender.estimated_value && (
+                        <div className="text-xs text-zinc-400 line-through">€{tender.estimated_value.toLocaleString()} est.</div>
+                      )}
+                    </div>
+                    <div className="flex justify-end">
+                      <div className="w-8 h-8 rounded-lg bg-zinc-50 border border-zinc-200 flex items-center justify-center text-zinc-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
+                        <ChevronRight size={16} />
                       </div>
                     </div>
                   </div>
@@ -657,8 +664,8 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
       {/* Pagination */}
       {total > pageSize && !loading && (
-        <div className="flex items-center justify-between mt-6 bg-white rounded-2xl border border-slate-200 shadow-sm px-5 py-3">
-          <p className="text-xs text-slate-400 font-medium">
+        <div className="flex items-center justify-between mt-6 bg-white rounded-xl border border-zinc-200 shadow-sm px-5 py-3">
+          <p className="text-xs text-zinc-400 font-medium">
             {t('pageOf', { current: page + 1, total: totalPages })}
           </p>
           <div className="flex items-center gap-2">

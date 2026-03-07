@@ -4,17 +4,16 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from '@/navigation'
 import {
   DollarSign,
-  MapPin,
-  Brain,
-  FileText,
   Target,
-  Zap,
   Building2,
   ArrowRight,
   Clock,
   Globe,
   Search as SearchIcon,
-  Star
+  Star,
+  Zap,
+  Brain,
+  FileText
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import Fuse from 'fuse.js';
@@ -77,23 +76,21 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
             *
           )
         `)
-
         .eq('client_id', clientId)
         .gte('match_score', minScoreFilter)
         .order('match_score', { ascending: false })
-        .limit(100); // Pagination: limit to 100 matches
+        .limit(100);
 
       if (error) {
         console.error("Supabase error:", error);
         setError(t('errorLoadingMatches') || "Could not load matches");
       } else {
         const flattened = data.map((m: any) => {
-          const t = m.tenders ? (Array.isArray(m.tenders) ? m.tenders[0] : m.tenders) : {};
+          const tender = m.tenders ? (Array.isArray(m.tenders) ? m.tenders[0] : m.tenders) : {};
           return {
             ...m,
-            ...t,
-            // Ensure we use the UUID from the match or the tender record
-            tender_uuid: m.tender_uuid || t.tender_uuid,
+            ...tender,
+            tender_uuid: m.tender_uuid || tender.tender_uuid,
             priority: m.match_score >= 75 ? 'High' : m.match_score >= 50 ? 'Medium' : 'Low'
           };
         });
@@ -126,7 +123,7 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
             budget: { label: t('categories.financialAlignment'), icon: <DollarSign size={13} />, color: "text-emerald-600", bg: "bg-emerald-50" },
             sector: { label: t('categories.sectorExpertise'), icon: <Target size={13} />, color: "text-violet-600", bg: "bg-violet-50" },
             ai: { label: t('categories.aiMatchConfidence'), icon: <Brain size={13} />, color: "text-blue-600", bg: "bg-blue-50" },
-            process: { label: t('categories.proceduralExperience'), icon: <FileText size={13} />, color: "text-slate-600", bg: "bg-slate-50" }
+            process: { label: t('categories.proceduralExperience'), icon: <FileText size={13} />, color: "text-zinc-600", bg: "bg-zinc-100" }
           };
           categories[key] = { ...configs[key] };
         }
@@ -147,8 +144,6 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
     const diff = new Date(deadline).getTime() - new Date().getTime();
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
-
-  const getEncodedId = (id: string) => encodeURIComponent(encodeURIComponent(id));
 
   const displayedMatches = useMemo(() => {
     let result = matches;
@@ -172,18 +167,18 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
       <PageHeader
         title={t('title')}
         subtitle={t('subtitle')}
-        icon={<Star size={18} />}
+        icon={<Star size={16} />}
         actions={
-          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+          <div className="flex items-center gap-1 bg-zinc-100 p-1 rounded-lg">
             <button
               onClick={() => setMinScoreFilter(0)}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${minScoreFilter === 0 ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${minScoreFilter === 0 ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
             >
               {t('allMatches')}
             </button>
             <button
               onClick={() => setMinScoreFilter(75)}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${minScoreFilter === 75 ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${minScoreFilter === 75 ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
             >
               {t('highConfidence')}
             </button>
@@ -192,11 +187,11 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
       />
 
       {/* Filter Bar */}
-      <Card className="p-2 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+      <Card padding="none" className="p-3 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
           <div className="md:col-span-8">
             <Input
-              icon={<SearchIcon size={18} />}
+              icon={<SearchIcon size={16} />}
               placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
@@ -208,50 +203,50 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
               options={countryOptions}
               value={selectedCountry}
               onChange={setSelectedCountry}
-              icon={<Globe size={16} />}
+              icon={<Globe size={15} />}
             />
           </div>
         </div>
       </Card>
 
       {/* Score Legend */}
-      <div className="mb-8 flex flex-wrap items-center gap-y-3 gap-x-6 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-        <div className="flex items-center gap-2 mr-2">
-          <Brain size={16} className="text-blue-600" />
-          <span className="text-xs font-black text-slate-900 uppercase tracking-widest">{t('scoreLegend.title')}</span>
+      <div className="mb-6 flex flex-wrap items-center gap-y-2 gap-x-5 bg-white px-4 py-3 rounded-xl border border-zinc-200 shadow-sm">
+        <div className="flex items-center gap-2 mr-1">
+          <Brain size={15} className="text-blue-600" />
+          <span className="text-[10px] font-black text-zinc-700 uppercase tracking-widest">{t('scoreLegend.title')}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-violet-400 shadow-sm" />
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{t('scoreLegend.cpv')}</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-violet-400" />
+          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-tight">{t('scoreLegend.cpv')}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-sm" />
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{t('scoreLegend.strategic')}</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-sky-400" />
+          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-tight">{t('scoreLegend.strategic')}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-teal-400 shadow-sm" />
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{t('scoreLegend.semantic')}</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-teal-400" />
+          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-tight">{t('scoreLegend.semantic')}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm" />
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{t('scoreLegend.keyword')}</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-emerald-400" />
+          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-tight">{t('scoreLegend.keyword')}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-sm" />
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{t('scoreLegend.location')}</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-amber-400" />
+          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-tight">{t('scoreLegend.location')}</span>
         </div>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-44 bg-white rounded-xl border border-slate-100 animate-pulse" />
+            <div key={i} className="h-44 bg-white rounded-xl border border-zinc-100 animate-pulse" />
           ))}
         </div>
       ) : error ? (
-        <div className="p-8 text-center rounded-2xl bg-red-50 border border-red-100">
+        <div className="p-8 text-center rounded-xl bg-red-50 border border-red-100">
           <p className="text-red-600 font-medium mb-2">{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="text-sm text-red-700 underline hover:text-red-800"
           >
@@ -260,129 +255,137 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
         </div>
       ) : displayedMatches.length === 0 ? (
         <EmptyState
-          icon={<Star size={36} />}
+          icon={<Star size={32} />}
           title={t('noMatchesFound')}
           subtitle={t('adjustFilters')}
         />
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="flex flex-col gap-3">
           {displayedMatches.map((match: any) => {
             const daysLeft = getDaysRemaining(match.submission_deadline);
-            const reasons = getCategorizedReasons(match.match_reasons);
+            const score = Math.round(match.match_score);
+            // SVG ring: r=34, circumference = 2*π*34 ≈ 213.6
+            const circumference = 213.6;
+            const dashOffset = circumference - (circumference * score) / 100;
+            const scoreColor = score >= 75 ? '#2563eb' : score >= 50 ? '#f59e0b' : '#a1a1aa';
+
+            const miniBarData = [
+              { label: 'CPV', value: match.score_cpv || 0, color: '#8b5cf6' },
+              { label: 'Str', value: match.score_strategic || 0, color: '#0ea5e9' },
+              { label: 'AI', value: match.score_semantic || 0, color: '#14b8a6' },
+              { label: 'Key', value: match.score_keyword || 0, color: '#10b981' },
+              { label: 'Urg', value: match.score_location || 0, color: '#f59e0b' },
+            ];
+
+            const priorityColor = match.priority === 'High' ? 'rose' : match.priority === 'Medium' ? 'amber' : 'zinc';
 
             return (
-              <Card key={match.tender_id} className="p-0 flex flex-col md:flex-row items-stretch group hover:border-blue-200 hover:shadow-md transition-all duration-300 overflow-hidden">
-
+              <Link
+                key={match.tender_id}
+                href={`/tenders/${match.tender_uuid}`}
+                className="bg-white rounded-xl border border-zinc-200 shadow-sm flex overflow-hidden cursor-pointer transition-all duration-200 hover:border-blue-500 hover:shadow-md hover:-translate-y-px group"
+              >
                 {/* Score Column */}
-                <div className="md:w-40 bg-slate-50 flex flex-col items-center justify-center p-5 border-b md:border-b-0 md:border-r border-slate-100">
-                  <div className="relative w-20 h-20 flex items-center justify-center mb-2">
-                    <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="40" cy="40" r="36" stroke="currentColor" strokeWidth="5" fill="transparent" className="text-slate-200" />
+                <div className="w-[140px] shrink-0 bg-zinc-50 border-r border-zinc-200 flex flex-col items-center justify-center py-5 px-3 gap-2">
+                  <div className="relative w-20 h-20">
+                    <svg viewBox="0 0 80 80" width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                      <circle cx="40" cy="40" r="34" stroke="#e4e4e7" strokeWidth="6" fill="none" />
                       <circle
-                        cx="40" cy="40" r="36" stroke="currentColor" strokeWidth="5" fill="transparent"
-                        strokeDasharray={226.2}
-                        strokeDashoffset={226.2 - (226.2 * match.match_score) / 100}
-                        className={`${match.match_score >= 75 ? 'text-blue-600' : match.match_score >= 50 ? 'text-amber-500' : 'text-slate-400'} transition-all duration-700`}
+                        cx="40" cy="40" r="34"
+                        stroke={scoreColor}
+                        strokeWidth="6" fill="none"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={dashOffset}
                         strokeLinecap="round"
                       />
                     </svg>
-                    <span className="absolute text-xl font-extrabold text-slate-900">{Math.round(match.match_score)}%</span>
+                    <span
+                      className="absolute inset-0 flex items-center justify-center text-[22px] font-extrabold"
+                      style={{ color: scoreColor }}
+                    >
+                      {score}
+                    </span>
                   </div>
-                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-2">{t('matchScore')}</span>
+                  <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">{t('matchScore')}</span>
 
-                  {/* Score Components Mini-Bar */}
-                  <div className="flex gap-0.5 w-full px-3">
-                    {match.score_cpv > 0 && <div className="h-1 flex-1 bg-violet-400 rounded-full" title="CPV Match" />}
-                    {match.score_strategic > 0 && <div className="h-1 flex-1 bg-sky-400 rounded-full" title="Strategic Fit" />}
-                    {match.score_semantic > 0 && <div className="h-1 flex-1 bg-teal-400 rounded-full" title="AI Semantic" />}
-                    {match.score_keyword > 0 && <div className="h-1 flex-1 bg-emerald-400 rounded-full" title="Keyword Match" />}
-                    {match.score_location > 0 && <div className="h-1 flex-1 bg-amber-400 rounded-full" title="Deadline Urgency" />}
+                  {/* Mini-bars with labels */}
+                  <div className="w-full px-1 space-y-1">
+                    {miniBarData.map(bar => (
+                      <div key={bar.label} className="flex items-center gap-1">
+                        <span className="text-[9px] font-semibold text-zinc-400 uppercase w-7 text-right">{bar.label}</span>
+                        <div className="flex-1 h-[3px] bg-zinc-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full"
+                            style={{ width: `${Math.min(bar.value, 100)}%`, backgroundColor: bar.color }}
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Content Column */}
-                <div className="flex-1 p-5 md:p-6">
-                  <div className="flex flex-wrap items-center gap-2 mb-3">
-                    <Badge
-                      color={(match.priority || 'Low') === 'High' ? 'blue' : (match.priority || 'Low') === 'Medium' ? 'amber' : 'slate'}
-                    >
+                {/* Body */}
+                <div className="flex-1 p-5 flex flex-col gap-1.5 min-w-0">
+                  {/* Header row: badges */}
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <Badge color={priorityColor as 'rose' | 'amber' | 'zinc'}>
                       {t(`matchTypes.${(match.priority || 'low').toLowerCase()}`)}
                     </Badge>
-
                     {daysLeft !== null && (
-                      <Badge
-                        color={daysLeft <= 7 ? 'rose' : 'amber'}
-                        icon={<Clock size={11} />}
-                      >
+                      <Badge color={daysLeft <= 7 ? 'rose' : 'amber'} icon={<Clock size={11} />}>
                         {t('daysLeft', { count: daysLeft })}
                       </Badge>
                     )}
-
-                    <span className="text-slate-400 text-[10px] font-medium flex items-center gap-1.5 ml-auto">
-                      <Building2 size={12} />
-                      {match.buyer_name}
-                    </span>
                   </div>
 
-                  <Link href={`/tenders/${match.tender_uuid}`}>
-                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-snug mb-1.5 pr-4">
-                      {match.title}
-                    </h3>
-                  </Link>
+                  {/* Title */}
+                  <h3 className="text-[15px] font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors leading-snug">
+                    {match.title}
+                  </h3>
 
+                  {/* Buyer row */}
+                  <div className="flex items-center gap-1.5 text-[13px] text-zinc-500">
+                    <Building2 size={13} />
+                    <span className="truncate">{match.buyer_name}</span>
+                    {match.country && (
+                      <>
+                        <span className="text-zinc-300">·</span>
+                        <span>{match.country}</span>
+                      </>
+                    )}
+                  </div>
 
-                  <p className="text-xs text-slate-400 mb-4 truncate max-w-[500px]" title={getCpvDescription(match.cpv_code)}>
-                    {getCpvDescription(match.cpv_code)}
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-6">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
-                        <DollarSign size={16} />
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider leading-none mb-0.5">{t('value')}</p>
-                        <p className="text-sm font-semibold text-slate-800 tabular-nums">{formatValue(match.estimated_value, match.currency)}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
-                        <MapPin size={16} />
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider leading-none mb-0.5">{t('region')}</p>
-                        <p className="text-sm font-semibold text-slate-800 uppercase">{match.country}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex-1"></div>
-
+                  {/* Metrics row */}
+                  <div className="flex items-center gap-4 mt-1">
                     <div className="flex items-center gap-1.5">
-                      {reasons.map((cat: any, i: number) => (
-                        <div
-                          key={i}
-                          title={cat.label}
-                          className={`w-8 h-8 rounded-lg ${cat.bg} ${cat.color} flex items-center justify-center hover:scale-110 transition-transform cursor-help`}
-                        >
-                          {cat.icon}
-                        </div>
-                      ))}
+                      <div className="w-[26px] h-[26px] rounded-md bg-emerald-50 flex items-center justify-center text-emerald-600">
+                        <DollarSign size={13} />
+                      </div>
+                      <span className="text-sm font-semibold text-zinc-900">{formatValue(match.estimated_value, match.currency)}</span>
                     </div>
+
+                    {match.win_probability > 0 && (
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-[26px] h-[26px] rounded-md bg-indigo-50 flex items-center justify-center text-indigo-600">
+                          <Target size={13} />
+                        </div>
+                        <span className="text-sm font-semibold text-zinc-900">Win: {Math.round(match.win_probability)}%</span>
+                      </div>
+                    )}
+
+                    {match.cpv_code && (
+                      <Badge color="blue">
+                        {match.cpv_code} — {getCpvDescription(match.cpv_code, locale)}
+                      </Badge>
+                    )}
                   </div>
                 </div>
 
-                {/* Actions Column */}
-                <div className="flex flex-row md:flex-col items-center justify-center gap-2 p-4 border-t md:border-t-0 md:border-l border-slate-100">
-                  <Link
-                    href={`/tenders/${match.tender_uuid}`}
-                    className="flex-1 md:flex-none w-full md:w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 transition-all group/btn"
-                    title={t('viewReport')}
-                  >
-                    <ArrowRight size={18} className="group-hover/btn:translate-x-0.5 transition-transform" />
-                  </Link>
+                {/* Arrow */}
+                <div className="w-11 shrink-0 flex items-center justify-center border-l border-zinc-200 text-zinc-400 group-hover:text-blue-600 transition-colors">
+                  <ArrowRight size={18} />
                 </div>
-              </Card>
+              </Link>
             );
           })}
         </div>

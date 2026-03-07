@@ -1,7 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
@@ -9,18 +9,11 @@ import { locales } from '@/i18n';
 import { QueryProvider } from '@/providers/QueryProvider';
 import "../globals.css";
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-inter",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-  weight: ["500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export function generateStaticParams() {
@@ -104,8 +97,8 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${dmSans.variable} ${plusJakarta.variable}`}>
-      <body className="bg-slate-50 min-h-screen text-slate-900 font-sans antialiased">
+    <html lang={locale} className={inter.variable}>
+      <body className="bg-zinc-50 min-h-screen text-zinc-900 font-sans antialiased">
         <QueryProvider>
           <NextIntlClientProvider messages={messages}>
             {children}

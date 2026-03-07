@@ -125,49 +125,49 @@ export function BuyerCompetitorAnalysis({ buyerName, selectedCpvs, initialTender
     };
   }, [tenders, selectedCpvs]);
 
-  if (loading) return <div className="p-8 text-center text-slate-400 animate-pulse">{t('loadingData')}</div>;
+  if (loading) return <div className="p-8 text-center text-zinc-400 animate-pulse">{t('loadingData')}</div>;
   if (!tenders.length) return null;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 mt-8">
+    <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8 mt-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-            <h3 className="text-xl font-black text-slate-900 flex items-center gap-2 uppercase tracking-tight text-sm">
+            <h3 className="text-xl font-black text-zinc-900 flex items-center gap-2 uppercase tracking-tight text-sm">
             <Trophy size={20} className="text-amber-500" />
             {t('competitorAnalysis')}
             </h3>
-            <p className="text-xs text-slate-500 font-bold mt-1 ml-7">
+            <p className="text-xs text-zinc-500 font-bold mt-1 ml-7">
                 {metrics ? t('basedOnRecent', { count: metrics.tenderCount }) : t('basedOnRecent', { count: 0 })}
             </p>
         </div>
       </div>
 
       {!metrics || metrics.tenderCount === 0 ? (
-        <div className="py-12 text-center border border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-            <Trophy size={32} className="mx-auto text-slate-300 mb-3" />
-            <p className="text-sm font-bold text-slate-500">{t('noData')}</p>
+        <div className="py-12 text-center border border-dashed border-zinc-200 rounded-xl bg-zinc-50/50">
+            <Trophy size={32} className="mx-auto text-zinc-300 mb-3" />
+            <p className="text-sm font-bold text-zinc-500">{t('noData')}</p>
         </div>
       ) : (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* KPI Card */}
         <div className="lg:col-span-1 space-y-4">
-            <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+            <div className="p-6 bg-zinc-50 rounded-3xl border border-zinc-100">
+                <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2 flex items-center gap-2">
                     <TrendingDown size={14} /> {t('avgDiscount')}
                 </p>
                 <div className="flex items-baseline gap-2">
-                    <p className={`text-4xl font-black tabular-nums ${metrics.overallAvgDiscount > 0 ? 'text-emerald-600' : 'text-slate-900'}`}>
+                    <p className={`text-4xl font-black tabular-nums ${metrics.overallAvgDiscount > 0 ? 'text-emerald-600' : 'text-zinc-900'}`}>
                         {metrics.overallAvgDiscount.toFixed(1)}%
                     </p>
-                    <span className="text-xs font-bold text-slate-400">{t('overall')}</span>
+                    <span className="text-xs font-bold text-zinc-400">{t('overall')}</span>
                 </div>
-                <p className="text-[10px] font-bold text-slate-500 mt-2 leading-relaxed">
+                <p className="text-[10px] font-bold text-zinc-500 mt-2 leading-relaxed">
                     {t('discountExplanation')}
                 </p>
             </div>
             
             {metrics.overallAvgDiscount > 20 && (
-                <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex gap-3">
+                <div className="p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-3">
                     <AlertCircle size={20} className="text-amber-500 shrink-0" />
                     <p className="text-xs font-bold text-amber-800 leading-tight">
                         {t('highDiscountAlert')}
@@ -177,17 +177,17 @@ export function BuyerCompetitorAnalysis({ buyerName, selectedCpvs, initialTender
         </div>
 
         {/* Competitors List */}
-        <div className="lg:col-span-2 bg-white border border-slate-100 rounded-3xl overflow-hidden">
+        <div className="lg:col-span-2 bg-white border border-zinc-100 rounded-3xl overflow-hidden">
             <table className="w-full text-left">
                 <thead>
-                    <tr className="bg-slate-50/50 border-b border-slate-100">
-                        <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('competitorName')}</th>
-                        <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">{t('wins')}</th>
-                        <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">{t('revenue')}</th>
-                        <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">{t('avgDisc')}</th>
+                    <tr className="bg-zinc-50/50 border-b border-zinc-100">
+                        <th className="px-6 py-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest">{t('competitorName')}</th>
+                        <th className="px-6 py-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest text-right">{t('wins')}</th>
+                        <th className="px-6 py-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest text-right">{t('revenue')}</th>
+                        <th className="px-6 py-4 text-[10px] font-black text-zinc-400 uppercase tracking-widest text-right">{t('avgDisc')}</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-50">
+                <tbody className="divide-y divide-zinc-50">
                     {metrics.topCompetitors.map((comp, i) => {
                         const fromTender = searchParams.get('fromTender');
                         const params = new URLSearchParams();
@@ -195,11 +195,11 @@ export function BuyerCompetitorAnalysis({ buyerName, selectedCpvs, initialTender
                         params.set('backUrl', `${pathname}?${searchParams.toString()}`);
 
                         return (
-                        <tr key={i} className="hover:bg-slate-50 transition-colors">
+                        <tr key={i} className="hover:bg-zinc-50 transition-colors">
                             <td className="px-6 py-4">
                                 <Link 
                                     href={`/intelligence/competitors/${encodeURIComponent(comp.id || comp.name)}?${params.toString()}`}
-                                    className="text-xs font-bold text-slate-700 truncate max-w-[200px] hover:text-blue-600 hover:underline block" 
+                                    className="text-xs font-bold text-zinc-700 truncate max-w-[200px] hover:text-blue-600 hover:underline block" 
                                     title={comp.name}
                                 >
                                     {comp.name}
@@ -209,12 +209,12 @@ export function BuyerCompetitorAnalysis({ buyerName, selectedCpvs, initialTender
                                 <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-[10px] font-black">{comp.wins}</span>
                             </td>
                             <td className="px-6 py-4 text-right">
-                                <p className="text-xs font-bold text-slate-600">
+                                <p className="text-xs font-bold text-zinc-600">
                                     {new Intl.NumberFormat(locale === 'pt' ? 'pt-PT' : 'en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(comp.totalValue)}
                                 </p>
                             </td>
                             <td className="px-6 py-4 text-right">
-                                <p className={`text-xs font-black ${comp.avgDiscount > metrics.overallAvgDiscount ? 'text-emerald-600' : 'text-slate-400'}`}>
+                                <p className={`text-xs font-black ${comp.avgDiscount > metrics.overallAvgDiscount ? 'text-emerald-600' : 'text-zinc-400'}`}>
                                     {comp.avgDiscount.toFixed(1)}%
                                 </p>
                             </td>

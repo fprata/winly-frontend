@@ -39,25 +39,25 @@ export function InsightsPaywall({ tenderId, initialInsights, derivedDocLink, tie
     return (
       <div className="space-y-6">
         {/* Truncated preview */}
-        <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8">
+        <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles size={16} className="text-blue-600" />
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('paywall.previewLabel')}</span>
+            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{t('paywall.previewLabel')}</span>
           </div>
-          <p className="text-sm text-slate-700 leading-relaxed font-medium mb-4">{truncatedSummary}</p>
+          <p className="text-sm text-zinc-700 leading-relaxed font-medium mb-4">{truncatedSummary}</p>
 
           {/* Blurred content overlay */}
           <div className="relative">
             <div className="blur-[4px] select-none pointer-events-none opacity-60">
               <div className="grid grid-cols-2 gap-4">
-                <div className="h-24 bg-slate-100 rounded-2xl"></div>
-                <div className="h-24 bg-slate-100 rounded-2xl"></div>
-                <div className="h-24 bg-slate-100 rounded-2xl"></div>
-                <div className="h-24 bg-slate-100 rounded-2xl"></div>
+                <div className="h-24 bg-zinc-100 rounded-xl"></div>
+                <div className="h-24 bg-zinc-100 rounded-xl"></div>
+                <div className="h-24 bg-zinc-100 rounded-xl"></div>
+                <div className="h-24 bg-zinc-100 rounded-xl"></div>
               </div>
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-xs font-bold text-slate-500 bg-white/80 px-4 py-2 rounded-xl border border-slate-200">{t('paywall.blurredPreview')}</p>
+              <p className="text-xs font-bold text-zinc-500 bg-white/80 px-4 py-2 rounded-xl border border-zinc-200">{t('paywall.blurredPreview')}</p>
             </div>
           </div>
         </div>
@@ -71,12 +71,12 @@ export function InsightsPaywall({ tenderId, initialInsights, derivedDocLink, tie
   // Free tier with no insights - disabled generate + upgrade
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-2xl p-8 flex flex-col items-center text-center">
-        <div className="w-16 h-16 rounded-3xl bg-slate-300 shadow-xl shadow-slate-200 flex items-center justify-center mb-6">
+      <div className="bg-gradient-to-br from-zinc-50 to-white border border-zinc-200 rounded-xl p-8 flex flex-col items-center text-center">
+        <div className="w-16 h-16 rounded-3xl bg-zinc-300 shadow-xl shadow-zinc-200 flex items-center justify-center mb-6">
           <Lock className="text-white" size={28} />
         </div>
-        <h3 className="text-xl font-black text-slate-900 mb-2 uppercase tracking-tight italic">{t('paywall.generateLocked')}</h3>
-        <p className="text-sm text-slate-500 max-w-sm mb-8 font-medium">
+        <h3 className="text-xl font-black text-zinc-900 mb-2 uppercase tracking-tight italic">{t('paywall.generateLocked')}</h3>
+        <p className="text-sm text-zinc-500 max-w-sm mb-8 font-medium">
           {t('paywall.upgradeDesc')}
         </p>
         <Button
@@ -84,7 +84,7 @@ export function InsightsPaywall({ tenderId, initialInsights, derivedDocLink, tie
           variant="accent"
           size="lg"
           disabled
-          className="px-10 py-6 rounded-2xl shadow-lg font-black tracking-widest text-xs opacity-50 cursor-not-allowed"
+          className="px-10 py-6 rounded-xl shadow-lg font-black tracking-widest text-xs opacity-50 cursor-not-allowed"
         >
           <Lock size={14} />
           {t('paywall.generateLocked')}
@@ -115,14 +115,14 @@ function UpgradeCTA() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white flex items-center justify-between">
+    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white flex items-center justify-between">
       <div>
         <h3 className="text-lg font-black uppercase tracking-tight mb-1">{t('paywall.upgradeTitle')}</h3>
         <p className="text-sm text-blue-100 font-medium">{t('paywall.upgradeDesc')}</p>
       </div>
       <button
         onClick={handleUpgrade}
-        className="px-6 py-3 bg-white text-blue-600 font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all flex items-center gap-2 flex-shrink-0"
+        className="px-6 py-3 bg-white text-blue-600 font-black text-xs uppercase tracking-widest rounded-xl hover:bg-blue-50 transition-all flex items-center gap-2 flex-shrink-0"
       >
         {t('paywall.upgradeCta')}
         <ArrowRight size={14} />

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function UpdatePasswordPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-6">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 p-6">
       <UpdatePasswordForm />
     </div>
   )

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winly — High-Impact Procurement Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --zinc-50: #fafafa;
+            --zinc-100: #f4f4f5;
+            --zinc-200: #e4e4e7;
+            --zinc-300: #d4d4d8;
+            --zinc-400: #a1a1aa;
+            --zinc-500: #71717a;
+            --zinc-600: #52525b;
+            --zinc-700: #3f3f46;
+            --zinc-800: #27272a;
+            --zinc-900: #18181b;
+            --zinc-950: #09090b;
+            --primary: #2563eb;
+            --radius-xl: 16px;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --sidebar-width: 280px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: var(--zinc-900);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 2px solid var(--zinc-100);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 32px 20px;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            color: var(--zinc-950);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 48px;
+            padding-left: 12px;
+        }
+
+        .logo-icon {
+            width: 32px; height: 32px; background: var(--primary); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; color: white;
+        }
+
+        nav { display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto; }
+        .nav-item {
+            display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: var(--radius-lg);
+            text-decoration: none; color: var(--zinc-500); font-weight: 600; font-size: 15px; transition: all 0.2s;
+        }
+        .nav-item:hover { background: var(--zinc-50); color: var(--zinc-900); }
+        .nav-item.active { background: #eff6ff; color: var(--primary); }
+        .nav-label { font-size: 11px; font-weight: 800; color: var(--zinc-400); text-transform: uppercase; letter-spacing: 0.1em; margin: 24px 0 12px 16px; }
+
+        .user-profile {
+            margin-top: auto; display: flex; align-items: center; gap: 12px; padding: 16px;
+            background: var(--zinc-50); border-radius: var(--radius-lg); border: 1px solid var(--zinc-200);
+        }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #7c3aed); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; }
+
+        /* Main Content Area */
+        main { flex: 1; margin-left: var(--sidebar-width); padding: 60px 80px; max-width: calc(100vw - var(--sidebar-width)); }
+        .page { display: none; animation: fadeIn 0.4s ease-out; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Typography */
+        h1 { font-size: 42px; font-weight: 900; letter-spacing: -0.04em; color: var(--zinc-950); margin-bottom: 8px; }
+        .subtitle { font-size: 16px; color: var(--zinc-500); margin-bottom: 48px; font-weight: 500; }
+
+        /* Components */
+        .card { background: white; border-radius: var(--radius-xl); border: 1px solid var(--zinc-200); padding: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.2s; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .card-label { font-size: 14px; font-weight: 600; color: var(--zinc-500); text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-value { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; color: var(--zinc-950); margin-top: 16px; }
+        .icon-box { width: 48px; height: 48px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; }
+        .icon-box.blue { background: #eff6ff; color: #2563eb; }
+        .icon-box.indigo { background: #eef2ff; color: #4338ca; }
+        .icon-box.emerald { background: #ecfdf5; color: #10b981; }
+
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; padding-bottom: 12px; border-bottom: 2px solid var(--zinc-200); }
+        .section-title { font-size: 24px; font-weight: 800; color: var(--zinc-950); letter-spacing: -0.02em; }
+
+        /* Tender Card */
+        .tender-card { background: white; border-radius: var(--radius-xl); border: 2px solid var(--zinc-100); padding: 28px; display: flex; justify-content: space-between; gap: 32px; cursor: pointer; transition: all 0.2s ease-out; margin-bottom: 16px; position: relative; overflow: hidden; }
+        .tender-card:hover { border-color: var(--primary); transform: scale(1.005); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); }
+        .match-emphasis { position: absolute; left: 0; top: 0; height: 100%; width: 5px; background: var(--primary); opacity: 0; transition: opacity 0.2s; }
+        .tender-card:hover .match-emphasis { opacity: 1; }
+        .tender-title { font-size: 20px; font-weight: 700; color: var(--zinc-950); margin-bottom: 8px; line-height: 1.3; }
+        .buyer-info { font-size: 15px; font-weight: 500; color: var(--zinc-500); display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+        .badge { padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+        .badge-blue { background: #eff6ff; color: #1d4ed8; }
+        .badge-green { background: #ecfdf5; color: #047857; }
+        .badge-indigo { background: #eef2ff; color: #4338ca; }
+        .value-area { text-align: right; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; min-width: 140px; }
+        .value-text { font-size: 24px; font-weight: 900; color: var(--zinc-950); letter-spacing: -0.02em; }
+
+        /* Tender Detail Styling */
+        .detail-hero { background: white; border-radius: var(--radius-xl); padding: 48px; border: 1px solid var(--zinc-200); margin-bottom: 32px; }
+        .detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+        .detail-tabs { display: flex; gap: 32px; border-bottom: 2px solid var(--zinc-100); margin-bottom: 32px; }
+        .tab { padding: 16px 0; font-weight: 700; font-size: 15px; color: var(--zinc-400); cursor: pointer; position: relative; }
+        .tab.active { color: var(--primary); }
+        .tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: var(--primary); }
+        .detail-content { font-size: 16px; color: var(--zinc-700); line-height: 1.6; }
+        .detail-content h3 { font-size: 20px; font-weight: 800; color: var(--zinc-950); margin: 32px 0 16px; }
+        .detail-sidebar { display: flex; flex-direction: column; gap: 24px; }
+        .ai-card { background: #f0f7ff; border: 1px solid #cce3ff; padding: 24px; border-radius: var(--radius-xl); }
+        .ai-label { font-size: 12px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .risk-meter { height: 12px; background: var(--zinc-200); border-radius: 6px; margin: 16px 0; overflow: hidden; }
+        .risk-fill { height: 100%; background: #10b981; border-radius: 6px; }
+
+        /* Buttons */
+        .btn { height: 52px; padding: 0 24px; border-radius: var(--radius-lg); background: white; border: 2px solid var(--zinc-200); font-weight: 700; color: var(--zinc-800); cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s; }
+        .btn-primary { background: var(--zinc-950); color: white; border: none; }
+        .btn-primary:hover { background: var(--zinc-800); transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 2px solid var(--zinc-200); }
+
+        .link { color: var(--primary); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside>
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="zap" size="20" fill="currentColor"></i></div> Winly
+        </div>
+        <nav>
+            <div class="nav-label">Main Menu</div>
+            <a href="#" class="nav-item active" onclick="showPage('dashboard', this)">
+                <i data-lucide="layout-grid" size="20"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('my-matches', this)">
+                <i data-lucide="heart" size="20"></i> My Matches
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('explorer', this)">
+                <i data-lucide="search" size="20"></i> Tender Explorer
+            </a>
+            <div class="nav-label">Procurement Intel</div>
+            <a href="#" class="nav-item" onclick="showPage('buyer-intel', this)">
+                <i data-lucide="building-2" size="20"></i> Buyer Intel
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('competitor-intel', this)">
+                <i data-lucide="users" size="20"></i> Competitor Intel
+            </a>
+            <div class="nav-label">Account</div>
+            <a href="#" class="nav-item" onclick="showPage('profile', this)">
+                <i data-lucide="user" size="20"></i> Profile
+            </a>
+        </nav>
+        <div class="user-profile">
+            <div class="avatar">JP</div>
+            <div style="flex: 1; min-width: 0;">
+                <div style="font-size: 14px; font-weight: 700; color: var(--zinc-950);">Joao Pereira</div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--zinc-500);">Pro Tier</div>
+            </div>
+            <i data-lucide="log-out" size="18" style="color: var(--zinc-400); cursor: pointer;"></i>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="page active">
+            <h1>Market Pulse</h1>
+            <p class="subtitle">High-impact insights and active matches for TechNova Solutions.</p>
+            <div class="stats-grid">
+                <div class="card">
+                    <div class="card-header"><span class="card-label">Perfect Matches</span><div class="icon-box blue"><i data-lucide="heart" size="24"></i></div></div>
+                    <div class="stat-value">12</div>
+                    <div style="margin-top: 16px;"><a href="#" class="link" onclick="showPage('my-matches', document.querySelector('.nav-item:nth-child(3)'))">Review matches <i data-lucide="arrow-right" size="18"></i></a></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-label">Active Bids</span><div class="icon-box indigo"><i data-lucide="send" size="24"></i></div></div>
+                    <div class="stat-value">4</div>
+                    <div style="margin-top: 16px; color: var(--zinc-500); font-weight: 600; font-size: 12px;">Next deadline in 3 days</div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-label">Market Share</span><div class="icon-box emerald"><i data-lucide="trending-up" size="24"></i></div></div>
+                    <div class="stat-value">8.2%</div>
+                    <div style="margin-top: 16px; color: #10b981; font-weight: 600; font-size: 12px;">+1.4% this month</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MY MATCHES PAGE -->
+        <div id="my-matches" class="page">
+            <header style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px;">
+                <div>
+                    <h1>My Matches</h1>
+                    <p class="subtitle">Personalized opportunities based on your capabilities and history.</p>
+                </div>
+                <button class="btn"><i data-lucide="settings" size="20"></i> Tuning</button>
+            </header>
+
+            <div class="tender-card" onclick="openDetail('Cloud Infrastructure for Health')">
+                <div class="match-emphasis"></div>
+                <div class="tender-info">
+                    <h3 class="tender-title">Public Cloud Infrastructure for the Ministry of Health</h3>
+                    <div class="buyer-info"><i data-lucide="building-2" size="18"></i> Serviços Partilhados do Ministério da Saúde, EPE</div>
+                    <div style="display: flex; gap: 8px;">
+                        <span class="badge badge-indigo" style="background: #2563eb; color: white;">96% MATCH</span>
+                        <span class="badge badge-blue">IT Services</span>
+                        <span class="badge badge-green">High Value</span>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 13px; color: var(--zinc-500); font-weight: 600;">Reason: Matches your ISO 27001 certification and recent wins with this buyer.</div>
+                </div>
+                <div class="value-area">
+                    <div class="value-text">€2,450,000</div>
+                    <div style="margin-top: 12px; color: #ef4444; font-weight: 700; font-size: 13px;">Closes in 5d</div>
+                </div>
+            </div>
+
+            <div class="tender-card">
+                <div class="match-emphasis"></div>
+                <div class="tender-info">
+                    <h3 class="tender-title">Managed Security Services for European Banking Authority</h3>
+                    <div class="buyer-info"><i data-lucide="building-2" size="18"></i> EBA - Paris, France</div>
+                    <div style="display: flex; gap: 8px;">
+                        <span class="badge badge-indigo" style="background: #4f46e5; color: white;">88% MATCH</span>
+                        <span class="badge badge-blue">Cybersecurity</span>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 13px; color: var(--zinc-500); font-weight: 600;">Reason: Matches your "Cybersecurity" tag and previous EU-level contracts.</div>
+                </div>
+                <div class="value-area">
+                    <div class="value-text">€840,000</div>
+                    <div style="margin-top: 12px; color: var(--zinc-400); font-weight: 700; font-size: 13px;">Published Today</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TENDER DETAIL PAGE -->
+        <div id="tender-detail" class="page">
+            <a href="#" class="link" onclick="showPage('my-matches', document.querySelector('.nav-item:nth-child(2)'))" style="margin-bottom: 32px;"><i data-lucide="arrow-left" size="18"></i> Back to Matches</a>
+            
+            <div class="detail-hero">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <span class="badge badge-indigo" style="background: #2563eb; color: white; padding: 6px 16px; font-size: 14px;">96% MATCH SCORE</span>
+                            <span class="badge badge-green">ACTIVE TENDER</span>
+                        </div>
+                        <h1 style="font-size: 36px; line-height: 1.1; max-width: 800px;">Public Cloud Infrastructure and Analytics Services for the Ministry of Health</h1>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 14px; font-weight: 800; color: var(--zinc-400); text-transform: uppercase;">Estimated Value</div>
+                        <div style="font-size: 42px; font-weight: 900; color: var(--zinc-950); letter-spacing: -0.04em;">€2,450,000</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 40px; align-items: center; border-top: 1px solid var(--zinc-100); pt-24; margin-top: 32px; padding-top: 32px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="icon-box" style="background: var(--zinc-50); width: 40px; height: 40px;"><i data-lucide="building-2" size="20"></i></div>
+                        <div>
+                            <div style="font-size: 12px; font-weight: 700; color: var(--zinc-400);">BUYER</div>
+                            <div style="font-size: 15px; font-weight: 700;">SPMS, EPE - Portugal</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="icon-box" style="background: var(--zinc-50); width: 40px; height: 40px;"><i data-lucide="calendar" size="20"></i></div>
+                        <div>
+                            <div style="font-size: 12px; font-weight: 700; color: var(--zinc-400);">PUBLISHED</div>
+                            <div style="font-size: 15px; font-weight: 700;">Oct 12, 2023</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="icon-box" style="background: #fff1f2; color: #e11d48; width: 40px; height: 40px;"><i data-lucide="clock" size="20"></i></div>
+                        <div>
+                            <div style="font-size: 12px; font-weight: 700; color: #fb7185;">DEADLINE</div>
+                            <div style="font-size: 15px; font-weight: 800; color: #e11d48;">Oct 28, 2023 (14 Days)</div>
+                        </div>
+                    </div>
+                    <div style="margin-left: auto; display: flex; gap: 12px;">
+                        <button class="btn btn-outline"><i data-lucide="download" size="20"></i> Docs</button>
+                        <button class="btn btn-primary"><i data-lucide="plus" size="20"></i> Start Bid</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-grid">
+                <div class="detail-main">
+                    <div class="detail-tabs">
+                        <div class="tab active">Overview</div>
+                        <div class="tab">AI Insights</div>
+                        <div class="tab">Documents</div>
+                        <div class="tab">Competitors</div>
+                    </div>
+                    <div class="detail-content">
+                        <h3>Tender Description</h3>
+                        <p>The Ministry of Health, through SPMS - Shared Services of the Ministry of Health, intends to establish a Framework Agreement for the provision of Public Cloud Infrastructure (IaaS and PaaS) and related Managed Services. This initiative aims to modernize the National Health Service's data management capabilities, ensuring high availability, scalability, and security of health data across the country.</p>
+                        
+                        <h3>Key Requirements</h3>
+                        <ul style="margin-left: 20px; margin-top: 16px;">
+                            <li>Provision of Cloud IaaS/PaaS services (Compute, Storage, Networking).</li>
+                            <li>Integration with existing on-premise infrastructure (Hybrid Cloud).</li>
+                            <li>Strict compliance with GDPR and ENISA health data security guidelines.</li>
+                            <li>24/7 Managed Services and technical support in Portuguese.</li>
+                        </ul>
+
+                        <h3>Sector (CPV)</h3>
+                        <div style="display: flex; gap: 8px; margin-top: 16px;">
+                            <span class="badge badge-blue">72315000 - Data Management</span>
+                            <span class="badge badge-blue">72222300 - IT Services</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-sidebar">
+                    <div class="ai-card">
+                        <div class="ai-label"><i data-lucide="sparkles" size="14"></i> AI Intelligence</div>
+                        <div style="margin-top: 24px;">
+                            <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 14px;">
+                                <span>Win Probability</span>
+                                <span style="color: #10b981;">84%</span>
+                            </div>
+                            <div class="risk-meter"><div class="risk-fill" style="width: 84%;"></div></div>
+                            <p style="font-size: 13px; color: var(--zinc-600); font-weight: 500;">Win probability is high due to your incumbency in 2 related sub-projects and pricing history.</p>
+                        </div>
+
+                        <div style="margin-top: 32px; border-top: 1px solid #cce3ff; padding-top: 24px;">
+                            <div style="font-size: 12px; font-weight: 800; color: var(--zinc-400); margin-bottom: 12px;">RECOMMENDED PRICE</div>
+                            <div style="font-size: 24px; font-weight: 900; color: var(--zinc-950);">€2,150,000 - €2,280,000</div>
+                            <p style="font-size: 12px; color: var(--zinc-500); margin-top: 8px;">Based on 14 similar awards by SPMS in the last 24 months.</p>
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 24px; height: 44px; font-size: 14px; background: var(--primary);">Ask AI Assistant</button>
+                    </div>
+
+                    <div class="card" style="padding: 24px;">
+                        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 16px;">Likely Competitors</h3>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <span style="font-size: 14px; font-weight: 600;">Novabase</span>
+                                <span class="badge badge-amber">HIGH RISK</span>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <span style="font-size: 14px; font-weight: 600;">Claranet</span>
+                                <span class="badge badge-blue">MEDIUM RISK</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXPLORER, INTEL, PROFILE (Same as before) -->
+        <div id="explorer" class="page"><h1>Tender Explorer</h1></div>
+        <div id="buyer-intel" class="page"><h1>Buyer Intelligence</h1></div>
+        <div id="competitor-intel" class="page"><h1>Competitor Intel</h1></div>
+        <div id="profile" class="page"><h1>Profile Page</h1></div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+        function showPage(pageId, element) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if(targetPage) targetPage.classList.add('active');
+            if(element) {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                element.classList.add('active');
+            }
+            window.scrollTo(0, 0);
+        }
+        function openDetail(title) {
+            showPage('tender-detail', null);
+            // In a real app, we'd load the data here.
+        }
+    </script>
+</body>
+</html>

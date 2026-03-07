@@ -308,7 +308,7 @@ export default async function TenderDetailsPage({
 
   return (
     <div className="max-w-6xl mx-auto pb-20 px-4">
-      <Link href={backUrl || '/matches'} className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-8 font-bold group text-sm w-fit">
+      <Link href={backUrl || '/matches'} className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors mb-8 font-bold group text-sm w-fit">
         <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
         {backUrl ? t('back') : t('backToMatches')}
       </Link>
@@ -317,8 +317,8 @@ export default async function TenderDetailsPage({
         {/* Main Column */}
         <div className="lg:col-span-8 space-y-8">
           {/* Header Card */}
-          <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
-            <div className={`bg-slate-50/50 px-8 py-4 border-b border-slate-100 flex justify-between items-center ${isAwarded ? 'bg-amber-50/50 border-amber-100' : ''}`}>
+          <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm overflow-hidden">
+            <div className={`bg-zinc-50/50 px-8 py-4 border-b border-zinc-100 flex justify-between items-center ${isAwarded ? 'bg-amber-50/50 border-amber-100' : ''}`}>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
                   {isAwarded ? (
@@ -329,7 +329,7 @@ export default async function TenderDetailsPage({
                   ) : (
                     <>
                       <ShieldCheck size={14} className="text-emerald-500" />
-                      <span className="text-[10px] font-black text-slate-400 tracking-widest uppercase">{t('metadataAnalysis')}</span>
+                      <span className="text-[10px] font-black text-zinc-400 tracking-widest uppercase">{t('metadataAnalysis')}</span>
                     </>
                   )}
                 </div>
@@ -351,16 +351,16 @@ export default async function TenderDetailsPage({
               </div>
             </div>
             <div className="p-8">
-              <h1 className="text-3xl font-black text-slate-900 leading-tight mb-8">{tender.title}</h1>
+              <h1 className="text-3xl font-black text-zinc-900 leading-tight mb-8">{tender.title}</h1>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <Link href={`/intelligence/buyers?name=${encodeURIComponent(tender.buyer_name)}&fromTender=${id}&backUrl=${encodeURIComponent('/tenders/' + id)}`} className="md:col-span-2 p-5 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-blue-200 hover:bg-white transition-all">
+                <Link href={`/intelligence/buyers?name=${encodeURIComponent(tender.buyer_name)}&fromTender=${id}&backUrl=${encodeURIComponent('/tenders/' + id)}`} className="md:col-span-2 p-5 bg-zinc-50 rounded-xl border border-zinc-100 group hover:border-blue-200 hover:bg-white transition-all">
                   <div className="flex justify-between items-start mb-2">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('authority')}</p>
-                    <ChevronRight size={14} className="text-slate-300 group-hover:text-blue-500" />
+                    <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{t('authority')}</p>
+                    <ChevronRight size={14} className="text-zinc-300 group-hover:text-blue-500" />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <div className="flex items-start gap-2 text-slate-800 font-bold text-sm">
+                    <div className="flex items-start gap-2 text-zinc-800 font-bold text-sm">
                       <Building2 size={18} className="text-blue-600 flex-shrink-0 mt-0.5" />
                       {tender.buyer_name}
                     </div>
@@ -371,51 +371,51 @@ export default async function TenderDetailsPage({
                     )}
                   </div>
                 </Link>
-                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('market')}</p>
-                  <div className="flex items-center gap-2 text-slate-800 font-bold">
+                <div className="p-5 bg-zinc-50 rounded-xl border border-zinc-100">
+                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">{t('market')}</p>
+                  <div className="flex items-center gap-2 text-zinc-800 font-bold">
                     <Globe size={18} className="text-blue-600" />
                     {tender.country}
                   </div>
                 </div>
-                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('financials')}</p>
-                  <div className="flex items-center gap-2 text-slate-800 font-bold text-lg tabular-nums">
+                <div className="p-5 bg-zinc-50 rounded-xl border border-zinc-100">
+                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">{t('financials')}</p>
+                  <div className="flex items-center gap-2 text-zinc-800 font-bold text-lg tabular-nums">
                     <DollarSign size={18} className="text-emerald-600" />
                     {formatValue(tender.estimated_value, tender.currency)}
                   </div>
                 </div>
 
                 {tender.procedure_type && (
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('procedureType')}</p>
-                    <div className="flex items-center gap-2 text-slate-800 font-bold text-sm">
+                  <div className="p-5 bg-zinc-50 rounded-xl border border-zinc-100">
+                    <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">{t('procedureType')}</p>
+                    <div className="flex items-center gap-2 text-zinc-800 font-bold text-sm">
                       <Gavel size={18} className="text-violet-600" />
                       {tender.procedure_type}
                     </div>
                   </div>
                 )}
                 {tender.publication_date && (
-                  <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{t('publicationDate')}</p>
-                    <div className="flex items-center gap-2 text-slate-800 font-bold text-sm tabular-nums">
+                  <div className="p-5 bg-zinc-50 rounded-xl border border-zinc-100">
+                    <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2">{t('publicationDate')}</p>
+                    <div className="flex items-center gap-2 text-zinc-800 font-bold text-sm tabular-nums">
                       <Calendar size={18} className="text-sky-600" />
                       {new Date(tender.publication_date).toLocaleDateString(locale === 'pt' ? 'pt-PT' : 'en-GB')}
                     </div>
                   </div>
                 )}
 
-                <div className="md:col-span-4 p-6 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-4">
+                <div className="md:col-span-4 p-6 bg-zinc-50 rounded-xl border border-zinc-100 flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 flex-shrink-0">
                     <Target size={20} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('sectorClassification')}</p>
+                    <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('sectorClassification')}</p>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-bold text-slate-800">{tender.cpv_code || "N/A"}</span>
+                      <span className="text-sm font-bold text-zinc-800">{tender.cpv_code || "N/A"}</span>
                     </div>
                     {tender.cpv_code && (
-                      <p className="text-xs font-medium text-slate-600 leading-relaxed max-w-3xl">
+                      <p className="text-xs font-medium text-zinc-600 leading-relaxed max-w-3xl">
                         {tender.cpv_description || getCpvDescription(tender.cpv_code)}
                       </p>
                     )}
@@ -439,10 +439,10 @@ export default async function TenderDetailsPage({
             {isAwarded ? (
               <>
                 {/* Award Summary Card */}
-                <div className="bg-amber-900 text-white p-8 rounded-2xl shadow-xl">
+                <div className="bg-amber-900 text-white p-8 rounded-xl shadow-xl">
                   <h3 className="text-xs font-black text-amber-300 uppercase tracking-widest mb-6">{t('awardDetails')}</h3>
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                    <div className="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
                       <History size={28} className="text-amber-300" />
                     </div>
                     <div>
@@ -454,7 +454,7 @@ export default async function TenderDetailsPage({
                   </div>
 
                   {tender.final_contract_value ? (
-                    <div className="p-4 bg-white/10 rounded-2xl border border-white/10 mb-4">
+                    <div className="p-4 bg-white/10 rounded-xl border border-white/10 mb-4">
                       <p className="text-[10px] font-black text-amber-300/80 uppercase tracking-widest mb-1">{t('finalContractValue')}</p>
                       <p className="text-xl font-black">{formatValue(tender.final_contract_value, tender.currency)}</p>
                       {tender.estimated_value && (
@@ -482,16 +482,16 @@ export default async function TenderDetailsPage({
                 </div>
 
                 {/* Company Fit Card (also useful for awarded tenders) */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-                  <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+                <div className="bg-white rounded-xl border border-zinc-200 p-8 shadow-sm">
+                  <h3 className="text-sm font-black text-zinc-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                     <Briefcase size={18} className="text-indigo-600" />
                     {t('companyProfileFit')}
                   </h3>
                   <div className="space-y-6">
                     <div className="group">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 leading-none">{t('yourServices')}</p>
-                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group-hover:border-indigo-200 transition-colors">
-                        <p className="text-xs font-bold text-slate-700 leading-relaxed">{profile?.services || "—"}</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2 leading-none">{t('yourServices')}</p>
+                      <div className="p-4 bg-zinc-50 rounded-xl border border-zinc-100 group-hover:border-indigo-200 transition-colors">
+                        <p className="text-xs font-bold text-zinc-700 leading-relaxed">{profile?.services || "—"}</p>
                       </div>
                     </div>
                   </div>
@@ -500,37 +500,37 @@ export default async function TenderDetailsPage({
             ) : (
               <>
                 {/* Deadline Card */}
-                <div className="bg-slate-900 text-white p-8 rounded-2xl shadow-xl">
+                <div className="bg-zinc-900 text-white p-8 rounded-xl shadow-xl">
                   <h3 className="text-xs font-black text-blue-400 uppercase tracking-widest mb-6">{t('submissionDeadline')}</h3>
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
+                    <div className="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
                       <Clock className="text-blue-400" size={28} />
                     </div>
                     <div>
                       <p className="text-2xl font-black tabular-nums">
                         {tender.submission_deadline ? new Date(tender.submission_deadline).toLocaleDateString(locale === 'pt' ? 'pt-PT' : 'en-GB') : t('contactAuthority')}
                       </p>
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1">{t('localTime')}</p>
+                      <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mt-1">{t('localTime')}</p>
                     </div>
                   </div>
 
                   <div className="space-y-3">
-                    <button className="w-full py-4 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/40 uppercase tracking-widest text-xs">
+                    <button className="w-full py-4 bg-blue-600 text-white font-black rounded-xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/40 uppercase tracking-widest text-xs">
                       {t('trackThisBid')}
                     </button>
-                    <button className="w-full py-4 bg-white/5 text-white font-black rounded-2xl hover:bg-white/10 transition-all border border-white/10 uppercase tracking-widest text-xs">
+                    <button className="w-full py-4 bg-white/5 text-white font-black rounded-xl hover:bg-white/10 transition-all border border-white/10 uppercase tracking-widest text-xs">
                       {t('ignoreTender')}
                     </button>
                   </div>
 
                   <div className="mt-8 pt-8 border-t border-white/10">
-                    <div className="flex items-center gap-3 text-slate-400">
+                    <div className="flex items-center gap-3 text-zinc-400">
                       <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 border border-emerald-500/20">
                         <ShieldCheck size={18} />
                       </div>
                       <div>
                         <p className="text-[10px] font-black text-white uppercase tracking-wider leading-none mb-1">{t('verifiedIntelligence')}</p>
-                        <p className="text-[9px] font-bold text-slate-500 uppercase">{t('syncedVia')}</p>
+                        <p className="text-[9px] font-bold text-zinc-500 uppercase">{t('syncedVia')}</p>
                       </div>
                     </div>
                   </div>
@@ -538,14 +538,14 @@ export default async function TenderDetailsPage({
 
                 {/* Risk Score Mini Card */}
                 {riskScore != null && (
-                  <div className={`rounded-2xl p-6 shadow-sm border ${
+                  <div className={`rounded-xl p-6 shadow-sm border ${
                     riskScore <= 3 ? 'bg-emerald-50 border-emerald-200' :
                     riskScore <= 6 ? 'bg-amber-50 border-amber-200' :
                     'bg-rose-50 border-rose-200'
                   }`}>
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('riskMiniCard')}</p>
+                        <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('riskMiniCard')}</p>
                         <p className={`text-3xl font-black ${
                           riskScore <= 3 ? 'text-emerald-600' :
                           riskScore <= 6 ? 'text-amber-600' :
@@ -554,7 +554,7 @@ export default async function TenderDetailsPage({
                           {riskScore}/10
                         </p>
                       </div>
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                         riskScore <= 3 ? 'bg-emerald-100 text-emerald-600' :
                         riskScore <= 6 ? 'bg-amber-100 text-amber-600' :
                         'bg-rose-100 text-rose-600'
@@ -573,24 +573,24 @@ export default async function TenderDetailsPage({
                 )}
 
                 {/* Company Fit Card */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-                  <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+                <div className="bg-white rounded-xl border border-zinc-200 p-8 shadow-sm">
+                  <h3 className="text-sm font-black text-zinc-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                     <Briefcase size={18} className="text-indigo-600" />
                     {t('companyProfileFit')}
                   </h3>
                   <div className="space-y-6">
                     <div className="group">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 leading-none">{t('yourServices')}</p>
-                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group-hover:border-indigo-200 transition-colors">
-                        <p className="text-xs font-bold text-slate-700 leading-relaxed">{profile?.services || "—"}</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2 leading-none">{t('yourServices')}</p>
+                      <div className="p-4 bg-zinc-50 rounded-xl border border-zinc-100 group-hover:border-indigo-200 transition-colors">
+                        <p className="text-xs font-bold text-zinc-700 leading-relaxed">{profile?.services || "—"}</p>
                       </div>
                     </div>
 
                     <div className="group">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 leading-none">{t('budgetAlignment')}</p>
-                      <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group-hover:border-emerald-200 transition-colors">
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-2 leading-none">{t('budgetAlignment')}</p>
+                      <div className="p-4 bg-zinc-50 rounded-xl border border-zinc-100 group-hover:border-emerald-200 transition-colors">
                         <div className="flex justify-between items-center mb-2">
-                          <p className="text-xs font-black text-slate-800 tabular-nums">
+                          <p className="text-xs font-black text-zinc-800 tabular-nums">
                             {profile?.max_budget ? formatValue(profile.max_budget) : "—"}
                           </p>
                           {tender.estimated_value <= (profile?.max_budget || 1000000000) ? (
@@ -599,7 +599,7 @@ export default async function TenderDetailsPage({
                             <span className="text-[9px] font-black text-orange-600 bg-orange-100 px-2 py-0.5 rounded uppercase">{t('outOfRange')}</span>
                           )}
                         </div>
-                        <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                        <div className="w-full h-1.5 bg-zinc-200 rounded-full overflow-hidden">
                           <div className="h-full bg-emerald-500" style={{ width: `${Math.min(100, (tender.estimated_value / (profile?.max_budget || 1)) * 100)}%` }}></div>
                         </div>
                       </div>

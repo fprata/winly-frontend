@@ -36,7 +36,7 @@ export function RiskScoreHero({ score, level, factors }: RiskScoreHeroProps) {
       : [];
 
   return (
-    <div className={`${config.bgColor} ${config.borderColor} border rounded-2xl p-8 shadow-sm`}>
+    <div className={`${config.bgColor} ${config.borderColor} border rounded-xl p-8 shadow-sm`}>
       <div className="flex flex-col md:flex-row items-center gap-8">
         {/* Gauge */}
         <div className="flex flex-col items-center">
@@ -63,7 +63,7 @@ export function RiskScoreHero({ score, level, factors }: RiskScoreHeroProps) {
             {/* Score text */}
             <text x="100" y="95" textAnchor="middle" className="fill-current" style={{ fontSize: '36px', fontWeight: 900 }}>
               <tspan className={config.textColor}>{score}</tspan>
-              <tspan style={{ fontSize: '16px', fontWeight: 700 }} className="fill-slate-400">/10</tspan>
+              <tspan style={{ fontSize: '16px', fontWeight: 700 }} className="fill-zinc-400">/10</tspan>
             </text>
           </svg>
           <div className={`flex items-center gap-2 ${config.textColor} font-black text-sm uppercase tracking-widest mt-2`}>
@@ -75,10 +75,10 @@ export function RiskScoreHero({ score, level, factors }: RiskScoreHeroProps) {
         {/* Risk Factors */}
         {factorsList.length > 0 && (
           <div className="flex-1">
-            <h4 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">{t('risk.keyFactors')}</h4>
+            <h4 className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-4">{t('risk.keyFactors')}</h4>
             <ul className="space-y-2">
               {factorsList.slice(0, 5).map((factor, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-slate-700 font-medium">
+                <li key={i} className="flex items-start gap-2 text-sm text-zinc-700 font-medium">
                   <div className={`w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0`} style={{ backgroundColor: config.strokeColor }} />
                   {typeof factor === 'string' ? factor : JSON.stringify(factor)}
                 </li>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search as SearchIcon, Building2, TrendingUp, Users, ArrowUpRight, ArrowLeft, ArrowRight, ShieldCheck, Filter, Check, ChevronDown, Activity, HeartHandshake, Lock, PieChart, SearchX } from 'lucide-react';
+import { Search as SearchIcon, Building2, TrendingUp, Users, ArrowUpRight, ArrowLeft, ArrowRight, ShieldCheck, Filter, Check, ChevronDown, Activity, HeartHandshake, Lock, PieChart, SearchX, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/navigation';
@@ -290,7 +290,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
   return (
     <div className="max-w-6xl mx-auto pb-20">
       {fromTender && (
-        <Link href={`/tenders/${fromTender}`} className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors mb-8 font-bold text-sm group w-fit">
+        <Link href={`/tenders/${fromTender}`} className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors mb-8 font-bold text-sm group w-fit">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           {t('backToTender')}
         </Link>
@@ -323,18 +323,18 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
           </Card>
 
           {searchResults.length > 0 && query.length >= 3 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl z-20 overflow-hidden">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-zinc-200 rounded-xl shadow-xl z-20 overflow-hidden">
               {searchResults.map((b, i) => (
                 <button
                   key={i}
                   onClick={() => navigateToProfile(b.buyer_company_id)}
-                  className="w-full text-left px-6 py-4 hover:bg-slate-50 border-b border-slate-50 last:border-0 flex items-center justify-between group"
+                  className="w-full text-left px-6 py-4 hover:bg-zinc-50 border-b border-zinc-50 last:border-0 flex items-center justify-between group"
                 >
                   <div>
-                    <p className="font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{b.name}</p>
-                    <p className="text-xs font-bold text-slate-400 uppercase">{b.country}</p>
+                    <p className="font-bold text-zinc-800 group-hover:text-blue-600 transition-colors">{b.name}</p>
+                    <p className="text-xs font-bold text-zinc-400 uppercase">{b.country}</p>
                   </div>
-                  <ArrowUpRight size={16} className="text-slate-300 group-hover:text-blue-600" />
+                  <ArrowUpRight size={16} className="text-zinc-300 group-hover:text-blue-600" />
                 </button>
               ))}
             </div>
@@ -343,13 +343,13 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
       )}
 
       {loading ? (
-        <div className="flex items-center justify-center py-20 text-slate-400 italic animate-pulse">{t('loading')}</div>
+        <div className="flex items-center justify-center py-20 text-zinc-400 italic animate-pulse">{t('loading')}</div>
       ) : metrics ? (
-        <div className="space-y-8 animate-in fade-in duration-500 text-slate-800">
+        <div className="space-y-8 animate-in fade-in duration-500 text-zinc-800">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
             <button 
               onClick={clearProfile}
-              className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors font-bold text-sm"
+              className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors font-bold text-sm"
             >
               <ArrowLeft size={16} />
               {backUrl ? t('back') : t('backToSearch')}
@@ -359,28 +359,28 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
             <div className="relative">
                 <button 
                     onClick={() => setIsFilterOpen(!isFilterOpen)}
-                    className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl font-bold text-xs text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+                    className="flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 rounded-xl font-bold text-xs text-zinc-700 hover:bg-zinc-50 transition-colors shadow-sm"
                 >
-                    <Filter size={14} className="text-slate-400" />
+                    <Filter size={14} className="text-zinc-400" />
                     {selectedCpvs.length === 0 ? t('analysis.allSectors') : t('analysis.selectedSectors', { count: selectedCpvs.length })}
                     <ChevronDown size={14} className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
                 {isFilterOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-64 max-h-80 overflow-y-auto bg-white border border-slate-200 rounded-2xl shadow-xl z-30 p-2">
+                    <div className="absolute right-0 top-full mt-2 w-64 max-h-80 overflow-y-auto bg-white border border-zinc-200 rounded-xl shadow-xl z-30 p-2">
                         <button 
                             onClick={() => setSelectedCpvs([])}
-                            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-between ${selectedCpvs.length === 0 ? 'bg-blue-50 text-blue-700' : 'text-slate-700 hover:bg-slate-50'}`}
+                            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-between ${selectedCpvs.length === 0 ? 'bg-blue-50 text-blue-700' : 'text-zinc-700 hover:bg-zinc-50'}`}
                         >
                             {t('analysis.allSectors')}
                             {selectedCpvs.length === 0 && <Check size={14} />}
                         </button>
-                        <div className="h-px bg-slate-100 my-1"></div>
+                        <div className="h-px bg-zinc-100 my-1"></div>
                         {profile.sector_stats?.map((sector: any) => (
                             <button 
                                 key={sector.cpv_division}
                                 onClick={() => toggleCpv(sector.cpv_division)}
-                                className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-between ${selectedCpvs.includes(sector.cpv_division) ? 'bg-blue-50 text-blue-700' : 'text-slate-700 hover:bg-slate-50'}`}
+                                className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-between ${selectedCpvs.includes(sector.cpv_division) ? 'bg-blue-50 text-blue-700' : 'text-zinc-700 hover:bg-zinc-50'}`}
                             >
                                 <span className="truncate pr-2" title={getCpvDescription(sector.cpv_division)}>{getCpvDescription(sector.cpv_division)}</span>
                                 {selectedCpvs.includes(sector.cpv_division) && <Check size={14} />}
@@ -394,14 +394,14 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
           </div>
 
           {/* === NEW HEADER SECTION (Identical to Competitor) === */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-sm p-8">
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-zinc-200/60 shadow-sm p-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
               <div className="flex items-center gap-6">
-                <div className="w-20 h-20 rounded-3xl bg-slate-900 flex items-center justify-center text-white border border-slate-800 shadow-2xl">
+                <div className="w-20 h-20 rounded-3xl bg-zinc-900 flex items-center justify-center text-white border border-zinc-800 shadow-2xl">
                   <Building2 size={40} />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">{profile.name}</h2>
+                  <h2 className="text-3xl font-black text-zinc-900 tracking-tight leading-none mb-2">{profile.name}</h2>
                   <div className="flex items-center gap-3">
                     <span className="flex items-center gap-1 px-3 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-full uppercase border border-emerald-100">
                       <ShieldCheck size={12} /> {t('verifiedAuthority')}
@@ -415,18 +415,18 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
               
               <div className="flex gap-4">
                 <div className="text-right">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('totalSpend')}</p>
-                  <p className="text-2xl font-black text-slate-900 tabular-nums">{formatValue(metrics.total_spend)}</p>
+                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('totalSpend')}</p>
+                  <p className="text-2xl font-black text-zinc-900 tabular-nums">{formatValue(metrics.total_spend)}</p>
                 </div>
-                <div className="w-px h-12 bg-slate-200"></div>
+                <div className="w-px h-12 bg-zinc-200"></div>
                 <div className="text-right">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('avgValue')}</p>
+                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('avgValue')}</p>
                   <p className="text-2xl font-black text-blue-600 tabular-nums">{formatValue(metrics.avg_value)}</p>
                 </div>
-                <div className="w-px h-12 bg-slate-200"></div>
+                <div className="w-px h-12 bg-zinc-200"></div>
                 <div className="text-right">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('awards')}</p>
-                  <p className="text-2xl font-black text-slate-900 tabular-nums">{metrics.total_contracts}</p>
+                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('awards')}</p>
+                  <p className="text-2xl font-black text-zinc-900 tabular-nums">{metrics.total_contracts}</p>
                 </div>
               </div>
             </div>
@@ -434,36 +434,36 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
             {/* === NEW CARD LAYOUT (Market Dominance & Buyer DNA) === */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
               {/* Card 1: Buyer DNA & Strategy */}
-              <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 h-full flex flex-col">
-                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8 h-full flex flex-col">
+                <h3 className="text-sm font-black text-zinc-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                   <Activity size={18} className="text-blue-600" />
                   Buyer Strategy & DNA
                 </h3>
                 <div className="space-y-6 flex-1">
-                  <div className="flex justify-between items-end pb-4 border-b border-slate-50">
+                  <div className="flex justify-between items-end pb-4 border-b border-zinc-50">
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Openness Score</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Openness Score</p>
                       <p className="text-2xl font-black text-emerald-600 tabular-nums">{(100 - (metrics.direct_award_pct || 0)).toFixed(1)}%</p>
-                      <p className="text-[9px] font-bold text-slate-400 mt-1">Inverse of Direct Awards</p>
+                      <p className="text-[9px] font-bold text-zinc-400 mt-1">Inverse of Direct Awards</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Loyalty Score</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Loyalty Score</p>
                       <p className="text-2xl font-black text-indigo-600 tabular-nums">
                         {profile.incumbency_rate_pct ? profile.incumbency_rate_pct : '—'}%
                       </p>
-                      <p className="text-[9px] font-bold text-slate-400 mt-1">% Spend to Top Vendor</p>
+                      <p className="text-[9px] font-bold text-zinc-400 mt-1">% Spend to Top Vendor</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Avg Bidders</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Avg Bidders</p>
                       <div className="flex items-center gap-2">
-                        <p className="text-xl font-black text-slate-900 tabular-nums">{metrics.avg_bidder_count !== null ? metrics.avg_bidder_count.toFixed(1) : '—'}</p>
-                        <span className="text-[10px] font-bold text-slate-400">per tender</span>
+                        <p className="text-xl font-black text-zinc-900 tabular-nums">{metrics.avg_bidder_count !== null ? metrics.avg_bidder_count.toFixed(1) : '—'}</p>
+                        <span className="text-[10px] font-bold text-zinc-400">per tender</span>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Avg Discount</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Avg Discount</p>
                       <p className={`text-xl font-black tabular-nums ${metrics.avg_discount < 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
                         {metrics.avg_discount ? `${metrics.avg_discount.toFixed(1)}%` : '0.0%'}
                       </p>
@@ -473,35 +473,35 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
               </div>
 
               {/* Card 2: Market Risk & Structure */}
-              <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 h-full flex flex-col">
-                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8 h-full flex flex-col">
+                <h3 className="text-sm font-black text-zinc-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                   <Lock size={18} className="text-rose-600" />
                   Risk Factors
                 </h3>
                 <div className="space-y-6 flex-1">
-                  <div className="flex justify-between items-end pb-4 border-b border-slate-50">
+                  <div className="flex justify-between items-end pb-4 border-b border-zinc-50">
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('directAwards')}</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('directAwards')}</p>
                       <p className="text-2xl font-black text-rose-600 tabular-nums">{metrics.direct_award_pct?.toFixed(1)}%</p>
                       <p className="text-[9px] font-bold text-rose-400 mt-1">{t('nonCompetitive')}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('q4Focus')}</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('q4Focus')}</p>
                       <p className="text-2xl font-black text-amber-600 tabular-nums">{profile.q4_seasonality ? (profile.q4_seasonality * 100).toFixed(1) : '—'}%</p>
                       <p className="text-[9px] font-bold text-amber-500 mt-1">{t('yearEndActivity')}</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('sectorDiversity')}</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('sectorDiversity')}</p>
                       <div className="flex items-center gap-2">
                         <p className="text-xl font-black text-indigo-600 tabular-nums">{profile.sector_diversity || 0}</p>
-                        <span className="text-[10px] font-bold text-slate-400">{t('cpvSectors')}</span>
+                        <span className="text-[10px] font-bold text-zinc-400">{t('cpvSectors')}</span>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('supplierPool')}</p>
-                      <p className="text-xl font-black text-slate-900 tabular-nums">{metrics.supplier_count}</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('supplierPool')}</p>
+                      <p className="text-xl font-black text-zinc-900 tabular-nums">{metrics.supplier_count}</p>
                     </div>
                   </div>
                 </div>
@@ -512,8 +512,8 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
           {/* Row 2: Strategic Focus (Sectors & Top Suppliers) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
               {/* Strategic Sector Dominance */}
-              <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 h-full">
-                <h3 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-2 uppercase tracking-tight text-sm">
+              <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8 h-full">
+                <h3 className="text-xl font-black text-zinc-900 mb-8 flex items-center gap-2 uppercase tracking-tight text-sm">
                   <PieChart size={20} className="text-purple-600" />
                   {t('sectorSpecialization')}
                 </h3>
@@ -523,8 +523,8 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
               </div>
 
               {/* Top Suppliers (Visual) */}
-              <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 h-full">
-                <h3 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-2 uppercase tracking-tight text-sm">
+              <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8 h-full">
+                <h3 className="text-xl font-black text-zinc-900 mb-8 flex items-center gap-2 uppercase tracking-tight text-sm">
                   <HeartHandshake size={20} className="text-emerald-600" />
                   {t('topSuppliers')}
                 </h3>
@@ -535,9 +535,9 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                     params.set('backUrl', `${pathname}?${searchParams.toString()}`);
                     
                     return (
-                    <div key={i} className="p-4 bg-slate-50 rounded-2xl border border-transparent hover:border-emerald-100 hover:bg-white transition-all">
+                    <div key={i} className="p-4 bg-zinc-50 rounded-xl border border-transparent hover:border-emerald-100 hover:bg-white transition-all">
                       <div className="flex justify-between items-start mb-1">
-                        <Link href={`/intelligence/competitors/${encodeURIComponent(winner.competitor_id)}?${params.toString()}`} className="text-xs font-black text-slate-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[200px]" title={winner.winner_name}>
+                        <Link href={`/intelligence/competitors/${encodeURIComponent(winner.competitor_id)}?${params.toString()}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[200px]" title={winner.winner_name}>
                           {winner.winner_name}
                         </Link>
                         <p className="text-xs font-bold text-emerald-600 whitespace-nowrap">{winner.wins} {t('wins')}</p>
@@ -546,14 +546,14 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                       {/* Share of Spend Visual Bar */}
                       <div className="mt-2 mb-1">
                         <div className="flex justify-between items-end mb-1">
-                            <p className="text-[10px] font-bold text-slate-500">{formatValue(winner.revenue)}</p>
+                            <p className="text-[10px] font-bold text-zinc-500">{formatValue(winner.revenue)}</p>
                         {winner.share_of_spend_pct !== undefined && winner.share_of_spend_pct !== null && (
                             <p className="text-[9px] font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded-md border border-blue-100" title={t('shareOfWallet')}>
                             {winner.share_of_spend_pct.toFixed(1)}% {t('shareOfWallet')}
                             </p>
                         )}
                         </div>
-                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
                             <div 
                                 className="h-full bg-blue-500 rounded-full" 
                                 style={{ width: `${winner.share_of_spend_pct}%` }}
@@ -579,8 +579,8 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                 </div>
 
                 {/* Historical Spending Trend (Data List) */}
-                <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 h-full overflow-y-auto custom-scrollbar">
-                    <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-tight text-sm sticky top-0 bg-white z-10 pb-4 border-b border-slate-100">
+                <div className="lg:col-span-5 bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8 h-full overflow-y-auto custom-scrollbar">
+                    <h3 className="text-xl font-black text-zinc-900 mb-6 flex items-center gap-2 uppercase tracking-tight text-sm sticky top-0 bg-white z-10 pb-4 border-b border-zinc-100">
                         <TrendingUp size={20} className="text-blue-600" />
                         {t('spendingHistory')}
                     </h3>
@@ -588,11 +588,11 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                         {metrics.yearly_stats.map((year: any, i: number) => (
                         <div key={i} className="group">
                             <div className="flex justify-between items-end mb-2">
-                            <span className="text-sm font-black text-slate-900">{year.year}</span>
-                            <span className="text-xs font-bold text-slate-500">{formatValue(year.total_spend)} • {year.total_contracts} {t('projects')}</span>
+                            <span className="text-sm font-black text-zinc-900">{year.year}</span>
+                            <span className="text-xs font-bold text-zinc-500">{formatValue(year.total_spend)} • {year.total_contracts} {t('projects')}</span>
                             </div>
                             <div className="flex items-center gap-3">
-                            <div className="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden flex">
+                            <div className="flex-1 h-3 bg-zinc-100 rounded-full overflow-hidden flex">
                                 <div 
                                 className="h-full bg-blue-600 rounded-full transition-all duration-1000" 
                                 style={{ width: `${(year.total_spend / metrics.yearly_stats[0].total_spend) * 100}%` }}
@@ -615,54 +615,54 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
             return (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
              {/* Active Tenders */}
-             <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8">
-                <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-tight text-sm">
+             <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8">
+                <h3 className="text-xl font-black text-zinc-900 mb-6 flex items-center gap-2 uppercase tracking-tight text-sm">
                     <TrendingUp size={20} className="text-blue-600" />
                     {t('analysis.activeTenders')}
                 </h3>
                 <div className="space-y-4">
                     {metrics.activeTenders?.length > 0 ? metrics.activeTenders.map((td: any, i: number) => (
-                        <div key={i} className="p-4 bg-slate-50 rounded-2xl border border-transparent hover:border-blue-100 hover:bg-white transition-all">
+                        <div key={i} className="p-4 bg-zinc-50 rounded-xl border border-transparent hover:border-blue-100 hover:bg-white transition-all">
                             <div className="flex justify-between items-start mb-1">
-                                <Link href={`/tenders/${td.tender_uuid}?backUrl=${tenderBackUrl}`} className="text-xs font-black text-slate-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={td.title}>
+                                <Link href={`/tenders/${td.tender_uuid}?backUrl=${tenderBackUrl}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={td.title}>
                                     {td.title || "No Title"}
                                 </Link>
-                                <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap">
+                                <span className="text-[10px] font-bold text-zinc-400 whitespace-nowrap">
                                     {td.submission_deadline ? new Date(td.submission_deadline).toLocaleDateString() : 'Open'}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center mt-2">
-                                <p className="text-[10px] font-bold text-slate-500">{formatValue(td.estimated_value)} (Est)</p>
+                                <p className="text-[10px] font-bold text-zinc-500">{formatValue(td.estimated_value)} (Est)</p>
                                 <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 uppercase">Active</span>
                             </div>
                         </div>
                     )) : (
-                        <p className="text-slate-400 italic text-sm text-center py-4">No active tenders found.</p>
+                        <p className="text-zinc-400 italic text-sm text-center py-4">No active tenders found.</p>
                     )}
                 </div>
              </div>
 
              {/* Awarded Tenders */}
-             <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8">
-                <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-tight text-sm">
+             <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8">
+                <h3 className="text-xl font-black text-zinc-900 mb-6 flex items-center gap-2 uppercase tracking-tight text-sm">
                     <Check size={20} className="text-emerald-600" />
                     {t('analysis.latestAwards')}
                 </h3>
                 <div className="space-y-4">
                     {metrics.awardedTenders?.length > 0 ? metrics.awardedTenders.map((td: any, i: number) => (
-                        <div key={i} className="p-4 bg-slate-50 rounded-2xl border border-transparent hover:border-emerald-100 hover:bg-white transition-all">
+                        <div key={i} className="p-4 bg-zinc-50 rounded-xl border border-transparent hover:border-emerald-100 hover:bg-white transition-all">
                             <div className="flex justify-between items-start mb-1">
-                                <Link href={`/tenders/${td.tender_uuid}?backUrl=${tenderBackUrl}`} className="text-xs font-black text-slate-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={td.title}>
+                                <Link href={`/tenders/${td.tender_uuid}?backUrl=${tenderBackUrl}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={td.title}>
                                     {td.title || "No Title"}
                                 </Link>
-                                <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap">
+                                <span className="text-[10px] font-bold text-zinc-400 whitespace-nowrap">
                                     {td.publication_date ? new Date(td.publication_date).getFullYear() : ''}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center mt-2">
                                 <div className="flex items-center gap-3">
-                                    <p className="text-[10px] font-bold text-slate-500">{formatValue(td.final_contract_value)}</p>
-                                    <p className="text-[10px] font-medium text-slate-400 border-l border-slate-200 pl-3">Est. {formatValue(td.estimated_value)}</p>
+                                    <p className="text-[10px] font-bold text-zinc-500">{formatValue(td.final_contract_value)}</p>
+                                    <p className="text-[10px] font-medium text-zinc-400 border-l border-zinc-200 pl-3">Est. {formatValue(td.estimated_value)}</p>
                                 </div>
                                 {td.estimated_value && td.final_contract_value < td.estimated_value && (
                                     <span className="text-[9px] font-bold text-emerald-600">
@@ -672,7 +672,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                             </div>
                         </div>
                     )) : (
-                        <p className="text-slate-400 italic text-sm text-center py-4">No awarded tenders found.</p>
+                        <p className="text-zinc-400 italic text-sm text-center py-4">No awarded tenders found.</p>
                     )}
                 </div>
              </div>
@@ -689,7 +689,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
       ) : (
         <div className="space-y-6 animate-in fade-in duration-700">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+            <h3 className="text-sm font-black text-zinc-400 uppercase tracking-widest flex items-center gap-2">
               <TrendingUp size={16} className="text-blue-600" />
               {query.length >= 3 ? t('searchResults') : t('topAuthorities')}
             </h3>
@@ -700,23 +700,32 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
               {searchResults.map((b, i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:border-blue-200 hover:shadow-md transition-all cursor-pointer group"
+                  className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 hover:border-blue-500 hover:shadow-md hover:-translate-y-px transition-all cursor-pointer group"
                   onClick={() => navigateToProfile(b.buyer_company_id)}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition-colors truncate">
+                      <h3 className="text-[17px] font-bold text-zinc-900 group-hover:text-blue-600 transition-colors mb-1">
                         {b.name}
                       </h3>
-                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                        <Badge color="slate">{b.country}</Badge>
-                        <span className="text-[10px] text-slate-400">{b.total_contracts?.toLocaleString()} {t('stats.totalAwards')}</span>
+                      <div className="flex items-center gap-1.5 text-[13px] text-zinc-500 mb-4">
+                        <MapPin size={12} />
+                        <span>{b.country}</span>
+                        <span className="text-zinc-300">·</span>
+                        <span>{t('publicAuthority')}</span>
+                      </div>
+                      <div className="flex gap-6">
+                        <div>
+                          <div className="text-[20px] font-extrabold text-blue-600 leading-tight">{(b.total_contracts || 0).toLocaleString()}</div>
+                          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">{t('stats.totalAwards')}</div>
+                        </div>
                       </div>
                     </div>
-                    <div className="text-right shrink-0">
-                      <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300 group-hover:bg-slate-900 group-hover:text-white transition-all">
-                        <ArrowRight size={14} />
-                      </div>
+                    <div className="flex flex-col items-end gap-2 shrink-0">
+                      <Badge color="zinc">{b.country}</Badge>
+                      <span className="text-[13px] text-zinc-400 group-hover:text-blue-600 transition-colors flex items-center gap-1 font-medium">
+                        {t('viewProfile')} <ArrowUpRight size={14} />
+                      </span>
                     </div>
                   </div>
                 </div>

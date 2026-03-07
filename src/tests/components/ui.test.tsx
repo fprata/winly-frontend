@@ -19,8 +19,8 @@ describe('Badge', () => {
   it('applies default slate color classes', () => {
     render(<Badge>Default</Badge>);
     const el = screen.getByText('Default');
-    expect(el.className).toContain('bg-slate-50');
-    expect(el.className).toContain('text-slate-600');
+    expect(el.className).toContain('bg-zinc-50');
+    expect(el.className).toContain('text-zinc-600');
   });
 
   it('applies the correct color classes for blue', () => {
@@ -31,7 +31,7 @@ describe('Badge', () => {
   });
 
   it('applies the correct color classes for emerald', () => {
-    render(<Badge color="emerald">Success</Badge>);
+    render(<Badge color="green">Success</Badge>);
     const el = screen.getByText('Success');
     expect(el.className).toContain('bg-emerald-50');
     expect(el.className).toContain('text-emerald-700');
@@ -66,7 +66,7 @@ describe('Card', () => {
     render(<Card>Base</Card>);
     const el = screen.getByText('Base');
     expect(el.className).toContain('bg-white');
-    expect(el.className).toContain('rounded-2xl');
+    expect(el.className).toContain('rounded-xl');
     expect(el.className).toContain('border');
   });
 
@@ -80,7 +80,7 @@ describe('Card', () => {
     render(<Card hover>Hoverable</Card>);
     const el = screen.getByText('Hoverable');
     expect(el.className).toContain('hover:shadow-md');
-    expect(el.className).toContain('hover:border-slate-300');
+    expect(el.className).toContain('hover:border-zinc-300');
   });
 
   it('merges custom className', () => {

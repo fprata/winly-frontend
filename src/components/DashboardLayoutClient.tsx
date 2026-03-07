@@ -25,7 +25,7 @@ export function DashboardLayoutClient({
       {/* Mobile Menu Button */}
       <button
         onClick={() => setMobileMenuOpen(true)}
-        className="md:hidden fixed bottom-5 right-5 z-30 p-3.5 bg-slate-900 text-white rounded-xl shadow-lg hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+        className="md:hidden fixed bottom-5 right-5 z-30 p-3 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700 active:scale-95 transition-all cursor-pointer"
         aria-label="Open menu"
       >
         <Menu size={20} />

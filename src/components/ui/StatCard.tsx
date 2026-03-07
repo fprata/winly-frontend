@@ -6,28 +6,30 @@ interface StatCardProps {
   label: string;
   value: React.ReactNode;
   subtitle?: React.ReactNode;
-  color?: "teal" | "navy" | "amber";
+  color?: "blue" | "green" | "amber" | "indigo" | "zinc";
   className?: string;
 }
 
 const colorMap = {
-  teal: {
-    iconBg: "bg-teal-50",
-    iconText: "text-teal-600",
-    labelText: "text-teal-600",
-    accentBorder: "border-l-teal-500",
+  blue: {
+    iconBg: "bg-blue-50",
+    iconText: "text-blue-600",
   },
-  navy: {
-    iconBg: "bg-slate-50",
-    iconText: "text-slate-700",
-    labelText: "text-slate-700",
-    accentBorder: "border-l-slate-700",
+  green: {
+    iconBg: "bg-emerald-50",
+    iconText: "text-emerald-600",
   },
   amber: {
     iconBg: "bg-amber-50",
     iconText: "text-amber-600",
-    labelText: "text-amber-600",
-    accentBorder: "border-l-amber-500",
+  },
+  indigo: {
+    iconBg: "bg-indigo-50",
+    iconText: "text-indigo-600",
+  },
+  zinc: {
+    iconBg: "bg-zinc-100",
+    iconText: "text-zinc-500",
   },
 };
 
@@ -36,34 +38,30 @@ export const StatCard = React.memo(function StatCard({
   label,
   value,
   subtitle,
-  color = "teal",
+  color = "blue",
   className,
 }: StatCardProps) {
   const c = colorMap[color];
   return (
     <div
       className={twMerge(
-        `bg-white p-6 rounded-xl border border-slate-200 border-l-4 ${c.accentBorder} shadow-sm hover:shadow-md transition-all duration-300`,
+        "bg-white p-5 rounded-xl border border-zinc-200 shadow-sm hover:shadow-md transition-all duration-200",
         className
       )}
     >
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-[13px] font-medium text-zinc-500">{label}</span>
         <div
-          className={`w-9 h-9 rounded-lg ${c.iconBg} ${c.iconText} flex items-center justify-center`}
+          className={`w-8 h-8 rounded-lg ${c.iconBg} ${c.iconText} flex items-center justify-center shrink-0`}
         >
           {icon}
         </div>
-        <span
-          className={`text-xs font-medium ${c.labelText} uppercase tracking-wider`}
-        >
-          {label}
-        </span>
       </div>
-      <h3 className="text-3xl font-extrabold text-slate-900 mb-1 tracking-tight">
+      <div className="text-[32px] font-bold text-zinc-900 tracking-tight leading-none mb-2">
         {value}
-      </h3>
+      </div>
       {subtitle && (
-        <div className="text-sm text-slate-500">{subtitle}</div>
+        <div className="text-[13px] text-zinc-500 mt-2 flex items-center gap-1">{subtitle}</div>
       )}
     </div>
   );

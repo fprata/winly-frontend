@@ -226,6 +226,8 @@
     "deadlineIn": "{days}d left",
     "deadlineExpired": "Expired",
     "noValue": "Not specified",
+    "estValue": "Est. Value",
+    "finalValue": "Final Value",
     "viewTender": "View"
   },
   "intelligence": {
@@ -285,6 +287,8 @@
       "nameLabel": "Authority Name",
       "countryLabel": "Region",
       "verifiedProfileLabel": "Verified Authority",
+      "viewProfile": "View profile",
+      "publicAuthority": "Public Authority",
       "stats": {
         "totalAwards": "Total Projects",
         "avgAwardValue": "Avg. Award",
@@ -375,6 +379,9 @@
       "topBuyers": "Top Clients",
       "nameLabel": "Company Name",
       "countryLabel": "Region",
+      "viewProfile": "View profile",
+      "activeCompetitor": "Active Competitor",
+      "competitor": "Competitor",
       "stats": {
         "totalWins": "Total Wins",
         "totalBids": "Total Bids",

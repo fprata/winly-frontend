@@ -65,7 +65,7 @@ export function TenderDetailsTabs({ tabs, riskScore, riskLevel }: TenderDetailsT
   return (
     <div className="space-y-8">
       {/* Tab Bar */}
-      <div className="flex items-center gap-2 p-1.5 bg-slate-100 rounded-2xl w-full sm:w-fit overflow-x-auto">
+      <div className="flex items-center gap-2 p-1.5 bg-zinc-100 rounded-xl w-full sm:w-fit overflow-x-auto">
         {visibleTabs.map(tab => (
           <button
             key={tab.id}
@@ -73,8 +73,8 @@ export function TenderDetailsTabs({ tabs, riskScore, riskLevel }: TenderDetailsT
             className={`
               px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-200 flex items-center gap-2
               ${activeTab === tab.id
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'text-slate-500 hover:text-slate-900 hover:bg-white/60'
+                ? 'bg-zinc-900 text-white shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-900 hover:bg-white/60'
               }
             `}
           >

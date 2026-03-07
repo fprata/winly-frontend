@@ -90,9 +90,9 @@ export function BuyerEvolutionCharts({ competitorTrends, sectorTrends }: TrendPr
 
   if (!sourceData || sourceData.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden flex flex-col h-full items-center justify-center p-8">
-        <TrendingUp size={48} className="text-slate-200 mb-4" />
-        <p className="text-slate-400 font-bold text-sm italic">
+      <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm overflow-hidden flex flex-col h-full items-center justify-center p-8">
+        <TrendingUp size={48} className="text-zinc-200 mb-4" />
+        <p className="text-zinc-400 font-bold text-sm italic">
           {t('noTrendHistory', { defaultValue: 'No strategic trend history available.' })}
         </p>
       </div>
@@ -101,28 +101,28 @@ export function BuyerEvolutionCharts({ competitorTrends, sectorTrends }: TrendPr
 
   if (!isMounted) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden flex flex-col h-full items-center justify-center p-8">
+      <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm overflow-hidden flex flex-col h-full items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden flex flex-col h-full">
+    <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm overflow-hidden flex flex-col h-full">
         {/* Header & Tabs */}
-        <div className="px-8 pt-8 pb-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight text-sm flex items-center gap-2">
+        <div className="px-8 pt-8 pb-4 border-b border-zinc-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h3 className="text-xl font-black text-zinc-900 uppercase tracking-tight text-sm flex items-center gap-2">
                 <TrendingUp size={20} className="text-blue-600" />
                 Strategic Evolution
             </h3>
             
-            <div className="flex bg-slate-100 p-1 rounded-xl">
+            <div className="flex bg-zinc-100 p-1 rounded-xl">
                 <button
                     onClick={() => setActiveTab('competitors')}
                     className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
                         activeTab === 'competitors' 
                         ? 'bg-white text-blue-600 shadow-sm' 
-                        : 'text-slate-500 hover:text-slate-700'
+                        : 'text-zinc-500 hover:text-zinc-700'
                     }`}
                 >
                     <TrendingUp size={14} />
@@ -133,7 +133,7 @@ export function BuyerEvolutionCharts({ competitorTrends, sectorTrends }: TrendPr
                     className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
                         activeTab === 'sectors' 
                         ? 'bg-white text-purple-600 shadow-sm' 
-                        : 'text-slate-500 hover:text-slate-700'
+                        : 'text-zinc-500 hover:text-zinc-700'
                     }`}
                 >
                     <PieChart size={14} />

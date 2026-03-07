@@ -29,10 +29,10 @@ api/
 - `src/components/*.tsx` — Feature components (ExplorerClient, MatchesClient, BuyerIntelligenceClient, etc.)
 
 ## Key Conventions
-- Use `slate-*` for all neutrals — never `gray-*`.
-- Follow the design system label pattern: `text-[10px] font-black text-slate-400 uppercase tracking-widest`.
+- Use `zinc-*` for all neutrals — never `slate-*` or `gray-*`.
+- Follow the design system label pattern: `text-[10px] font-black text-zinc-400 uppercase tracking-widest`.
 - Icons: Lucide React. Card headers use `size={18}`, section titles `size={20}`.
-- Cards: `rounded-2xl` with `border-slate-200 shadow-sm`.
+- Cards: `rounded-xl` with `border-zinc-200 shadow-sm`.
 - Always use the `<Button>` component from `@/components/ui/Button` for actions.
 
 ## i18n

@@ -30,8 +30,8 @@ export default function ExplorerError({
           />
         </svg>
       </div>
-      <h2 className="text-xl font-bold text-slate-900 mb-2">Explorer Unavailable</h2>
-      <p className="text-slate-500 max-w-md mb-8">
+      <h2 className="text-xl font-bold text-zinc-900 mb-2">Explorer Unavailable</h2>
+      <p className="text-zinc-500 max-w-md mb-8">
         We couldn't load the tender explorer. Please check your internet connection and try again.
       </p>
       <div className="flex gap-4">

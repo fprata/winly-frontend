@@ -30,8 +30,8 @@ export default function Error({
           />
         </svg>
       </div>
-      <h2 className="text-xl font-bold text-slate-900 mb-2">Something went wrong</h2>
-      <p className="text-slate-500 max-w-md mb-8">
+      <h2 className="text-xl font-bold text-zinc-900 mb-2">Something went wrong</h2>
+      <p className="text-zinc-500 max-w-md mb-8">
         We encountered an error while loading your dashboard. Please try again or contact support if the issue persists.
       </p>
       <div className="flex gap-4">
@@ -43,7 +43,7 @@ export default function Error({
         </button>
         <button
           onClick={() => window.location.reload()}
-          className="px-6 py-2.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-semibold hover:bg-slate-50 transition-colors"
+          className="px-6 py-2.5 bg-white text-zinc-700 border border-zinc-200 rounded-xl text-sm font-semibold hover:bg-zinc-50 transition-colors"
         >
           Reload page
         </button>
