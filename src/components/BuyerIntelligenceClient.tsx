@@ -747,59 +747,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
             initialTenders={tenders} 
           />
         </div>
-      ) : (
-        <div className="space-y-6 animate-in fade-in duration-700">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-black text-zinc-400 uppercase tracking-widest flex items-center gap-2">
-              <TrendingUp size={16} className="text-blue-600" />
-              {query.length >= 3 ? t('searchResults') : t('topAuthorities')}
-            </h3>
-          </div>
-
-          {searchResults.length > 0 ? (
-            <div className="space-y-3">
-              {searchResults.map((b, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 hover:border-blue-500 hover:shadow-md hover:-translate-y-px transition-all cursor-pointer group"
-                  onClick={() => navigateToProfile(b.buyer_company_id)}
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-[17px] font-bold text-zinc-900 group-hover:text-blue-600 transition-colors mb-1">
-                        {b.name}
-                      </h3>
-                      <div className="flex items-center gap-1.5 text-[13px] text-zinc-500 mb-4">
-                        <MapPin size={12} />
-                        <span>{b.country}</span>
-                        <span className="text-zinc-300">·</span>
-                        <span>{t('publicAuthority')}</span>
-                      </div>
-                      <div className="flex gap-6">
-                        <div>
-                          <div className="text-[20px] font-extrabold text-blue-600 leading-tight">{(b.total_contracts || 0).toLocaleString()}</div>
-                          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">{t('stats.totalAwards')}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-2 shrink-0">
-                      <Badge color="zinc">{b.country}</Badge>
-                      <span className="text-[13px] text-zinc-400 group-hover:text-blue-600 transition-colors flex items-center gap-1 font-medium">
-                        {t('viewProfile')} <ArrowUpRight size={14} />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyState
-              icon={<SearchX size={36} />}
-              title={t('noResultsFound')}
-            />
-          )}
-        </div>
-      )}
+      ) : null}
     </div>
   );
 }
