@@ -2,20 +2,27 @@
 
 import React, { useState } from 'react';
 import {
-  ArrowRight,
-  Brain,
-  Target,
-  DollarSign,
-  Globe,
-  Zap,
   FileText,
+  Target,
+  Building2,
+  BarChart3,
+  Link2,
+  Download,
+  Sparkles,
+  MessageCircle,
+  ListChecks,
+  AlertTriangle,
   ShieldCheck,
-  AlertCircle,
-  TrendingDown,
+  ArrowRight,
+  FileDown,
+  HelpCircle,
+  Lock,
+  Loader2,
 } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/navigation';
-import { MatchDetails, ClientProfile } from './types';
+import { toast } from '../ui/Toast';
+import type { UserTier } from './types';
 
 interface OverviewTabProps {
   tenderId: string;
@@ -27,8 +34,13 @@ interface OverviewTabProps {
     country: string;
     description: string;
     cpv_code: string | null;
+    procedure_type?: string | null;
+    submission_deadline?: string | null;
+    publication_date?: string | null;
+    source_system?: string | null;
+    tender_id?: string | null;
   };
-  match: MatchDetails | null;
+  match: any | null;
   buyerIntel: any;
   relevantCompetitors: any[];
   sectorStats: any;
@@ -40,37 +52,58 @@ interface OverviewTabProps {
   discountPct: number;
   incumbent: string | null;
   relatedTenders: any[];
+  riskScore?: number | null;
+  riskLevel?: string | null;
+  riskFactors?: any;
+  userTier?: UserTier;
 }
 
-const DESCRIPTION_CHAR_LIMIT = 500;
-
-function ProjectScope({ description }: { description: string }) {
-  const t = useTranslations('tenders');
-  const [expanded, setExpanded] = useState(false);
-  const text = description || t('noDescription');
-  const isLong = text.length > DESCRIPTION_CHAR_LIMIT;
-  const displayText = isLong && !expanded ? text.slice(0, DESCRIPTION_CHAR_LIMIT) + '...' : text;
-
+function DataGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <section className="bg-white p-8 rounded-xl border border-zinc-200/60 shadow-sm">
-      <h3 className="text-xl font-bold text-zinc-900 mb-6 flex items-center gap-2">
-        <FileText size={24} className="text-blue-600" />
-        {t('projectScope')}
-      </h3>
-      <div className="text-zinc-600 text-lg leading-relaxed whitespace-pre-wrap font-medium">
-        {displayText}
-      </div>
-      {isLong && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="mt-4 text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors"
-        >
-          {expanded ? t('readLess') : t('readMore')}
-        </button>
-      )}
-    </section>
+    <div className="mb-4 last:mb-0">
+      <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-0.5">{label}</span>
+      <div className="font-semibold text-zinc-900 leading-snug">{children}</div>
+    </div>
   );
 }
+
+function CardHeader({ icon, title }: { icon: React.ReactNode; title: string }) {
+  return (
+    <div className="flex items-center gap-2 mb-5 pb-3 border-b border-zinc-200">
+      {icon}
+      <h3 className="text-[15px] font-bold text-zinc-900">{title}</h3>
+    </div>
+  );
+}
+
+function IconBox({ color, children }: { color: 'blue' | 'indigo' | 'emerald' | 'rose' | 'amber'; children: React.ReactNode }) {
+  const colors = {
+    blue: 'bg-blue-50 text-blue-600',
+    indigo: 'bg-indigo-50 text-indigo-600',
+    emerald: 'bg-emerald-50 text-emerald-600',
+    rose: 'bg-rose-50 text-rose-600',
+    amber: 'bg-amber-50 text-amber-600',
+  };
+  return (
+    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${colors[color]}`}>
+      {children}
+    </div>
+  );
+}
+
+function ScoreBar({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <div className="flex items-center gap-2.5 mb-2.5 last:mb-0">
+      <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider w-[90px] shrink-0">{label}</span>
+      <div className="flex-1 h-2 bg-zinc-100 rounded-full overflow-hidden">
+        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(value, 100)}%`, backgroundColor: color }} />
+      </div>
+      <span className="text-[13px] font-bold text-zinc-900 w-7 text-right tabular-nums">{Math.round(value)}</span>
+    </div>
+  );
+}
+
+const DESCRIPTION_CHAR_LIMIT = 600;
 
 export function OverviewTab({
   tenderId,
@@ -87,290 +120,364 @@ export function OverviewTab({
   discountPct,
   incumbent,
   relatedTenders,
+  riskScore,
+  riskLevel,
+  riskFactors,
+  userTier,
 }: OverviewTabProps) {
   const t = useTranslations('tenders');
-  const tMatches = useTranslations('matches');
   const locale = useLocale();
+  const [descExpanded, setDescExpanded] = useState(false);
+  const [exportingPdf, setExportingPdf] = useState(false);
+  const [exportingQuestions, setExportingQuestions] = useState(false);
+
+  const isPro = userTier === 'Professional' || userTier === 'Enterprise';
 
   const formatValue = (val: number, curr: string = 'EUR') => {
     if (!val) return t('valueNotSpecified');
     return new Intl.NumberFormat(locale === 'pt' ? 'pt-PT' : 'en-GB', {
-      style: 'currency',
-      currency: curr || 'EUR',
-      maximumFractionDigits: 0,
+      style: 'currency', currency: curr || 'EUR', maximumFractionDigits: 0,
     }).format(val);
   };
 
+  const daysLeft = tender.submission_deadline
+    ? Math.ceil((new Date(tender.submission_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    : null;
+
+  const description = tender.description || t('noDescription');
+  const isLongDesc = description.length > DESCRIPTION_CHAR_LIMIT;
+  const displayDesc = isLongDesc && !descExpanded ? description.slice(0, DESCRIPTION_CHAR_LIMIT) + '...' : description;
+
+  const riskColor = riskScore == null ? '' : riskScore <= 3 ? '#10b981' : riskScore <= 6 ? '#f59e0b' : '#dc2626';
+  const riskBg = riskScore == null ? '' : riskScore <= 3 ? 'bg-emerald-500' : riskScore <= 6 ? 'bg-amber-500' : 'bg-rose-600';
+  const riskLabel = riskScore == null ? '' : riskScore <= 3 ? 'LOW RISK' : riskScore <= 6 ? 'MEDIUM RISK' : 'HIGH RISK';
+
+  const handleExportPdf = async () => {
+    if (!isPro) return;
+    setExportingPdf(true);
+    try {
+      const res = await fetch('/api/export/insights-pdf', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tenderId }),
+      });
+      if (!res.ok) throw new Error();
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `tender-insights-${tenderId}.pdf`; a.click();
+      URL.revokeObjectURL(url);
+      toast('success', t('export.downloadReady'));
+    } catch { toast('error', t('export.exportError')); }
+    finally { setExportingPdf(false); }
+  };
+
+  const handleExportQuestions = async () => {
+    if (!isPro) return;
+    setExportingQuestions(true);
+    try {
+      const res = await fetch('/api/export/questions', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tenderId }),
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `tender-questions-${tenderId}.json`; a.click();
+      URL.revokeObjectURL(url);
+      toast('success', t('export.downloadReady'));
+    } catch { toast('error', t('export.exportError')); }
+    finally { setExportingQuestions(false); }
+  };
+
   return (
-    <div className="space-y-8">
-      {/* Strategic Dashboard */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Win Probability & Match Card */}
-        <div className="flex flex-col h-full">
-          <div className="bg-zinc-900 rounded-xl p-8 text-white shadow-xl relative overflow-hidden flex-1 flex flex-col">
-            <div className="absolute top-0 right-0 p-6 opacity-5"><Brain size={120} /></div>
-            <div className="relative z-10 flex flex-col h-full">
-              <div className="flex justify-between items-center mb-8">
-                <h3 className="text-lg font-bold">{t('predictiveIntelligence')}</h3>
-                <div className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest">{t('mlModel')}</div>
-              </div>
+    <div className="space-y-4">
 
-              {match?.match_score != null ? (
-                <>
-                  <div className="grid grid-cols-1 gap-8 mb-10">
-                    <div className="text-center group">
-                      <div className="w-32 h-32 rounded-full border-4 border-zinc-800 flex items-center justify-center relative mx-auto mb-3 transition-transform group-hover:scale-105">
-                        <svg className="absolute inset-0 w-full h-full -rotate-90">
-                          <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-zinc-800" />
-                          <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="4" fill="transparent" strokeDasharray={377} strokeDashoffset={377 - (377 * match.match_score) / 100} className="text-blue-500 transition-all duration-1000" strokeLinecap="round" />
-                        </svg>
-                        <span className="text-4xl font-black">{Math.round(match.match_score)}%</span>
-                      </div>
-                      <p className="text-xs font-black text-zinc-400 uppercase tracking-widest">{t('companyFit')}</p>
-                    </div>
-                  </div>
+      {/* Row 1: Key Details + Match Analysis */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                  <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-8 border-t border-zinc-800 pt-8">
-                    <div className="flex justify-between items-center text-[10px] font-bold">
-                      <span className="text-zinc-500 uppercase">{t('sectorExpertise')}</span>
-                      <span className="text-purple-400">+{match.score_cpv || t('pending')}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-[10px] font-bold">
-                      <span className="text-zinc-500 uppercase">{t('strategicAlignment')}</span>
-                      <span className="text-blue-400">+{match.score_strategic || t('pending')}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-[10px] font-bold">
-                      <span className="text-zinc-500 uppercase">{t('aiSemanticMatch')}</span>
-                      <span className="text-indigo-400">+{match.score_semantic || t('pending')}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-[10px] font-bold">
-                      <span className="text-zinc-500 uppercase">{t('capacityFit')}</span>
-                      <span className="text-emerald-400">+{match.score_capacity || t('pending')}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex-1"></div>
-
-                  <div className="pt-6 border-t border-zinc-800">
-                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-4">{t('fitAnalysis')}</p>
-                    <ul className="space-y-3">
-                      {match.match_reasons?.split('|').filter((r: string) => r.trim()).map((reason: string, i: number) => (
-                        <li key={i} className="flex items-start gap-3 text-xs text-zinc-300 leading-tight">
-                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />
-                          {reason.trim()}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </>
-              ) : (
-                <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
-                  <div className="w-20 h-20 rounded-full border-4 border-zinc-800 flex items-center justify-center mb-4">
-                    <Brain size={32} className="text-zinc-600" />
-                  </div>
-                  <p className="text-sm font-bold text-zinc-400 mb-2">{t('noMatchData')}</p>
-                  <p className="text-xs text-zinc-500 max-w-[240px]">{t('noMatchDataDesc')}</p>
-                </div>
-              )}
-            </div>
-          </div>
+        {/* Key Details */}
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <CardHeader icon={<IconBox color="blue"><FileText size={16} /></IconBox>} title={t('keyDetails')} />
+          <DataGroup label={t('authority')}>
+            <Link
+              href={`/intelligence/buyers?name=${encodeURIComponent(tender.buyer_name)}&fromTender=${tenderId}&backUrl=${encodeURIComponent('/tenders/' + tenderId)}`}
+              className="text-blue-600 hover:underline font-semibold"
+            >
+              {tender.buyer_name}
+            </Link>
+          </DataGroup>
+          {tender.procedure_type && (
+            <DataGroup label={t('procedureType')}>{tender.procedure_type}</DataGroup>
+          )}
+          <DataGroup label={t('financials')}>
+            <span className="text-[20px] font-extrabold text-blue-600">{formatValue(tender.estimated_value, tender.currency)}</span>
+          </DataGroup>
+          {tender.submission_deadline && (
+            <DataGroup label={t('submissionDeadline')}>
+              <span style={{ color: daysLeft !== null && daysLeft <= 14 ? '#b45309' : undefined, fontWeight: daysLeft !== null && daysLeft <= 14 ? 700 : undefined }}>
+                {new Date(tender.submission_deadline).toLocaleDateString(locale === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                {daysLeft !== null && daysLeft > 0 && ` (${daysLeft}d)`}
+              </span>
+            </DataGroup>
+          )}
+          {tender.publication_date && (
+            <DataGroup label={t('publicationDate')}>
+              {new Date(tender.publication_date).toLocaleDateString(locale === 'pt' ? 'pt-PT' : 'en-GB')}
+            </DataGroup>
+          )}
+          {tender.source_system && (
+            <DataGroup label={t('source')}>{tender.source_system}{tender.tender_id ? ` — ${tender.tender_id}` : ''}</DataGroup>
+          )}
         </div>
 
-        {/* Competition & Market Card */}
-        <div className="flex flex-col h-full">
-          <div className="bg-white rounded-xl border border-zinc-200 p-8 shadow-sm flex-1 flex flex-col">
-            <h3 className="text-lg font-bold text-zinc-900 mb-6 flex items-center gap-2">
-              <Target size={20} className="text-rose-600" />
-              {t('competitiveLandscape')}
-            </h3>
+        {/* Match Analysis */}
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <CardHeader icon={<IconBox color="indigo"><Target size={16} /></IconBox>} title={t('matchAnalysis')} />
 
-            <div className="space-y-6 flex-1 flex flex-col">
-              {/* Incumbent Alert */}
-              {incumbent ? (
-                <div className="p-5 bg-rose-50 rounded-xl border border-rose-100">
-                  <div className="flex items-center gap-2 text-rose-700 font-black text-[10px] uppercase tracking-widest mb-2">
-                    <AlertCircle size={14} />
-                    {t('incumbentDetected')}
-                  </div>
-                  <p className="text-sm font-bold text-rose-900 mb-1">{incumbent}</p>
-                  <p className="text-xs text-rose-600 italic">{t('renewalNotice')}</p>
+          {match?.match_score != null ? (
+            <>
+              <div className="flex gap-6 mb-5">
+                <div>
+                  <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-0.5">{t('overallScore')}</span>
+                  <span className="text-[20px] font-extrabold text-blue-600">{Math.round(match.match_score)} / 100</span>
                 </div>
-              ) : (
-                <div className="p-5 bg-emerald-50 rounded-xl border border-emerald-100">
-                  <div className="flex items-center gap-2 text-emerald-700 font-black text-[10px] uppercase tracking-widest mb-2">
-                    <ShieldCheck size={14} />
-                    {t('openField')}
+                {match.win_probability > 0 && (
+                  <div>
+                    <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-0.5">{t('winProbability')}</span>
+                    <span className="text-[20px] font-extrabold text-emerald-600">{Math.round(match.win_probability)}%</span>
                   </div>
-                  <p className="text-xs text-emerald-600">{t('noIncumbent')}</p>
-                </div>
-              )}
-
-              {/* Predicted Competitors */}
+                )}
+              </div>
               <div>
-                <div className="flex justify-between items-center mb-4">
-                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{t('expectedCompetitors')}</p>
-                  {relevantCompetitors !== buyerIntel?.top_winners && (
-                    <span className="text-[9px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full uppercase tracking-wider">{tMatches('categories.sectorExpertise')}</span>
-                  )}
-                </div>
-                <div className="space-y-3">
-                  {relevantCompetitors?.slice(0, 3).length > 0 ? (
-                    relevantCompetitors.slice(0, 3).map((w: any, i: number) => (
-                      <Link key={i} href={`/intelligence/competitors?name=${encodeURIComponent(w.winner_name)}&backUrl=${encodeURIComponent('/tenders/' + tenderId)}`} className="flex items-center justify-between p-3 bg-zinc-50 rounded-xl border border-zinc-100 hover:border-blue-200 transition-all group">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-white border border-zinc-200 flex items-center justify-center text-[10px] font-black text-zinc-400 group-hover:text-blue-600 transition-colors">
-                            {w.winner_name.charAt(0)}
-                          </div>
-                          <div>
-                            <span className="text-xs font-bold text-zinc-700 group-hover:text-blue-600 transition-colors block leading-tight">{w.winner_name}</span>
-                            {w.avg_discount > 0 && (
-                              <span className="text-[9px] font-medium text-zinc-400">{t('avgDiscountLabel')}: <span className="text-emerald-600 font-bold">{w.avg_discount.toFixed(1)}%</span></span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-[10px] font-black text-zinc-400 block leading-none">{w.wins} {t('wins')}</span>
-                          <span className="text-[9px] font-bold text-emerald-600 uppercase">{t('topRival')}</span>
-                        </div>
-                      </Link>
-                    ))
-                  ) : (
-                    <p className="text-xs text-zinc-400 italic py-4 text-center border-2 border-dashed border-zinc-100 rounded-xl">{t('noCompetitorData')}</p>
-                  )}
-                </div>
+                {match.score_cpv > 0 && <ScoreBar label="CPV" value={match.score_cpv} color="#8b5cf6" />}
+                {match.score_strategic > 0 && <ScoreBar label={t('strategic')} value={match.score_strategic} color="#0ea5e9" />}
+                {match.score_semantic > 0 && <ScoreBar label={t('semantic')} value={match.score_semantic} color="#14b8a6" />}
+                {match.score_keyword > 0 && <ScoreBar label={t('keyword')} value={match.score_keyword} color="#10b981" />}
+                {match.score_location > 0 && <ScoreBar label={t('location')} value={match.score_location} color="#f59e0b" />}
+                {match.score_market_opp > 0 && <ScoreBar label={t('marketOpp')} value={match.score_market_opp} color="#a1a1aa" />}
               </div>
-
-              <div className="flex-1"></div>
-
-              {/* Buyer DNA */}
-              <div className="pt-6 border-t border-zinc-100">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-zinc-50 rounded-xl border border-zinc-100">
-                    <div className="flex justify-between items-center mb-1">
-                      <p className="text-[10px] font-black text-zinc-400 uppercase leading-none">{t('avgDiscount')}</p>
-                      {sectorStats && <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded uppercase">{tMatches('categories.sectorExpertise')}</span>}
-                    </div>
-                    <p className={`text-xl font-black ${refinedAvgDiscount < 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
-                      {refinedAvgDiscount ? `${refinedAvgDiscount.toFixed(1)}%` : '—'}
-                    </p>
-                    <p className="text-[9px] font-bold text-zinc-400 mt-1 uppercase">{t('buyerPriceSensitivity')}</p>
-                  </div>
-                  <div className="p-4 bg-zinc-50 rounded-xl border border-zinc-100">
-                    <div className="flex justify-between items-center mb-1">
-                      <p className="text-[10px] font-black text-zinc-400 uppercase leading-none">{t('marketDensity')}</p>
-                      {sectorStats && <span className="text-[9px] font-bold text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded uppercase">{tMatches('categories.sectorExpertise')}</span>}
-                    </div>
-                    <p className="text-xl font-black text-zinc-800">{typeof refinedBidderCount === 'number' && refinedBidderCount !== 0 ? refinedBidderCount.toFixed(1) : '—'}</p>
-                    <p className="text-[9px] font-bold text-zinc-400 mt-1 uppercase">{t('avgBidders')}</p>
-                  </div>
-                </div>
-              </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <Target size={32} className="text-zinc-200 mb-3" />
+              <p className="text-sm text-zinc-400 font-medium">{t('noMatchData')}</p>
+              <p className="text-xs text-zinc-300 mt-1">{t('noMatchDataDesc')}</p>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
-      {/* Pricing Analysis Section */}
-      <section className="bg-white p-8 rounded-xl border border-zinc-200/60 shadow-sm">
-        <div className="flex justify-between items-center mb-8">
-          <h3 className="text-xl font-bold text-zinc-900 flex items-center gap-2">
-            <Target size={24} className="text-emerald-600" />
-            {t('priceEngine')}
-          </h3>
-          <div className="px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-widest border border-emerald-100">
-            {t('estimateBased')}
+      {/* Row 2: Project Scope */}
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+        <CardHeader icon={<IconBox color="blue"><FileText size={16} /></IconBox>} title={t('projectScope')} />
+        <p className="text-[14px] text-zinc-600 leading-relaxed whitespace-pre-wrap">{displayDesc}</p>
+        {isLongDesc && (
+          <button
+            onClick={() => setDescExpanded(!descExpanded)}
+            className="mt-3 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
+          >
+            {descExpanded ? t('readLess') : t('readMore')}
+          </button>
+        )}
+      </div>
+
+      {/* Row 3: Buyer Profile + Pricing Benchmark */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        {/* Buyer Profile */}
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <CardHeader icon={<IconBox color="blue"><Building2 size={16} /></IconBox>} title={t('buyerProfile')} />
+          <DataGroup label={t('authority')}>{tender.buyer_name}</DataGroup>
+          <div className="flex gap-5 mt-3">
+            {buyerIntel?.total_contracts > 0 && (
+              <div>
+                <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-0.5">{t('totalContracts')}</span>
+                <span className="text-[20px] font-extrabold text-zinc-900">{buyerIntel.total_contracts}</span>
+              </div>
+            )}
+            {refinedAvgDiscount > 0 && (
+              <div>
+                <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-0.5">{t('avgDiscount')}</span>
+                <span className="text-[20px] font-extrabold text-emerald-600">{refinedAvgDiscount.toFixed(1)}%</span>
+              </div>
+            )}
+            {refinedBidderCount > 0 && (
+              <div>
+                <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-0.5">{t('avgBidders')}</span>
+                <span className="text-[20px] font-extrabold text-zinc-900">{refinedBidderCount.toFixed(1)}</span>
+              </div>
+            )}
+          </div>
+          {relevantCompetitors.length > 0 && (
+            <div className="mt-4">
+              <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-2">{t('expectedCompetitors')}</span>
+              <div className="space-y-2">
+                {relevantCompetitors.slice(0, 3).map((c: any, i: number) => (
+                  <Link key={i} href={`/intelligence/competitors?name=${encodeURIComponent(c.winner_name)}&backUrl=${encodeURIComponent('/tenders/' + tenderId)}`}
+                    className="flex items-center justify-between p-2.5 bg-zinc-50 rounded-lg border border-zinc-200 hover:border-blue-300 hover:bg-white transition-all group text-sm"
+                  >
+                    <span className="font-medium text-zinc-700 group-hover:text-blue-600 transition-colors truncate">{c.winner_name}</span>
+                    <span className="text-xs text-zinc-400 shrink-0 ml-2">{c.wins} {t('wins')}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="mt-4">
+            <Link
+              href={`/intelligence/buyers?name=${encodeURIComponent(tender.buyer_name)}&fromTender=${tenderId}&backUrl=${encodeURIComponent('/tenders/' + tenderId)}`}
+              className="text-[13px] text-blue-600 font-semibold hover:underline flex items-center gap-1"
+            >
+              {t('viewFullBuyerProfile')} <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="md:col-span-2">
-            <p className="text-zinc-600 mb-6 font-medium leading-relaxed">
-              {t('priceAnalysisDesc')}
-            </p>
-
-            <div className="space-y-8">
-              <div>
-                <div className="flex justify-between text-[10px] font-black text-zinc-400 uppercase mb-3">
-                  <span>{t('competitiveP25')}</span>
-                  <span>{t('marketMedianP50')}</span>
-                  <span>{t('highMarginP75')}</span>
-                </div>
-                <div className="h-4 bg-zinc-100 rounded-full relative">
-                  <div className="absolute inset-y-0 left-[25%] right-[25%] bg-emerald-500/20 border-x-2 border-emerald-500/40"></div>
-                  <div
-                    className="absolute top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-600 shadow-xl z-10 transition-all duration-1000"
-                    style={{ left: '50%' }}
-                  ></div>
-                </div>
-                <div className="flex justify-between mt-3 tabular-nums font-bold text-xs text-zinc-500 uppercase tracking-widest">
-                  <span>{formatValue((tender.estimated_value || 0) * (benchmarks ? (1 + benchmarks.p25_discount_rate) : 0.7))}</span>
-                  <span className="text-blue-600 font-black">{t('targetBid')}</span>
-                  <span>{formatValue((tender.estimated_value || 0) * (benchmarks ? (1 + benchmarks.p75_discount_rate) : 1.2))}</span>
-                </div>
-              </div>
-
-              <div className="p-6 bg-blue-50 rounded-xl border border-blue-100 flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 shadow-sm flex-shrink-0">
-                  <TrendingDown size={20} />
+        {/* Pricing Benchmark */}
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <CardHeader icon={<IconBox color="emerald"><BarChart3 size={16} /></IconBox>} title={t('pricingBenchmark')} />
+          <DataGroup label={t('targetBidRecommended')}>
+            <span className="text-[20px] font-extrabold text-blue-600">{formatValue(targetBid)}</span>
+          </DataGroup>
+          {benchmarks && (
+            <DataGroup label={t('historicalRange')}>
+              <div className="flex gap-4 mt-1">
+                <div>
+                  <span className="text-[11px] text-zinc-400 font-semibold uppercase block">LOW</span>
+                  <span className="text-base font-bold">{formatValue(tender.estimated_value * (1 + (benchmarks.p25_discount_rate || -0.2)))}</span>
                 </div>
                 <div>
-                  <p className="font-bold text-blue-900 mb-1">{t('recStrategy')}</p>
-                  <p className="text-sm text-blue-700">
-                    {t('recStrategyDesc', {
-                      value: formatValue(targetBid),
-                      discount: discountPct,
-                      country: tender.country,
-                    })}
-                    {buyerIntel?.avg_discount < 0 && (
-                      <span className="block mt-2 italic opacity-80">{t('buyerDiscountNote', { discount: Math.abs(Math.round(buyerIntel.avg_discount)) })}</span>
-                    )}
-                  </p>
+                  <span className="text-[11px] text-zinc-400 font-semibold uppercase block">MEDIAN</span>
+                  <span className="text-base font-bold">{formatValue(tender.estimated_value * (1 + (benchmarks.median_discount_rate || -0.1)))}</span>
+                </div>
+                <div>
+                  <span className="text-[11px] text-zinc-400 font-semibold uppercase block">HIGH</span>
+                  <span className="text-base font-bold">{formatValue(tender.estimated_value)}</span>
                 </div>
               </div>
-            </div>
-          </div>
+            </DataGroup>
+          )}
+          <DataGroup label={t('incumbentDetected')}>
+            {incumbent ? (
+              <span className="flex items-center gap-2">
+                {incumbent}
+                <span className="inline-flex items-center px-2 py-0.5 rounded bg-rose-50 text-rose-600 border border-rose-100 text-xs font-medium">{t('activeIncumbent')}</span>
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5 text-emerald-600 text-sm">
+                <ShieldCheck size={14} /> {t('openField')}
+              </span>
+            )}
+          </DataGroup>
+        </div>
+      </div>
 
-          <div className="bg-zinc-50 p-6 rounded-xl border border-zinc-100 flex flex-col justify-center">
-            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-4">{t('marketContext')}</p>
-            <div className="space-y-4">
-              <div>
-                <p className="text-[10px] font-bold text-zinc-500 uppercase">{t('avgBuyerValue')}</p>
-                <p className="text-lg font-black text-zinc-800">{formatValue(refinedVal)}</p>
+      {/* Row 4: Risk Assessment */}
+      {riskScore != null && (
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <CardHeader
+            icon={<div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-emerald-50 text-emerald-600"><ShieldCheck size={16} /></div>}
+            title={t('riskAssessment')}
+          />
+          <div className="flex gap-6 items-start">
+            <div className="shrink-0 border-r border-zinc-200 pr-6">
+              <div className="text-[48px] font-extrabold leading-none mb-2" style={{ color: riskColor }}>
+                {riskScore}<span className="text-[18px] text-zinc-400 font-medium">/10</span>
               </div>
-              <div>
-                <p className="text-[10px] font-bold text-zinc-500 uppercase">{t('buyerAvgVariation')}</p>
-                <p className={`text-lg font-black ${refinedAvgDiscount < 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
-                  {refinedAvgDiscount ? `${refinedAvgDiscount.toFixed(1)}%` : '—'}
-                </p>
-              </div>
+              <span className={`inline-block px-3 py-1 rounded text-white text-[13px] font-bold ${riskBg}`}>
+                {riskLevel?.toUpperCase() || riskLabel}
+              </span>
+            </div>
+            <div className="flex-1">
+              <h4 className="text-sm font-bold text-zinc-700 mb-3">{t('keyRiskFactors')}</h4>
+              {Array.isArray(riskFactors) && riskFactors.length > 0 ? (
+                <ul className="list-disc pl-5 space-y-1.5">
+                  {riskFactors.map((f: string, i: number) => (
+                    <li key={i} className="text-sm text-zinc-500 leading-snug">{f}</li>
+                  ))}
+                </ul>
+              ) : typeof riskFactors === 'string' ? (
+                <p className="text-sm text-zinc-500">{riskFactors}</p>
+              ) : (
+                <p className="text-sm text-zinc-400 italic">{t('noRiskFactors')}</p>
+              )}
             </div>
           </div>
         </div>
-      </section>
+      )}
 
-      {/* Project Scope */}
-      <ProjectScope description={tender.description} />
+      {/* Row 5: Actions */}
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+        <CardHeader icon={<IconBox color="blue"><Download size={16} /></IconBox>} title={t('actions')} />
+        <div className="flex flex-wrap gap-3">
+          {/* Analyze Documents → goes to Insights tab */}
+          <Link
+            href={`/tenders/${tenderId}?tab=insights`}
+            className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
+          >
+            <Sparkles size={16} /> {t('analyzeDocuments')}
+          </Link>
 
-      {/* Related Opportunities */}
+          {/* Export PDF */}
+          <button
+            onClick={handleExportPdf}
+            disabled={!isPro || exportingPdf}
+            className={`inline-flex items-center gap-2 h-9 px-4 rounded-lg text-sm font-semibold transition-colors ${
+              isPro ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-zinc-100 text-zinc-400 cursor-not-allowed'
+            }`}
+          >
+            {exportingPdf ? <Loader2 size={16} className="animate-spin" /> : isPro ? <FileDown size={16} /> : <Lock size={16} />}
+            {exportingPdf ? t('export.exporting') : t('export.pdf')}
+          </button>
+
+          {/* Ask AI Assistant → goes to chat tab */}
+          <Link
+            href={`/tenders/${tenderId}?tab=chat`}
+            className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-emerald-500 text-white text-sm font-semibold hover:bg-emerald-600 transition-colors"
+          >
+            <MessageCircle size={16} /> {t('askAiAssistant')}
+          </Link>
+
+          {/* Export Questions */}
+          <button
+            onClick={handleExportQuestions}
+            disabled={!isPro || exportingQuestions}
+            className={`inline-flex items-center gap-2 h-9 px-4 rounded-lg text-sm font-semibold border transition-colors ${
+              isPro ? 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50' : 'border-zinc-200 bg-zinc-100 text-zinc-400 cursor-not-allowed'
+            }`}
+          >
+            {exportingQuestions ? <Loader2 size={16} className="animate-spin" /> : isPro ? <ListChecks size={16} /> : <Lock size={16} />}
+            {exportingQuestions ? t('export.exporting') : t('export.questions')}
+          </button>
+        </div>
+      </div>
+
+      {/* Row 6: Related Tenders */}
       {relatedTenders.length > 0 && (
-        <section className="bg-white p-8 rounded-xl border border-zinc-200/60 shadow-sm">
-          <h3 className="text-xl font-bold text-zinc-900 mb-8 flex items-center gap-2 uppercase tracking-tight text-sm">
-            <Brain size={20} className="text-blue-600" />
-            {t('relatedOpportunities')}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <CardHeader icon={<IconBox color="blue"><Link2 size={16} /></IconBox>} title={t('relatedOpportunities')} />
+          <div className="flex flex-col gap-3">
             {relatedTenders.map((rt: any) => (
-              <Link key={rt.tender_id} href={`/tenders/${rt.tender_uuid}?backUrl=${encodeURIComponent('/tenders/' + tenderId)}`} className="group p-6 bg-zinc-50 rounded-xl border border-zinc-100 hover:border-blue-200 hover:bg-white transition-all flex flex-col h-full">
-                <p className="text-xs font-black text-zinc-400 uppercase tracking-widest mb-3">{rt.buyer_name}</p>
-                <h4 className="text-sm font-bold text-zinc-800 group-hover:text-blue-600 transition-colors line-clamp-3 mb-4 flex-1">{rt.title}</h4>
-                <div className="flex justify-between items-center pt-4 border-t border-zinc-100 mt-auto">
-                  <span className="text-[10px] font-black text-emerald-600 uppercase tabular-nums">{formatValue(rt.estimated_value, rt.currency)}</span>
-                  <ArrowRight size={14} className="text-zinc-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+              <Link
+                key={rt.tender_id}
+                href={`/tenders/${rt.tender_uuid}?backUrl=${encodeURIComponent('/tenders/' + tenderId)}`}
+                className="flex items-center justify-between p-3 px-4 bg-zinc-50 rounded-lg border border-zinc-200 hover:border-blue-300 hover:bg-white transition-all group"
+              >
+                <div>
+                  <div className="text-sm font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors">{rt.title}</div>
+                  <div className="text-xs text-zinc-400 mt-0.5">
+                    {rt.country} · {formatValue(rt.estimated_value, rt.currency)} · {rt.is_active ? t('active') : t('awarded')}
+                  </div>
                 </div>
+                <span className="inline-flex items-center px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-100 text-xs font-medium shrink-0 ml-4">
+                  {rt.similarity ? `${Math.round(rt.similarity * 100)}% ${t('similar')}` : t('related')}
+                </span>
               </Link>
             ))}
           </div>
-        </section>
+        </div>
       )}
     </div>
   );

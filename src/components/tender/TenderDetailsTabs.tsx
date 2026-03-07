@@ -63,25 +63,23 @@ export function TenderDetailsTabs({ tabs, riskScore, riskLevel }: TenderDetailsT
   const activeContent = visibleTabs.find(tab => tab.id === activeTab)?.content || visibleTabs[0]?.content;
 
   return (
-    <div className="space-y-8">
+    <div>
       {/* Tab Bar */}
-      <div className="flex items-center gap-2 p-1.5 bg-zinc-100 rounded-xl w-full sm:w-fit overflow-x-auto">
+      <div className="flex border-b border-zinc-200 mb-7 gap-1 overflow-x-auto">
         {visibleTabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => handleTabChange(tab.id)}
-            className={`
-              px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-200 flex items-center gap-2
-              ${activeTab === tab.id
-                ? 'bg-zinc-900 text-white shadow-sm'
-                : 'text-zinc-500 hover:text-zinc-900 hover:bg-white/60'
-              }
-            `}
+            className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-all whitespace-nowrap flex items-center gap-2 cursor-pointer ${
+              activeTab === tab.id
+                ? 'text-blue-600 border-blue-600 font-semibold'
+                : 'text-zinc-500 border-transparent hover:text-zinc-900'
+            }`}
           >
             {tab.label}
             {tab.id === 'insights' && riskScore != null && (
-              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black text-white ${getRiskColor(riskScore)}`}>
-                <AlertTriangle size={9} />
+              <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold text-white ${getRiskColor(riskScore)}`}>
+                <AlertTriangle size={8} />
                 {riskScore}/10
               </span>
             )}
