@@ -186,53 +186,27 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
     setLoading(true);
     setError(null);
 
-    let supabaseQuery = supabase
-      .from('tenders')
-      .select('*, tender_matches(match_score)', { count: 'estimated' });
+    const params = new URLSearchParams();
+    if (q) params.set('q', q);
+    if (c !== 'All') params.set('country', c);
+    if (cpvFilter !== 'All') params.set('cpv', cpvFilter);
+    if (minVal) params.set('minValue', minVal);
+    if (maxVal) params.set('maxValue', maxVal);
+    if (statusFilter !== 'All') params.set('status', statusFilter);
+    if (sortBy !== 'newest') params.set('sort', sortBy);
+    if (p > 0) params.set('page', p.toString());
 
-    if (q) {
-      supabaseQuery = supabaseQuery.textSearch('search_vector', q, { type: 'websearch', config: 'public.portuguese_unaccent' });
-    }
-
-    if (c !== "All") {
-      supabaseQuery = supabaseQuery.eq('country', c);
-    }
-    if (cpvFilter !== "All") {
-      supabaseQuery = supabaseQuery.ilike('cpv_code', `${cpvFilter}%`);
-    }
-    if (minVal) {
-      supabaseQuery = supabaseQuery.gte('estimated_value', parseFloat(minVal));
-    }
-    if (maxVal) {
-      supabaseQuery = supabaseQuery.lte('estimated_value', parseFloat(maxVal));
-    }
-    if (statusFilter === "active") {
-      supabaseQuery = supabaseQuery.eq('is_active', true);
-    } else if (statusFilter === "inactive") {
-      supabaseQuery = supabaseQuery.eq('is_active', false);
-    } else if (statusFilter === "awarded") {
-      supabaseQuery = supabaseQuery.not('final_contract_value', 'is', null);
-    }
-
-    if (sortBy === "valueDesc") {
-      supabaseQuery = supabaseQuery.order('estimated_value', { ascending: false, nullsFirst: false });
-    } else if (sortBy === "valueAsc") {
-      supabaseQuery = supabaseQuery.order('estimated_value', { ascending: true, nullsFirst: false });
-    } else {
-      supabaseQuery = supabaseQuery.order('publication_date', { ascending: false });
-    }
-
-    const { data, count, error } = await supabaseQuery
-      .range(p * pageSize, (p + 1) * pageSize - 1);
-
-    if (error) {
-      console.error("Search failed:", error);
+    try {
+      const res = await fetch(`/api/explorer/search?${params.toString()}`);
+      if (!res.ok) throw new Error('Search failed');
+      const { data, count } = await res.json();
+      setTenders(data || []);
+      setTotal(count || 0);
+    } catch (err) {
+      console.error("Search failed:", err);
       setError(tCommon('errorLoadingData') || "Error loading data");
       setTenders([]);
       setTotal(0);
-    } else {
-      setTenders(data || []);
-      setTotal(count || 0);
     }
     setLoading(false);
   };

@@ -54,7 +54,9 @@
     "contactSales": "Contactar Vendas",
     "loading": "A carregar dados...",
     "viewAll": "Ver Tudo",
-    "active": "Ativo"
+    "active": "Ativo",
+    "tryAgain": "Tentar novamente",
+    "errorLoadingData": "Erro ao carregar dados"
   },
   "stats": {
     "scoringPoints": "150+",
@@ -325,6 +327,9 @@
         "latestAwards": "Últimas Adjudicações",
         "noData": "Nenhum concurso recente encontrado para este setor."
       },
+      "awards": "Adjudicações",
+      "cpvSectors": "Setores CPV",
+      "sectorSpecialization": "Especialização por Setor",
       "noResults": "Nenhuma entidade encontrada",
       "noResultsHint": "Tente um termo de pesquisa diferente"
     },
@@ -612,6 +617,7 @@
       "blurredPreview": "Insights completos disponíveis com o plano Pro"
     },
     "export": {
+      "actions": "Ações",
       "pdf": "Exportar PDF",
       "questions": "Exportar Perguntas",
       "exporting": "A exportar...",

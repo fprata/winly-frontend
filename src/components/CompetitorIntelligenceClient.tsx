@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search as SearchIcon, TrendingUp, Users, ArrowUpRight, ArrowRight, ShieldCheck, Trophy, ArrowLeft, Building2, Check, SearchX, MapPin, X } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/navigation';
 import { getCpvDescription } from '@/utils/cpv-data';
@@ -60,13 +59,9 @@ export function CompetitorIntelligenceClient({
   const searchCompetitors = async (value: string) => {
     if (value.length < 3) return;
 
-    const { data } = await supabase
-      .from('intel_competitors')
-      .select('name, country, total_wins, competitor_id, win_rate_pct, total_revenue, avg_discount_pct, buyer_diversity')
-      .ilike('name', `%${value}%`)
-      .limit(10);
-
-    setSearchResults(data || []);
+    const res = await fetch(`/api/intelligence/search?q=${encodeURIComponent(value)}&type=competitors`);
+    const json = await res.json();
+    setSearchResults(json.data || []);
   };
 
   const navigateToProfile = (id: string) => {

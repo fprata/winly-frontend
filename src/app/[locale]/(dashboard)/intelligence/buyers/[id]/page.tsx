@@ -1,5 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
+import { getDataClient } from '@/utils/dev-auth';
 import { BuyerIntelligenceClient } from '@/components/BuyerIntelligenceClient';
 
 export const revalidate = 300;
@@ -15,11 +16,12 @@ export default async function BuyerProfilePage({
   const { fromTender } = await searchParams;
   const decodedId = decodeURIComponent(id);
   const supabase = await createClient();
+  const db = await getDataClient(supabase);
 
   let initialProfile = null;
 
   if (decodedId) {
-    const { data } = await supabase
+    const { data } = await db
       .from('intel_buyers')
       .select('*')
       .eq('buyer_company_id', decodedId)

@@ -1,11 +1,11 @@
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
 import { BYPASS_AUTH } from '@/utils/dev-auth'
 
-export async function updateSession(request: NextRequest, response?: NextResponse) {
-  // Skip all auth logic in dev bypass mode
-  if (BYPASS_AUTH) return response || NextResponse.next({ request: { headers: request.headers } });
+const DEV_EMAIL = 'francisco.prata@gmail.com'
 
+export async function updateSession(request: NextRequest, response?: NextResponse) {
   // Use the response passed from next-intl, or create a new one
   let supabaseResponse = response || NextResponse.next({
     request: {
@@ -22,7 +22,7 @@ export async function updateSession(request: NextRequest, response?: NextRespons
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           )
           // Do NOT create a new response here, use the existing one to preserve next-intl rewrites
@@ -37,6 +37,30 @@ export async function updateSession(request: NextRequest, response?: NextRespons
   const {
     data: { user },
   } = await supabase.auth.getUser()
+
+  // In dev bypass mode: auto-sign-in if no session exists, then skip redirect logic
+  if (BYPASS_AUTH) {
+    if (!user) {
+      // Use admin client to generate a magic link token and exchange it for a real session.
+      // The session cookies are written into supabaseResponse via the setAll handler above.
+      const adminClient = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        { auth: { persistSession: false } }
+      )
+      const { data: linkData } = await adminClient.auth.admin.generateLink({
+        type: 'magiclink',
+        email: DEV_EMAIL,
+      })
+      if (linkData?.properties?.hashed_token) {
+        await supabase.auth.verifyOtp({
+          token_hash: linkData.properties.hashed_token,
+          type: 'email',
+        })
+      }
+    }
+    return supabaseResponse
+  }
 
   // Get pathname without locale prefix for route checking
   // Supports /en/path, /pt/path, or /path

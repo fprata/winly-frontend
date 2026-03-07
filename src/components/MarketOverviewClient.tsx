@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { supabase } from '@/lib/supabase';
 import { Activity, DollarSign, Building2, Globe, BarChart3, PieChart, ArrowUpRight, Filter } from 'lucide-react';
 import { SectorMixChart } from './SectorMixChart';
-import { Link } from '@/navigation';
+import { Link, useRouter, usePathname } from '@/navigation';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { getCpvDescription } from '@/utils/cpv-data';
 import { Select } from './ui/Select';
@@ -13,71 +12,38 @@ import { StatCard } from './ui/StatCard';
 import { Card } from './ui/Card';
 import { EmptyState } from './ui/EmptyState';
 
-export function MarketOverviewClient() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
-  const [countries, setCountries] = useState<string[]>([]);
-  const [sectors, setSectors] = useState<string[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState('ALL');
-  const [selectedSector, setSelectedSector] = useState('ALL');
-  const [isMounted, setIsMounted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+interface MarketOverviewClientProps {
+  initialData: any;
+  initialCountries: string[];
+  initialSectors: string[];
+  selectedCountry: string;
+  selectedSector: string;
+}
+
+export function MarketOverviewClient({
+  initialData,
+  initialCountries,
+  initialSectors,
+  selectedCountry,
+  selectedSector,
+}: MarketOverviewClientProps) {
+  const data = initialData;
+  const countries = initialCountries;
+  const sectors = initialSectors;
 
   const t = useTranslations('dashboard');
   const tCommon = useTranslations('common');
   const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    async function fetchFilters() {
-      const { data: rows, error } = await supabase
-        .from('market_overview')
-        .select('country, cpv_division')
-        .limit(1000); // Pagination: limit filter options
-
-      if (error) {
-        console.error("Error fetching filters:", error);
-        // Non-critical, can continue without filters or with empty filters
-      } else if (rows) {
-        const uniqueCountries = Array.from(new Set(rows.map(r => r.country))).sort();
-        const uniqueSectors = Array.from(new Set(rows.map(r => r.cpv_division))).sort();
-        setCountries(uniqueCountries);
-        setSectors(uniqueSectors);
-      }
-    }
-    fetchFilters();
-  }, []);
-
-  useEffect(() => {
-    async function fetchMarketData() {
-      setLoading(true);
-      setError(null);
-      const { data: stats, error } = await supabase
-        .from('market_overview')
-        .select('*')
-        .eq('country', selectedCountry)
-        .eq('cpv_division', selectedSector)
-        .limit(1)
-        .single();
-
-      if (error) {
-         if (error.code !== 'PGRST116') { // PGRST116 is "Results contain 0 rows" which is fine (no data)
-            console.error("Error fetching market data:", error);
-            setError(t('errorLoadingData'));
-         }
-         setData(null);
-      } else if (stats) {
-        setData(stats);
-      } else {
-        setData(null);
-      }
-      setLoading(false);
-    }
-    fetchMarketData();
-  }, [selectedCountry, selectedSector, t]);
+  const updateFilter = (newCountry: string, newSector: string) => {
+    const params = new URLSearchParams();
+    if (newCountry !== 'ALL') params.set('country', newCountry);
+    if (newSector !== 'ALL') params.set('sector', newSector);
+    const qs = params.toString();
+    router.push(qs ? `${pathname}?${qs}` : pathname);
+  };
 
   const formatValue = (val: number) => {
     return new Intl.NumberFormat(locale === 'pt' ? 'pt-PT' : 'en-GB', {
@@ -117,17 +83,15 @@ export function MarketOverviewClient() {
       : data.top_buyers_json;
   }, [data]);
 
-  const countryOptions = countries.map(c => ({
-    value: c,
-    label: c === 'ALL' ? t('allRegions') : c
-  }));
+  const countryOptions = [
+    { value: 'ALL', label: t('allRegions') },
+    ...countries.filter(c => c !== 'ALL').map(c => ({ value: c, label: c })),
+  ];
 
-  const sectorOptions = sectors.map(s => ({
-    value: s,
-    label: s === 'ALL' ? t('allSectors') : `${s} - ${getCpvDescription(s + '000000', locale)}`
-  }));
-
-  if (!isMounted) return null;
+  const sectorOptions = [
+    { value: 'ALL', label: t('allSectors') },
+    ...sectors.filter(s => s !== 'ALL').map(s => ({ value: s, label: `${s} - ${getCpvDescription(s + '000000', locale)}` })),
+  ];
 
   return (
     <div className="space-y-6">
@@ -137,34 +101,20 @@ export function MarketOverviewClient() {
         <Select
           options={countryOptions}
           value={selectedCountry}
-          onChange={setSelectedCountry}
+          onChange={val => updateFilter(val, selectedSector)}
           icon={<Globe size={16} />}
           className="flex-1"
         />
         <Select
           options={sectorOptions}
           value={selectedSector}
-          onChange={setSelectedSector}
+          onChange={val => updateFilter(selectedCountry, val)}
           icon={<Filter size={16} />}
           className="flex-1"
         />
       </div>
 
-      {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 animate-pulse">
-          {[1, 2, 3].map(i => <div key={i} className="h-36 bg-zinc-100 rounded-xl" />)}
-        </div>
-      ) : error ? (
-        <div className="p-8 text-center rounded-xl bg-red-50 border border-red-100">
-          <p className="text-red-600 font-medium mb-2">{error}</p>
-          <button 
-            onClick={() => window.location.reload()}
-            className="text-sm text-red-700 underline hover:text-red-800"
-          >
-            {tCommon('tryAgain') || 'Try again'}
-          </button>
-        </div>
-      ) : !data ? (
+      {!data ? (
         <EmptyState
           icon={<Activity size={36} />}
           title={t('noDataAvailable')}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
+import { getDataClient } from '@/utils/dev-auth';
 import { CompetitorIntelligenceClient } from '@/components/CompetitorIntelligenceClient';
 
 export const revalidate = 300;
@@ -11,12 +12,13 @@ export default async function CompetitorIntelligencePage({
 }) {
   const { name, fromTender } = await searchParams;
   const supabase = await createClient();
+  const db = await getDataClient(supabase);
 
   let initialSearchResults: any[] = [];
   let initialProfile = null;
 
   if (name) {
-    const { data: exactMatches } = await supabase
+    const { data: exactMatches } = await db
       .from('intel_competitors')
       .select('*')
       .ilike('name', name)
@@ -35,7 +37,7 @@ export default async function CompetitorIntelligencePage({
     }
   } else {
     // Default List View — fetch rich data for result cards
-    const { data } = await supabase
+    const { data } = await db
       .from('intel_competitors')
       .select('name, country, total_wins, competitor_id, total_revenue, win_rate_pct, avg_discount_pct, buyer_diversity')
       .order('total_wins', { ascending: false })

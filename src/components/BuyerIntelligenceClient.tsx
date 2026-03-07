@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Search as SearchIcon, Building2, TrendingUp, Users, ArrowUpRight, ArrowLeft, ArrowRight, ShieldCheck, Filter, Check, ChevronDown, Activity, HeartHandshake, Lock, PieChart, SearchX, MapPin, X } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/navigation';
 import { getCpvDescription } from '@/utils/cpv-data';
@@ -66,16 +65,12 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
   useEffect(() => {
     const fetchTenders = async () => {
       if (!profile?.name) return;
-      
-      setTendersLoading(true);
-      const { data } = await supabase
-        .from('tenders')
-        .select('tender_id, tender_uuid, title, cpv_code, estimated_value, final_contract_value, winners_list, publication_date, submission_deadline, is_active, procedure_type')
-        .eq('buyer_name', profile.name)
-        .order('publication_date', { ascending: false });
 
-      if (data) {
-        setTenders(data);
+      setTendersLoading(true);
+      const res = await fetch(`/api/intelligence/buyer-tenders?buyer_name=${encodeURIComponent(profile.name)}`);
+      const json = await res.json();
+      if (json.data) {
+        setTenders(json.data);
       }
       setTendersLoading(false);
     };
@@ -86,13 +81,9 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
   const searchBuyers = async (value: string) => {
     if (value.length < 3) return;
 
-    const { data } = await supabase
-      .from('intel_buyers')
-      .select('name, country, total_contracts, buyer_company_id, total_spend, avg_discount, avg_bidder_count')
-      .ilike('name', `%${value}%`)
-      .limit(10);
-
-    setSearchResults(data || []);
+    const res = await fetch(`/api/intelligence/search?q=${encodeURIComponent(value)}&type=buyers`);
+    const json = await res.json();
+    setSearchResults(json.data || []);
   };
 
   const navigateToProfile = (id: string) => {

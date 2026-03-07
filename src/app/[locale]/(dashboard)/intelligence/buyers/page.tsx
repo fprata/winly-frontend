@@ -1,5 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
+import { getDataClient } from '@/utils/dev-auth';
 import { BuyerIntelligenceClient } from '@/components/BuyerIntelligenceClient';
 
 export const revalidate = 300;
@@ -11,13 +12,14 @@ export default async function BuyerIntelligencePage({
 }) {
   const { name, fromTender } = await searchParams;
   const supabase = await createClient();
+  const db = await getDataClient(supabase);
 
   let initialSearchResults: any[] = [];
   let initialProfile = null;
 
   if (name) {
     // Try to find exact match for direct profile view
-    const { data: exactMatches } = await supabase
+    const { data: exactMatches } = await db
       .from('intel_buyers')
       .select('*')
       .ilike('name', name)
@@ -37,7 +39,7 @@ export default async function BuyerIntelligencePage({
     }
   } else {
     // Default List View — fetch rich data for result cards
-    const { data } = await supabase
+    const { data } = await db
       .from('intel_buyers')
       .select('name, country, total_contracts, buyer_company_id, total_spend, avg_discount, avg_bidder_count')
       .order('total_contracts', { ascending: false })

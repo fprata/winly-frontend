@@ -35,13 +35,13 @@ export async function getServerUser(supabase: any) {
 
 /** Drop-in for the clients table lookup in server components. */
 export async function getServerProfile(supabase: any, email: string) {
-  if (BYPASS_AUTH) return { data: DEV_PROFILE, error: null };
   return supabase.from('clients').select('*').eq('email', email).single();
 }
 
 /**
- * In bypass mode, returns a service-role client that skips RLS.
- * Otherwise returns the regular session-based client passed in.
+ * In bypass mode, returns a service-role client that skips RLS so server
+ * components can access all data (intel tables, tender_matches, etc.).
+ * In production, returns the regular session-based client.
  */
 export async function getDataClient(sessionClient: any) {
   if (BYPASS_AUTH) {

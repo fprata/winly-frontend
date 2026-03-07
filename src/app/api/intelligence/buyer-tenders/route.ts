@@ -1,0 +1,22 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createAdminClient } from '@/utils/supabase/server';
+
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl;
+  const buyerName = searchParams.get('buyer_name');
+
+  if (!buyerName) {
+    return NextResponse.json({ error: 'buyer_name is required' }, { status: 400 });
+  }
+
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from('tenders')
+    .select('tender_id, tender_uuid, title, cpv_code, estimated_value, final_contract_value, winners_list, publication_date, submission_deadline, is_active, procedure_type')
+    .eq('buyer_name', buyerName)
+    .order('publication_date', { ascending: false });
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ data: data || [] });
+}

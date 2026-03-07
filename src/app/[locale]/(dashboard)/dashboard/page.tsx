@@ -2,22 +2,36 @@ import React from 'react';
 import { Link } from '@/navigation'
 import { Bell, User, Search, ArrowRight, ShieldCheck, Zap, Globe } from 'lucide-react';
 import { createClient } from '@/utils/supabase/server';
+import { getServerUser, getDataClient } from '@/utils/dev-auth';
 import { getTranslations, getLocale } from 'next-intl/server';
 import { StatCard } from '@/components/ui/StatCard';
 import { Card } from '@/components/ui/Card';
+import { redirect } from 'next/navigation';
 
 export default async function Dashboard() {
   const t = await getTranslations('dashboard');
   const locale = await getLocale();
   const supabase = await createClient();
 
-  // Fetch stats server-side
-  const { data: matches, error } = await supabase
+  const { user } = await getServerUser(supabase);
+  if (!user) redirect('/login');
+
+  const db = await getDataClient(supabase);
+
+  const { data: profile } = await db
+    .from('clients')
+    .select('id')
+    .eq('email', user.email)
+    .single();
+
+  // Fetch stats server-side, scoped to this user's matches
+  const { data: matches, error } = await db
     .from('tender_matches')
     .select(`
       match_score,
       tenders (estimated_value)
-    `);
+    `)
+    .eq('client_id', profile?.id ?? '');
 
   let stats = { total: 0, high: 0, value: 0 };
   let status = 'online';

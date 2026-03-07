@@ -1,17 +1,42 @@
 import React from 'react';
-import { TrendingUp, PieChart, Info, Activity } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
-import dynamic from 'next/dynamic';
+import { createClient } from '@/utils/supabase/server';
+import { getDataClient } from '@/utils/dev-auth';
+import { MarketOverviewClient } from '@/components/MarketOverviewClient';
 
-const MarketOverviewClient = dynamic(
-  () => import('@/components/MarketOverviewClient').then(mod => ({ default: mod.MarketOverviewClient })),
-  {
-    loading: () => <div className="flex items-center justify-center min-h-[400px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>
-  }
-);
-
-export default async function MarketIntelligencePage() {
+export default async function MarketIntelligencePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ country?: string; sector?: string }>;
+}) {
   const t = await getTranslations('intelligence');
+  const { country = 'ALL', sector = 'ALL' } = await searchParams;
+
+  const supabase = await createClient();
+  const db = await getDataClient(supabase);
+
+  // Fetch filter options
+  const { data: filterRows } = await db
+    .from('market_overview')
+    .select('country, cpv_division')
+    .limit(1000);
+
+  const uniqueCountries: string[] = filterRows
+    ? Array.from(new Set(filterRows.map((r: any) => r.country))).sort() as string[]
+    : [];
+  const uniqueSectors: string[] = filterRows
+    ? Array.from(new Set(filterRows.map((r: any) => r.cpv_division))).sort() as string[]
+    : [];
+
+  // Fetch selected data row
+  const { data: statsData } = await db
+    .from('market_overview')
+    .select('*')
+    .eq('country', country)
+    .eq('cpv_division', sector)
+    .limit(1)
+    .maybeSingle();
 
   return (
     <div className="max-w-6xl mx-auto pb-20">
@@ -23,7 +48,13 @@ export default async function MarketIntelligencePage() {
         <p className="text-zinc-500 mt-2 font-medium">{t('market.subtitle')}</p>
       </div>
 
-      <MarketOverviewClient />
+      <MarketOverviewClient
+        initialData={statsData}
+        initialCountries={uniqueCountries}
+        initialSectors={uniqueSectors}
+        selectedCountry={country}
+        selectedSector={sector}
+      />
     </div>
   );
 }

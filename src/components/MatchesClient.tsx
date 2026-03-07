@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from '@/navigation'
 import {
   DollarSign,
@@ -51,11 +51,11 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
   const [minScoreFilter, setMinScoreFilter] = useState(0);
   const [page, setPage] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const [isFirstRender, setIsFirstRender] = useState(true);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    if (isFirstRender) {
-      setIsFirstRender(false);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
       return;
     }
 
@@ -100,7 +100,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
       setLoading(false);
     }
     fetchMatches();
-  }, [minScoreFilter, isFirstRender, clientId, t]);
+  }, [minScoreFilter, clientId, t]);
 
   const formatValue = (val: number, curr: string) => {
     if (!val) return "TBD";

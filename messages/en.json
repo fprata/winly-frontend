@@ -54,7 +54,9 @@
     "contactSales": "Contact Sales",
     "loading": "Loading data...",
     "viewAll": "View All",
-    "active": "Active"
+    "active": "Active",
+    "tryAgain": "Try again",
+    "errorLoadingData": "Error loading data"
   },
   "stats": {
     "scoringPoints": "150+",
@@ -325,6 +327,9 @@
         "latestAwards": "Latest Awards",
         "noData": "No recent tenders found for this sector."
       },
+      "awards": "Awards",
+      "cpvSectors": "CPV Sectors",
+      "sectorSpecialization": "Sector Specialization",
       "noResults": "No buyers found",
       "noResultsHint": "Try a different search term"
     },
@@ -612,6 +617,7 @@
       "blurredPreview": "Full insights available with Pro plan"
     },
     "export": {
+      "actions": "Actions",
       "pdf": "Export PDF",
       "questions": "Export Questions",
       "exporting": "Exporting...",
