@@ -14,7 +14,7 @@ import { getTranslations, getLocale } from 'next-intl/server';
 import { Link } from '@/navigation';
 import { notFound, redirect } from 'next/navigation';
 import { getCpvDescription } from '@/utils/cpv-data';
-import { getServerUser } from '@/utils/dev-auth';
+import { getServerUser, getDataClient } from '@/utils/dev-auth';
 import { TenderDetailsTabs } from '@/components/tender/TenderDetailsTabs';
 import { OverviewTab } from '@/components/tender/OverviewTab';
 import { AwardTab } from '@/components/tender/AwardTab';
@@ -80,8 +80,10 @@ export default async function TenderDetailsPage({
   const { user } = await getServerUser(supabase);
   if (!user) redirect('/login');
 
+  const db = await getDataClient(supabase);
+
   // Simple, direct lookup by internal UUID
-  const { data: tender, error: tenderError } = await supabase
+  const { data: tender, error: tenderError } = await db
     .from('tenders')
     .select('*')
     .eq('tender_uuid', id)
@@ -121,7 +123,7 @@ export default async function TenderDetailsPage({
 
   // Fetch profile with tier
   const [profileRes] = await Promise.all([
-    supabase.from('clients').select('*').eq('email', user.email).single()
+    db.from('clients').select('*').eq('email', user.email).single()
   ]);
 
   const profile: ClientProfile | null = profileRes.data;
@@ -130,20 +132,20 @@ export default async function TenderDetailsPage({
   // Fetch Secondary Data
   const cpvDiv = tender.cpv_code ? tender.cpv_code.substring(0, 2) : null;
 
-  const buyerPromise = supabase
+  const buyerPromise = db
     .from('intel_buyers')
     .select('*')
     .eq('name', tender.buyer_name)
     .single();
 
-  const matchPromise = profile ? supabase
+  const matchPromise = profile ? db
     .from('tender_matches')
     .select('match_score, match_reasons, score_location, score_cpv, score_strategic, score_semantic, score_keyword, score_capacity, score_market_opp, win_probability')
     .eq('tender_uuid', id)
     .eq('client_id', profile.id)
     .maybeSingle() : Promise.resolve({ data: null });
 
-  const benchmarkPromise = cpvDiv ? supabase
+  const benchmarkPromise = cpvDiv ? db
     .from('market_benchmarks')
     .select('p25_discount_rate, median_discount_rate, p75_discount_rate')
     .eq('cpv_division', cpvDiv)
@@ -159,7 +161,7 @@ export default async function TenderDetailsPage({
   // Semantic Search for Related Tenders
   let relatedTenders: any[] = [];
   if (tender.embedding) {
-    const { data: related } = await supabase.rpc('match_tenders', {
+    const { data: related } = await db.rpc('match_tenders', {
       query_embedding: tender.embedding,
       match_threshold: 0.5,
       match_count: 3,
@@ -184,7 +186,7 @@ export default async function TenderDetailsPage({
   if (buyerIntel?.top_winners && tender.cpv_code && buyerIntel.top_winners.length > 0) {
     const winnerNames = buyerIntel.top_winners.map((w: any) => w.winner_name);
 
-    const { data: competitors } = await supabase
+    const { data: competitors } = await db
       .from('intel_competitors')
       .select('name, sector_stats, avg_discount_pct')
       .in('name', winnerNames);
@@ -194,7 +196,7 @@ export default async function TenderDetailsPage({
       const discountMap = new Map(competitors.map((c: any) => [c.name, c.avg_discount_pct]));
 
       const filtered = buyerIntel.top_winners.filter((w: any) => {
-        const stats: any[] = sectorMap.get(w.winner_name) || [];
+        const stats: any[] = (sectorMap.get(w.winner_name) as any[]) || [];
         return stats.some((s: any) => s.cpv_division === cpvDiv);
       }).map((w: any) => ({
         ...w,

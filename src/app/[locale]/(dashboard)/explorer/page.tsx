@@ -1,6 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
-import { getServerUser } from '@/utils/dev-auth';
+import { getServerUser, getDataClient } from '@/utils/dev-auth';
 import { ExplorerClient } from '@/components/ExplorerClient';
 import { redirect } from 'next/navigation';
 
@@ -36,13 +36,15 @@ export default async function ExplorerPage({
   const { user } = await getServerUser(supabase);
   if (!user) redirect('/login');
 
-  const { data: profile } = await supabase
+  const db = await getDataClient(supabase);
+
+  const { data: profile } = await db
     .from('clients')
     .select('id')
     .eq('email', user.email)
     .single();
 
-  let supabaseQuery = supabase
+  let supabaseQuery = db
     .from('tenders')
     .select('*, tender_matches(match_score)', { count: 'estimated' });
 

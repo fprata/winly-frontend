@@ -1,6 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
-import { getServerUser } from '@/utils/dev-auth';
+import { getServerUser, getDataClient } from '@/utils/dev-auth';
 import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
@@ -26,7 +26,9 @@ export default async function MatchesPage() {
   const { user } = await getServerUser(supabase);
   if (!user) redirect('/login');
 
-  const { data: profile } = await supabase
+  const db = await getDataClient(supabase);
+
+  const { data: profile } = await db
     .from('clients')
     .select('id')
     .eq('email', user.email)
@@ -36,11 +38,11 @@ export default async function MatchesPage() {
 
   // Fetch total count + initial matches
   const [{ count: totalCount }, { data: matches, error }] = await Promise.all([
-    supabase
+    db
       .from('tender_matches')
       .select('*', { count: 'exact', head: true })
       .eq('client_id', profile.id),
-    supabase
+    db
       .from('tender_matches')
       .select(`
         match_score,

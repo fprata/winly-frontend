@@ -4,7 +4,7 @@ import { DashboardLayoutClient } from "@/components/DashboardLayoutClient";
 import { DashboardFooter } from "@/components/DashboardFooter";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { getServerUser } from "@/utils/dev-auth";
+import { getServerUser, getDataClient } from "@/utils/dev-auth";
 import { DashboardHeader } from "@/components/DashboardHeader";
 
 export default async function DashboardLayout({
@@ -19,7 +19,9 @@ export default async function DashboardLayout({
     redirect('/login');
   }
 
-  const { data: profile } = await supabase
+  const db = await getDataClient(supabase);
+
+  const { data: profile } = await db
     .from('clients')
     .select('name, email')
     .eq('email', user.email)

@@ -8,7 +8,7 @@ export const BYPASS_AUTH = process.env.BYPASS_AUTH === 'true';
 
 export const DEV_USER = {
   id: 'dev-user-00000000-0000-0000-0000-000000000000',
-  email: 'dev@winly.io',
+  email: 'francisco.prata@gmail.com',
   app_metadata: {},
   user_metadata: {},
   aud: 'authenticated',
@@ -17,8 +17,8 @@ export const DEV_USER = {
 
 export const DEV_PROFILE = {
   id: 'dev-user-00000000-0000-0000-0000-000000000000',
-  name: 'Dev User',
-  email: 'dev@winly.io',
+  name: 'Francisco Prata',
+  email: 'francisco.prata@gmail.com',
   services: 'Software Development',
   tech_stack: 'React, TypeScript, Node.js',
   min_budget: 10000,
@@ -37,4 +37,16 @@ export async function getServerUser(supabase: any) {
 export async function getServerProfile(supabase: any, email: string) {
   if (BYPASS_AUTH) return { data: DEV_PROFILE, error: null };
   return supabase.from('clients').select('*').eq('email', email).single();
+}
+
+/**
+ * In bypass mode, returns a service-role client that skips RLS.
+ * Otherwise returns the regular session-based client passed in.
+ */
+export async function getDataClient(sessionClient: any) {
+  if (BYPASS_AUTH) {
+    const { createAdminClient } = await import('./supabase/server');
+    return createAdminClient();
+  }
+  return sessionClient;
 }
