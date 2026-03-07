@@ -26,12 +26,12 @@ interface TenderInsightsProps {
   onInsightsGenerated?: (insights: any) => void;
 }
 
-function renderInsightValue(val: any): string {
-  if (val === null || val === undefined) return 'Not specified in notice.';
+function renderInsightValue(val: any, notSpecified = 'Not specified in notice.', noneSpecified = 'None specified.', yes = 'Yes', no = 'No'): string {
+  if (val === null || val === undefined) return notSpecified;
   if (typeof val === 'string') return val;
-  if (typeof val === 'boolean') return val ? 'Yes' : 'No';
+  if (typeof val === 'boolean') return val ? yes : no;
   if (Array.isArray(val)) {
-    if (val.length === 0) return 'None specified.';
+    if (val.length === 0) return noneSpecified;
     return val.map(v => (typeof v === 'string' ? v : JSON.stringify(v))).join('\n• ');
   }
   if (typeof val === 'object') {
@@ -39,7 +39,7 @@ function renderInsightValue(val: any): string {
       .filter(([_, v]) => v !== null && v !== undefined && v !== 0)
       .map(([k, v]) => {
         const key = k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        return `${key}: ${typeof v === 'string' ? v : typeof v === 'boolean' ? (v ? 'Yes' : 'No') : JSON.stringify(v)}`;
+        return `${key}: ${typeof v === 'string' ? v : typeof v === 'boolean' ? (v ? yes : no) : JSON.stringify(v)}`;
       })
       .join('\n');
   }
@@ -73,7 +73,7 @@ function InsightCard({ children, className }: { children: React.ReactNode; class
 }
 
 export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onInsightsGenerated }: TenderInsightsProps) {
-  const t = useTranslations('tender');
+  const t = useTranslations('tenders');
   const locale = useLocale();
   const [rawInsights, setRawInsights] = useState<any>(initialInsights);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -93,12 +93,12 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
       if (data.success) {
         setRawInsights(data.insights);
         onInsightsGenerated?.(data.insights);
-        toast("success", "AI Analysis complete!");
+        toast("success", t('insights.analysisComplete'));
       } else {
-        toast("error", data.error || "Failed to analyze document");
+        toast("error", data.error || t('insights.analysisError'));
       }
     } catch {
-      toast("error", "An error occurred during analysis");
+      toast("error", t('insights.analysisException'));
     } finally {
       setIsAnalyzing(false);
     }
@@ -111,9 +111,9 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
           <Sparkles className="w-5 h-5 text-amber-400 absolute -top-1.5 -right-1.5 animate-pulse" />
         </div>
-        <h3 className="text-[16px] font-bold text-zinc-900 mb-2">Analysing document…</h3>
+        <h3 className="text-[16px] font-bold text-zinc-900 mb-2">{t('insights.analysing')}</h3>
         <p className="text-[13px] text-zinc-500 max-w-xs text-center leading-relaxed">
-          Extracting strategic bidding intelligence. This usually takes 15–30 seconds.
+          {t('insights.analysingDesc')}
         </p>
       </InsightCard>
     );
@@ -127,11 +127,11 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           <InsightCard>
             <CardHeader
               icon={<div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><FileText size={16} /></div>}
-              title="Legacy Analysis"
+              title={t('insights.legacyAnalysis')}
             />
             <p className="text-[14px] text-zinc-600 leading-relaxed whitespace-pre-line">{insights.executive_summary}</p>
             <button onClick={runAnalysis} className="mt-4 text-[13px] font-medium text-blue-600 hover:underline">
-              Rerun Analysis for new format
+              {t('insights.rerunAnalysis')}
             </button>
           </InsightCard>
         </div>
@@ -144,10 +144,10 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
         <InsightCard>
           <CardHeader
             icon={<div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><FileText size={16} /></div>}
-            title="Project Summary"
+            title={t('insights.projectSummary')}
           />
           <p className="text-[14px] text-zinc-600 leading-relaxed whitespace-pre-line">
-            {renderInsightValue(insights.project_summary)}
+            {renderInsightValue(insights.project_summary, t('insights.notSpecified'), t('insights.noneSpecified'), t('insights.yes'), t('insights.no'))}
           </p>
           {categoryDetected && (
             <span className="mt-3 inline-flex items-center px-2 py-0.5 bg-blue-50 text-blue-700 text-[11px] font-semibold rounded border border-blue-100">
@@ -162,19 +162,19 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           <InsightCard>
             <CardHeader
               icon={<div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center"><Scale size={16} /></div>}
-              title="Financials & Scoring"
+              title={t('insights.financialsScoring')}
             />
             <DataGroup
-              label="Budget"
+              label={t('insights.budget')}
               value={`${insights.financials?.base_budget_value ?? '—'} ${insights.financials?.base_budget_currency ?? ''}`.trim() || '—'}
               valueClass="text-[16px] font-extrabold text-blue-600"
             />
             <DataGroup
-              label="Price Weight"
+              label={t('insights.priceWeight')}
               value={insights.evaluation_criteria?.price_weight_percent != null ? `${insights.evaluation_criteria.price_weight_percent}%` : '—'}
             />
             <DataGroup
-              label="Quality Weight"
+              label={t('insights.qualityWeight')}
               value={insights.evaluation_criteria?.quality_weight_percent != null ? `${insights.evaluation_criteria.quality_weight_percent}%` : '—'}
             />
           </InsightCard>
@@ -183,19 +183,19 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           <InsightCard>
             <CardHeader
               icon={<div className="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center"><Clock size={16} /></div>}
-              title="Timeline & Constraints"
+              title={t('insights.timelineConstraints')}
             />
             <DataGroup
-              label="Contract Duration"
-              value={insights.proposal_timeline?.contract_duration_months != null ? `${insights.proposal_timeline.contract_duration_months} months` : '—'}
+              label={t('insights.contractDuration')}
+              value={insights.proposal_timeline?.contract_duration_months != null ? `${insights.proposal_timeline.contract_duration_months} ${t('insights.months')}` : '—'}
             />
             <DataGroup
-              label="Submission Deadline"
+              label={t('submissionDeadline')}
               value={insights.proposal_timeline?.submission_deadline_iso || '—'}
             />
             <DataGroup
-              label="Demo Required"
-              value={insights.proposal_timeline?.is_demo_required ? 'Yes' : 'No'}
+              label={t('insights.demoRequired')}
+              value={insights.proposal_timeline?.is_demo_required ? t('insights.yes') : t('insights.no')}
             />
           </InsightCard>
 
@@ -203,28 +203,28 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           <InsightCard>
             <CardHeader
               icon={<div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><Zap size={16} /></div>}
-              title="Strategic Intelligence"
+              title={t('insights.strategicIntelligence')}
             />
             {insights.strategic_intelligence?.incumbent_vendor_mentions?.length > 0 && (
               <DataGroup
-                label="Incumbents Detected"
+                label={t('insights.incumbentsDetected')}
                 value={insights.strategic_intelligence.incumbent_vendor_mentions.join(', ')}
                 valueClass="text-rose-600"
               />
             )}
             {insights.strategic_intelligence?.proprietary_lockin_risks?.length > 0 && (
               <DataGroup
-                label="Lock-in Risks"
+                label={t('insights.lockinRisks')}
                 value={insights.strategic_intelligence.proprietary_lockin_risks.join(', ')}
               />
             )}
             <DataGroup
-              label="Advance Payment"
-              value={insights.strategic_intelligence?.advance_payment_allowed ? 'Allowed' : 'Not Allowed'}
+              label={t('insights.advancePayment')}
+              value={insights.strategic_intelligence?.advance_payment_allowed ? t('insights.allowed') : t('insights.notAllowed')}
             />
             <DataGroup
-              label="Price Revision Clause"
-              value={insights.strategic_intelligence?.price_revision_clause ? 'Allowed' : 'Not Allowed'}
+              label={t('insights.priceRevisionClause')}
+              value={insights.strategic_intelligence?.price_revision_clause ? t('insights.allowed') : t('insights.notAllowed')}
             />
           </InsightCard>
 
@@ -232,10 +232,10 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
           <InsightCard>
             <CardHeader
               icon={<div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center"><ShieldCheck size={16} /></div>}
-              title="Mandatory Certifications"
+              title={t('insights.mandatoryCertifications')}
             />
             <p className="text-[14px] text-zinc-600 leading-relaxed whitespace-pre-line">
-              • {renderInsightValue(insights.mandatory_certifications_and_licenses)}
+              • {renderInsightValue(insights.mandatory_certifications_and_licenses, t('insights.notSpecified'), t('insights.noneSpecified'), t('insights.yes'), t('insights.no'))}
             </p>
           </InsightCard>
         </div>
@@ -244,14 +244,14 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
         <div className="flex items-center justify-between pt-2">
           <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
             <CheckCircle2 size={13} />
-            Verified by Winly Multi-Agent AI
+            {t('insights.verifiedBy')}
           </div>
           <button
             onClick={runAnalysis}
             className="flex items-center gap-1.5 text-[12px] font-medium text-zinc-400 hover:text-blue-600 transition-colors"
           >
             <RefreshCw size={13} />
-            Refresh Analysis
+            {t('insights.refreshAnalysis')}
           </button>
         </div>
       </div>
@@ -264,9 +264,9 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
       <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-5">
         <Sparkles size={22} />
       </div>
-      <h3 className="text-[17px] font-bold text-zinc-900 mb-2">Strategic Document Analysis</h3>
+      <h3 className="text-[17px] font-bold text-zinc-900 mb-2">{t('insights.emptyTitle')}</h3>
       <p className="text-[13px] text-zinc-500 max-w-sm mb-7 leading-relaxed">
-        Use the Winly Document Analytics Engine to extract scoring criteria, SLAs, and hidden requirements from the tender PDF.
+        {t('insights.emptyDesc')}
       </p>
       <Button
         type="button"
@@ -276,9 +276,9 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
         className="px-8"
       >
         <Sparkles size={15} />
-        Generate Strategic Insights
+        {t('insights.generate')}
       </Button>
-      <p className="mt-4 text-[11px] text-zinc-400">Powered by Google Gemini 2.5 Flash</p>
+      <p className="mt-4 text-[11px] text-zinc-400">{t('insights.poweredBy')}</p>
     </div>
   );
 }
