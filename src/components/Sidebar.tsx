@@ -1,12 +1,12 @@
 "use client";
 
 import { Link, usePathname } from '@/navigation'
-import { LayoutDashboard, Star, User, Search, TrendingUp, Building2, Trophy, LogOut, X } from "lucide-react";
+import { LayoutDashboard, Star, Search, BarChart3, Building2, Users, Settings, LogOut, X } from "lucide-react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { useTranslations } from 'next-intl';
 
-function SidebarLink({
+function NavItem({
   href,
   icon: Icon,
   children,
@@ -26,85 +26,104 @@ function SidebarLink({
       onClick={onClick}
       className={twMerge(
         clsx(
-          "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-150 text-sm",
+          "flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-150 text-sm mb-0.5",
           isActive
             ? "bg-blue-50 text-blue-600 font-semibold"
             : "text-zinc-500 font-medium hover:bg-zinc-100 hover:text-zinc-900"
         )
       )}
     >
-      <Icon
-        size={16}
-        className={twMerge(clsx("transition-colors shrink-0", isActive ? "text-blue-600" : "text-zinc-400 group-hover:text-zinc-600"))}
-      />
+      <Icon size={16} className={clsx("shrink-0", isActive ? "text-blue-600" : "text-zinc-400")} />
       <span>{children}</span>
     </Link>
+  );
+}
+
+function NavSection({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-[0.08em] px-3 mt-5 mb-2">
+      {children}
+    </div>
   );
 }
 
 export function Sidebar({
   signOutAction,
   mobileOpen = false,
-  onCloseMobile
+  onCloseMobile,
+  userInitials,
+  userName,
+  userEmail,
 }: {
   signOutAction: () => Promise<void>;
   mobileOpen?: boolean;
   onCloseMobile?: () => void;
+  userInitials?: string;
+  userName?: string;
+  userEmail?: string;
 }) {
   const t = useTranslations('sidebar');
 
   const handleLinkClick = () => {
-    if (onCloseMobile) {
-      onCloseMobile();
-    }
+    if (onCloseMobile) onCloseMobile();
   };
 
   const sidebarContent = (
     <>
-      <div className="px-4 py-5 border-b border-zinc-100">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs font-black">W</div>
-          <span className="text-base font-bold text-zinc-900 tracking-tight">
-            Winly<span className="text-blue-600">AI</span>
-          </span>
+      {/* Logo */}
+      <div className="px-5 py-5 border-b border-zinc-200">
+        <Link href="/" className="block">
+          <span className="text-[22px] font-extrabold text-blue-600 tracking-tight leading-none">Winly</span>
         </Link>
       </div>
 
-      <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
-        <div className="px-3 py-1.5 text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-0.5">{t('platform')}</div>
-        <SidebarLink href="/dashboard" icon={LayoutDashboard} onClick={handleLinkClick}>
+      {/* Nav */}
+      <nav className="flex-1 px-3 py-3 overflow-y-auto">
+        <NavItem href="/dashboard" icon={LayoutDashboard} onClick={handleLinkClick}>
           {t('dashboard')}
-        </SidebarLink>
-        <SidebarLink href="/explorer" icon={Search} onClick={handleLinkClick}>
-          {t('explorer')}
-        </SidebarLink>
-        <SidebarLink href="/matches" icon={Star} onClick={handleLinkClick}>
+        </NavItem>
+        <NavItem href="/matches" icon={Star} onClick={handleLinkClick}>
           {t('matches')}
-        </SidebarLink>
+        </NavItem>
+        <NavItem href="/explorer" icon={Search} onClick={handleLinkClick}>
+          {t('explorer')}
+        </NavItem>
 
-        <div className="px-3 py-1.5 text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-0.5 mt-5">{t('intelligence')}</div>
-        <SidebarLink href="/intelligence" icon={TrendingUp} onClick={handleLinkClick}>
+        <NavSection>{t('intelligence')}</NavSection>
+
+        <NavItem href="/intelligence" icon={BarChart3} onClick={handleLinkClick}>
           {t('marketOverview')}
-        </SidebarLink>
-        <SidebarLink href="/intelligence/buyers" icon={Building2} onClick={handleLinkClick}>
+        </NavItem>
+        <NavItem href="/intelligence/buyers" icon={Building2} onClick={handleLinkClick}>
           {t('buyerProfiles')}
-        </SidebarLink>
-        <SidebarLink href="/intelligence/competitors" icon={Trophy} onClick={handleLinkClick}>
+        </NavItem>
+        <NavItem href="/intelligence/competitors" icon={Users} onClick={handleLinkClick}>
           {t('competitorIntel')}
-        </SidebarLink>
+        </NavItem>
+
+        <div className="border-t border-zinc-200 my-3" />
+
+        <NavItem href="/profile" icon={Settings} onClick={handleLinkClick}>
+          {t('profile') || 'Settings'}
+        </NavItem>
       </nav>
 
-      <div className="px-3 pb-4 pt-3 border-t border-zinc-100 space-y-0.5">
-        <SidebarLink href="/profile" icon={User} onClick={handleLinkClick}>
-          {t('profile') || 'Profile'}
-        </SidebarLink>
+      {/* User Section */}
+      <div className="px-5 py-4 border-t border-zinc-200 flex items-center gap-2.5">
+        <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
+          {userInitials || 'WA'}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-[13px] font-semibold text-zinc-900 truncate">{userName || t('myAccount')}</div>
+          <div className="text-[11px] text-zinc-400 truncate">{userEmail || ''}</div>
+        </div>
         <form action={signOutAction}>
           <button
             type="submit"
-            className="flex items-center gap-3 px-3 py-2.5 font-medium rounded-lg transition-all duration-200 group w-full text-zinc-500 hover:bg-red-50 hover:text-red-600 text-sm cursor-pointer"
+            title="Sign out"
+            className="p-1.5 rounded-lg text-zinc-400 hover:bg-red-50 hover:text-red-500 transition-all cursor-pointer shrink-0"
           >
-            <LogOut size={17} className="text-zinc-400 group-hover:text-red-500 transition-colors shrink-0" />
-            <span>{t('signOut') || 'Sign Out'}</span>
+            <LogOut size={15} />
           </button>
         </form>
       </div>
@@ -125,7 +144,7 @@ export function Sidebar({
             className="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm z-40 md:hidden"
             onClick={onCloseMobile}
           />
-          <aside className="w-60 bg-white border-r border-zinc-200 fixed h-full left-0 top-0 flex flex-col z-50 md:hidden animate-slide-in-right">
+          <aside className="w-60 bg-white border-r border-zinc-200 fixed h-full left-0 top-0 flex flex-col z-50 md:hidden">
             <button
               onClick={onCloseMobile}
               className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-zinc-100 text-zinc-400 hover:text-zinc-700 transition-all cursor-pointer"

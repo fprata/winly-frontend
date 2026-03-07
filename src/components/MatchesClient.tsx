@@ -6,33 +6,36 @@ import {
   DollarSign,
   Target,
   Building2,
-  ArrowRight,
+  ChevronRight,
+  ChevronLeft,
   Clock,
-  Globe,
   Search as SearchIcon,
   Star,
-  Zap,
-  Brain,
-  FileText
+  Filter,
+  ArrowUpDown,
+  TrendingUp,
+  ShieldCheck,
+  Bell,
+  X,
+  Globe,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import Fuse from 'fuse.js';
 import { useTranslations, useLocale } from 'next-intl';
 import { getCpvDescription } from '@/utils/cpv-data';
-import { PageHeader } from './ui/PageHeader';
-import { Input } from './ui/Input';
-import { Select } from './ui/Select';
 import { Badge } from './ui/Badge';
 import { EmptyState } from './ui/EmptyState';
-import { Card } from './ui/Card';
 
 interface MatchesClientProps {
   initialMatches: any[];
   clientId: string;
+  totalCount?: number;
 }
 
-export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) {
-  const [matches, setMatches] = useState<any[]>(() =>
+const PAGE_SIZE = 20;
+
+export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesClientProps) {
+  const [allMatches, setAllMatches] = useState<any[]>(() =>
     initialMatches.map((m: any) => ({
       ...m,
       ...(m.tenders || {}),
@@ -46,9 +49,9 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("All");
   const [minScoreFilter, setMinScoreFilter] = useState(0);
-
-  const [isFirstRender, setIsFirstRender] = useState(true);
+  const [page, setPage] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
   useEffect(() => {
     if (isFirstRender) {
@@ -72,17 +75,14 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
           win_probability,
           tender_id,
           tender_uuid,
-          tenders!inner (
-            *
-          )
+          tenders!inner (*)
         `)
         .eq('client_id', clientId)
         .gte('match_score', minScoreFilter)
         .order('match_score', { ascending: false })
-        .limit(100);
+        .limit(200);
 
       if (error) {
-        console.error("Supabase error:", error);
         setError(t('errorLoadingMatches') || "Could not load matches");
       } else {
         const flattened = data.map((m: any) => {
@@ -94,43 +94,13 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
             priority: m.match_score >= 75 ? 'High' : m.match_score >= 50 ? 'Medium' : 'Low'
           };
         });
-        setMatches(flattened);
+        setAllMatches(flattened);
+        setPage(0);
       }
       setLoading(false);
     }
     fetchMatches();
   }, [minScoreFilter, isFirstRender, clientId, t]);
-
-  const getCategorizedReasons = (rawReasons: string) => {
-    if (!rawReasons) return [];
-    const reasons = rawReasons.split(/[|]|,/).filter((r: string) => r.trim());
-    const categories: Record<string, any> = {};
-    reasons.forEach((reason: string) => {
-      const text = reason.toLowerCase();
-      let key = "";
-      if (text.includes('urgent')) key = "urgent";
-      else if (text.includes('country') || text.includes('location')) key = "market";
-      else if (text.includes('budget') || text.includes('value') || text.includes('financial')) key = "budget";
-      else if (text.includes('cpv') || text.includes('sector')) key = "sector";
-      else if (text.includes('semantic') || text.includes('match') || text.includes('context')) key = "ai";
-      else if (text.includes('procedure') || text.includes('openness')) key = "process";
-
-      if (key) {
-        if (!categories[key]) {
-          const configs: any = {
-            urgent: { label: t('categories.timeSensitivity'), icon: <Zap size={13} />, color: "text-amber-600", bg: "bg-amber-50" },
-            market: { label: t('categories.marketRelevance'), icon: <Globe size={13} />, color: "text-sky-600", bg: "bg-sky-50" },
-            budget: { label: t('categories.financialAlignment'), icon: <DollarSign size={13} />, color: "text-emerald-600", bg: "bg-emerald-50" },
-            sector: { label: t('categories.sectorExpertise'), icon: <Target size={13} />, color: "text-violet-600", bg: "bg-violet-50" },
-            ai: { label: t('categories.aiMatchConfidence'), icon: <Brain size={13} />, color: "text-blue-600", bg: "bg-blue-50" },
-            process: { label: t('categories.proceduralExperience'), icon: <FileText size={13} />, color: "text-zinc-600", bg: "bg-zinc-100" }
-          };
-          categories[key] = { ...configs[key] };
-        }
-      }
-    });
-    return Object.values(categories).slice(0, 4);
-  };
 
   const formatValue = (val: number, curr: string) => {
     if (!val) return "TBD";
@@ -146,99 +116,161 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
   };
 
   const displayedMatches = useMemo(() => {
-    let result = matches;
+    let result = allMatches;
     if (selectedCountry !== "All") result = result.filter((m: any) => (m.country || "") === selectedCountry);
     if (searchTerm) {
       const fuse = new Fuse(result, { keys: ['title', 'buyer_name'], threshold: 0.35 });
       result = fuse.search(searchTerm).map((r: any) => r.item);
     }
     return result;
-  }, [matches, searchTerm, selectedCountry]);
+  }, [allMatches, searchTerm, selectedCountry]);
 
-  const countryOptions = [
-    { value: "All", label: t('allRegions') },
-    { value: "PT", label: "Portugal" },
-    { value: "ES", label: "Spain" },
-    { value: "FR", label: "France" },
-  ];
+  const paginatedMatches = useMemo(() => {
+    return displayedMatches.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  }, [displayedMatches, page]);
+
+  const totalPages = Math.ceil(displayedMatches.length / PAGE_SIZE);
+  const from = page * PAGE_SIZE + 1;
+  const to = Math.min((page + 1) * PAGE_SIZE, displayedMatches.length);
+
+  // Stat card data
+  const highConfidenceCount = allMatches.filter(m => m.match_score >= 75).length;
+  const pipelineValue = allMatches.reduce((sum, m) => sum + (m.estimated_value || 0), 0);
+  const activeCount = totalCount ?? allMatches.length;
+
+  const formatPipelineValue = (val: number) => {
+    if (val >= 1_000_000_000) return `€${(val / 1_000_000_000).toFixed(1)}B`;
+    if (val >= 1_000_000) return `€${(val / 1_000_000).toFixed(1)}M`;
+    if (val >= 1_000) return `€${(val / 1_000).toFixed(0)}K`;
+    return `€${val.toFixed(0)}`;
+  };
+
+  // Active filter chips
+  const activeChips: { key: string; label: string }[] = [];
+  if (minScoreFilter > 0) activeChips.push({ key: 'score', label: `Score: ${minScoreFilter}+` });
+  if (selectedCountry !== 'All') activeChips.push({ key: 'country', label: selectedCountry });
+
+  const removeChip = (key: string) => {
+    if (key === 'score') setMinScoreFilter(0);
+    if (key === 'country') setSelectedCountry('All');
+  };
 
   return (
-    <div className="max-w-7xl mx-auto pb-16">
-      <PageHeader
-        title={t('title')}
-        subtitle={t('subtitle')}
-        icon={<Star size={16} />}
-        actions={
-          <div className="flex items-center gap-1 bg-zinc-100 p-1 rounded-lg">
-            <button
-              onClick={() => setMinScoreFilter(0)}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${minScoreFilter === 0 ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
-            >
-              {t('allMatches')}
-            </button>
-            <button
-              onClick={() => setMinScoreFilter(75)}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${minScoreFilter === 75 ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700'}`}
-            >
-              {t('highConfidence')}
-            </button>
-          </div>
-        }
-      />
+    <div className="pb-16">
+      {/* Page Header */}
+      <header className="flex justify-between items-start mb-7">
+        <div>
+          <h1 className="text-[28px] font-extrabold tracking-tight text-zinc-950 leading-none mb-1">{t('title')}</h1>
+          <p className="text-[14px] text-zinc-500">{t('subtitle')}</p>
+        </div>
+        <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-semibold border border-emerald-100">
+          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+          Live Feed Active
+        </div>
+      </header>
 
-      {/* Filter Bar */}
-      <Card padding="none" className="p-3 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-2">
-          <div className="md:col-span-8">
-            <Input
-              icon={<SearchIcon size={16} />}
-              placeholder={t('searchPlaceholder')}
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className="border-0 shadow-none focus:ring-0"
-            />
+      {/* Stat Cards */}
+      <div className="grid grid-cols-3 gap-5 mb-8">
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[13px] font-medium text-zinc-500">{t('activeMatches') || 'Active Matches'}</span>
+            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+              <Bell size={16} />
+            </div>
           </div>
-          <div className="md:col-span-4">
-            <Select
-              options={countryOptions}
-              value={selectedCountry}
-              onChange={setSelectedCountry}
-              icon={<Globe size={15} />}
-            />
+          <div className="text-[32px] font-bold tracking-tight text-zinc-900 leading-none">{activeCount.toLocaleString()}</div>
+          <div className="mt-2">
+            <Link href="/matches" className="text-blue-600 text-[13px] font-semibold flex items-center gap-1 hover:underline">
+              {t('managePipeline') || 'Manage pipeline'} <ChevronRight size={14} />
+            </Link>
           </div>
         </div>
-      </Card>
 
-      {/* Score Legend */}
-      <div className="mb-6 flex flex-wrap items-center gap-y-2 gap-x-5 bg-white px-4 py-3 rounded-xl border border-zinc-200 shadow-sm">
-        <div className="flex items-center gap-2 mr-1">
-          <Brain size={15} className="text-blue-600" />
-          <span className="text-[10px] font-black text-zinc-700 uppercase tracking-widest">{t('scoreLegend.title')}</span>
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[13px] font-medium text-zinc-500">{t('highConfidence') || 'High Confidence'}</span>
+            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <ShieldCheck size={16} />
+            </div>
+          </div>
+          <div className="text-[32px] font-bold tracking-tight text-zinc-900 leading-none">{highConfidenceCount}</div>
+          <div className="mt-2">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-zinc-100 text-zinc-600 rounded text-xs font-medium border border-zinc-200">
+              &gt; 75% {t('matchScore') || 'Match Score'}
+            </span>
+          </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-violet-400" />
-          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-tight">{t('scoreLegend.cpv')}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-sky-400" />
-          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-tight">{t('scoreLegend.strategic')}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-teal-400" />
-          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-tight">{t('scoreLegend.semantic')}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-emerald-400" />
-          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-tight">{t('scoreLegend.keyword')}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-amber-400" />
-          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-tight">{t('scoreLegend.location')}</span>
+
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[13px] font-medium text-zinc-500">{t('pipelineValue') || 'Pipeline Value'}</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <TrendingUp size={16} />
+            </div>
+          </div>
+          <div className="text-[32px] font-bold tracking-tight text-zinc-900 leading-none">
+            {formatPipelineValue(pipelineValue)}
+          </div>
+          <div className="mt-2 text-[13px] text-zinc-500">{t('acrossAllMatches') || 'Across all active matches'}</div>
         </div>
       </div>
 
+      {/* Section header with controls */}
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-[18px] font-bold text-zinc-900">{t('recentMatches') || 'Recent Matches'}</h2>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setMinScoreFilter(minScoreFilter > 0 ? 0 : 60)}
+            className="h-9 px-3 rounded-lg border border-zinc-200 bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 shadow-sm transition-all"
+          >
+            <Filter size={15} /> Filters
+          </button>
+          <button
+            onClick={() => setMinScoreFilter(minScoreFilter === 75 ? 0 : 75)}
+            className={`h-9 px-3 rounded-lg border text-sm font-medium flex items-center gap-1.5 shadow-sm transition-all ${minScoreFilter === 75 ? 'border-blue-300 bg-blue-50 text-blue-700' : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'}`}
+          >
+            <ArrowUpDown size={15} /> Score
+          </button>
+          <div className="relative">
+            <SearchIcon size={15} className="absolute left-2.5 top-2.5 text-zinc-400" />
+            <input
+              type="text"
+              placeholder={t('searchPlaceholder') || "Search tenders..."}
+              value={searchTerm}
+              onChange={e => { setSearchTerm(e.target.value); setPage(0); }}
+              className="h-9 pl-8 pr-3 w-64 rounded-lg border border-zinc-300 text-sm outline-none bg-white shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-zinc-400 transition-all"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Filter chips */}
+      {activeChips.length > 0 && (
+        <div className="flex items-center gap-2 mb-3">
+          {activeChips.map(chip => (
+            <span key={chip.key} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-medium">
+              {chip.label}
+              <button onClick={() => removeChip(chip.key)} className="opacity-60 hover:opacity-100 cursor-pointer">
+                <X size={13} />
+              </button>
+            </span>
+          ))}
+          <button onClick={() => { setMinScoreFilter(0); setSelectedCountry('All'); }} className="text-xs text-zinc-400 hover:text-zinc-600">
+            Clear all
+          </button>
+        </div>
+      )}
+
+      {/* Results count */}
+      {!loading && displayedMatches.length > 0 && (
+        <div className="text-xs text-zinc-400 mb-3">
+          Showing {from}–{to} of {displayedMatches.length.toLocaleString()} matches
+        </div>
+      )}
+
+      {/* Match list */}
       {loading ? (
-        <div className="grid grid-cols-1 gap-3">
+        <div className="flex flex-col gap-3">
           {[1, 2, 3].map(i => (
             <div key={i} className="h-44 bg-white rounded-xl border border-zinc-100 animate-pulse" />
           ))}
@@ -246,10 +278,7 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
       ) : error ? (
         <div className="p-8 text-center rounded-xl bg-red-50 border border-red-100">
           <p className="text-red-600 font-medium mb-2">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="text-sm text-red-700 underline hover:text-red-800"
-          >
+          <button onClick={() => window.location.reload()} className="text-sm text-red-700 underline hover:text-red-800">
             Try again
           </button>
         </div>
@@ -261,13 +290,13 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
         />
       ) : (
         <div className="flex flex-col gap-3">
-          {displayedMatches.map((match: any) => {
+          {paginatedMatches.map((match: any) => {
             const daysLeft = getDaysRemaining(match.submission_deadline);
             const score = Math.round(match.match_score);
-            // SVG ring: r=34, circumference = 2*π*34 ≈ 213.6
             const circumference = 213.6;
             const dashOffset = circumference - (circumference * score) / 100;
             const scoreColor = score >= 75 ? '#2563eb' : score >= 50 ? '#f59e0b' : '#a1a1aa';
+            const priorityColor: 'rose' | 'amber' | 'zinc' = match.priority === 'High' ? 'rose' : match.priority === 'Medium' ? 'amber' : 'zinc';
 
             const miniBarData = [
               { label: 'CPV', value: match.score_cpv || 0, color: '#8b5cf6' },
@@ -276,8 +305,6 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
               { label: 'Key', value: match.score_keyword || 0, color: '#10b981' },
               { label: 'Urg', value: match.score_location || 0, color: '#f59e0b' },
             ];
-
-            const priorityColor = match.priority === 'High' ? 'rose' : match.priority === 'Medium' ? 'amber' : 'zinc';
 
             return (
               <Link
@@ -307,8 +334,6 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                     </span>
                   </div>
                   <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">{t('matchScore')}</span>
-
-                  {/* Mini-bars with labels */}
                   <div className="w-full px-1 space-y-1">
                     {miniBarData.map(bar => (
                       <div key={bar.label} className="flex items-center gap-1">
@@ -326,24 +351,21 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
 
                 {/* Body */}
                 <div className="flex-1 p-5 flex flex-col gap-1.5 min-w-0">
-                  {/* Header row: badges */}
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <Badge color={priorityColor as 'rose' | 'amber' | 'zinc'}>
+                    <Badge color={priorityColor}>
                       {t(`matchTypes.${(match.priority || 'low').toLowerCase()}`)}
                     </Badge>
                     {daysLeft !== null && (
                       <Badge color={daysLeft <= 7 ? 'rose' : 'amber'} icon={<Clock size={11} />}>
-                        {t('daysLeft', { count: daysLeft })}
+                        {daysLeft} {t('daysLeft', { count: daysLeft }).replace(`${daysLeft} `, '') || 'days left'}
                       </Badge>
                     )}
                   </div>
 
-                  {/* Title */}
                   <h3 className="text-[15px] font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors leading-snug">
                     {match.title}
                   </h3>
 
-                  {/* Buyer row */}
                   <div className="flex items-center gap-1.5 text-[13px] text-zinc-500">
                     <Building2 size={13} />
                     <span className="truncate">{match.buyer_name}</span>
@@ -355,7 +377,6 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                     )}
                   </div>
 
-                  {/* Metrics row */}
                   <div className="flex items-center gap-4 mt-1">
                     <div className="flex items-center gap-1.5">
                       <div className="w-[26px] h-[26px] rounded-md bg-emerald-50 flex items-center justify-center text-emerald-600">
@@ -363,7 +384,6 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                       </div>
                       <span className="text-sm font-semibold text-zinc-900">{formatValue(match.estimated_value, match.currency)}</span>
                     </div>
-
                     {match.win_probability > 0 && (
                       <div className="flex items-center gap-1.5">
                         <div className="w-[26px] h-[26px] rounded-md bg-indigo-50 flex items-center justify-center text-indigo-600">
@@ -372,22 +392,51 @@ export function MatchesClient({ initialMatches, clientId }: MatchesClientProps) 
                         <span className="text-sm font-semibold text-zinc-900">Win: {Math.round(match.win_probability)}%</span>
                       </div>
                     )}
-
                     {match.cpv_code && (
                       <Badge color="blue">
                         {match.cpv_code} — {getCpvDescription(match.cpv_code, locale)}
                       </Badge>
                     )}
                   </div>
+
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {match.priority === 'High' && <Badge color="blue">Sector match</Badge>}
+                    {match.win_probability >= 60 && <Badge color="blue">Budget fit</Badge>}
+                    {match.score_strategic >= 70 && <Badge color="blue">Strategic fit</Badge>}
+                    {match.country && <Badge color="zinc">{match.country === 'PT' ? 'Portugal' : match.country}</Badge>}
+                  </div>
                 </div>
 
                 {/* Arrow */}
                 <div className="w-11 shrink-0 flex items-center justify-center border-l border-zinc-200 text-zinc-400 group-hover:text-blue-600 transition-colors">
-                  <ArrowRight size={18} />
+                  <ChevronRight size={18} />
                 </div>
               </Link>
             );
           })}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {!loading && displayedMatches.length > PAGE_SIZE && (
+        <div className="flex items-center justify-between mt-6 pt-5 border-t border-zinc-200">
+          <button
+            disabled={page === 0}
+            onClick={() => setPage(p => p - 1)}
+            className="h-9 px-3 rounded-lg border border-zinc-200 bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          >
+            <ChevronLeft size={15} /> Previous
+          </button>
+          <span className="text-sm text-zinc-500">
+            Page {page + 1} of {totalPages}
+          </span>
+          <button
+            disabled={page >= totalPages - 1}
+            onClick={() => setPage(p => p + 1)}
+            className="h-9 px-3 rounded-lg border border-zinc-200 bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          >
+            Next <ChevronRight size={15} />
+          </button>
         </div>
       )}
     </div>

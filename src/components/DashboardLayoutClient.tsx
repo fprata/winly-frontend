@@ -7,10 +7,16 @@ import { ToastContainer } from "./ui/Toast";
 
 export function DashboardLayoutClient({
   signOutAction,
-  children
+  children,
+  userInitials,
+  userName,
+  userEmail,
 }: {
   signOutAction: () => Promise<void>;
   children: React.ReactNode;
+  userInitials?: string;
+  userName?: string;
+  userEmail?: string;
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -20,6 +26,9 @@ export function DashboardLayoutClient({
         signOutAction={signOutAction}
         mobileOpen={mobileMenuOpen}
         onCloseMobile={() => setMobileMenuOpen(false)}
+        userInitials={userInitials}
+        userName={userName}
+        userEmail={userEmail}
       />
 
       {/* Mobile Menu Button */}

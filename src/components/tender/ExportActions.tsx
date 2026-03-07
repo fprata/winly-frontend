@@ -70,40 +70,44 @@ export function ExportActions({ tenderId, tier }: ExportActionsProps) {
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <button
-        onClick={handleExportPdf}
-        disabled={!isPro || exportingPdf}
-        className={`
-          flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all
-          ${isPro
-            ? 'bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm'
-            : 'bg-zinc-100 text-zinc-400 cursor-not-allowed'
-          }
-        `}
-      >
-        {exportingPdf ? <Loader2 size={14} className="animate-spin" /> : isPro ? <FileDown size={14} /> : <Lock size={14} />}
-        {exportingPdf ? t('export.exporting') : t('export.pdf')}
-      </button>
+    <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+      <div className="flex items-center gap-2 mb-5 pb-3 border-b border-zinc-200">
+        <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+          <FileDown size={16} />
+        </div>
+        <h3 className="text-[15px] font-bold text-zinc-900">{t('export.actions') || 'Actions'}</h3>
+      </div>
+      <div className="flex items-center gap-2 flex-wrap">
+        <button
+          onClick={handleExportPdf}
+          disabled={!isPro || exportingPdf}
+          className={`h-9 px-4 rounded-lg text-[14px] font-semibold flex items-center gap-2 transition-all ${
+            isPro
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-zinc-100 text-zinc-400 cursor-not-allowed'
+          }`}
+        >
+          {exportingPdf ? <Loader2 size={14} className="animate-spin" /> : isPro ? <FileDown size={14} /> : <Lock size={14} />}
+          {exportingPdf ? t('export.exporting') : t('export.pdf')}
+        </button>
 
-      <button
-        onClick={handleExportQuestions}
-        disabled={!isPro || exportingQuestions}
-        className={`
-          flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all
-          ${isPro
-            ? 'bg-white text-zinc-700 border border-zinc-200 hover:bg-zinc-50 shadow-sm'
-            : 'bg-zinc-100 text-zinc-400 cursor-not-allowed'
-          }
-        `}
-      >
-        {exportingQuestions ? <Loader2 size={14} className="animate-spin" /> : isPro ? <HelpCircle size={14} /> : <Lock size={14} />}
-        {exportingQuestions ? t('export.exporting') : t('export.questions')}
-      </button>
+        <button
+          onClick={handleExportQuestions}
+          disabled={!isPro || exportingQuestions}
+          className={`h-9 px-4 rounded-lg text-[14px] font-semibold flex items-center gap-2 border transition-all ${
+            isPro
+              ? 'bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 shadow-sm'
+              : 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed'
+          }`}
+        >
+          {exportingQuestions ? <Loader2 size={14} className="animate-spin" /> : isPro ? <HelpCircle size={14} /> : <Lock size={14} />}
+          {exportingQuestions ? t('export.exporting') : t('export.questions')}
+        </button>
 
-      {!isPro && (
-        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">{t('export.proOnly')}</span>
-      )}
+        {!isPro && (
+          <span className="text-[12px] text-zinc-400 font-medium">{t('export.proOnly')}</span>
+        )}
+      </div>
     </div>
   );
 }

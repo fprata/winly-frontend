@@ -228,7 +228,13 @@
     "noValue": "Not specified",
     "estValue": "Est. Value",
     "finalValue": "Final Value",
-    "viewTender": "View"
+    "viewTender": "View",
+    "totalActive": "Total Active",
+    "closingThisWeek": "Closing This Week",
+    "totalValue": "Total Value",
+    "deadlinesIn7Days": "Deadlines in 7 days",
+    "acrossActiveTenders": "Across active tenders",
+    "allTenders": "All Tenders"
   },
   "intelligence": {
     "market": {
@@ -486,7 +492,13 @@
     "strategicFit": "Strategic Fit",
     "aiSemantic": "AI Semantic",
     "keywordMatch": "Keyword Match",
-    "location": "Location"
+    "location": "Location",
+    "errorLoadingMatches": "Could not load matches. Please try again.",
+    "activeMatches": "Active Matches",
+    "managePipeline": "Manage pipeline",
+    "recentMatches": "Recent Matches",
+    "acrossAllMatches": "Across all active matches",
+    "pipelineValue": "Pipeline Value"
   },
   "tenders": {
     "loading": "Consulting cloud database...",

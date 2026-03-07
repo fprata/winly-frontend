@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AlertTriangle, Shield, ShieldAlert } from 'lucide-react';
+import { Shield, ShieldAlert, AlertTriangle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface RiskScoreHeroProps {
@@ -11,23 +11,39 @@ interface RiskScoreHeroProps {
 }
 
 function getRiskConfig(score: number) {
-  if (score <= 3) return { color: 'emerald', strokeColor: '#10b981', bgColor: 'bg-emerald-50', borderColor: 'border-emerald-200', textColor: 'text-emerald-700', icon: Shield };
-  if (score <= 6) return { color: 'amber', strokeColor: '#f59e0b', bgColor: 'bg-amber-50', borderColor: 'border-amber-200', textColor: 'text-amber-700', icon: ShieldAlert };
-  return { color: 'rose', strokeColor: '#f43f5e', bgColor: 'bg-rose-50', borderColor: 'border-rose-200', textColor: 'text-rose-700', icon: AlertTriangle };
+  if (score <= 3) return {
+    strokeColor: '#10b981',
+    iconBg: 'bg-emerald-50',
+    iconColor: 'text-emerald-600',
+    badgeBg: '#10b981',
+    scoreColor: '#10b981',
+    icon: Shield,
+    label: 'LOW RISK',
+  };
+  if (score <= 6) return {
+    strokeColor: '#f59e0b',
+    iconBg: 'bg-amber-50',
+    iconColor: 'text-amber-600',
+    badgeBg: '#f59e0b',
+    scoreColor: '#f59e0b',
+    icon: ShieldAlert,
+    label: 'MEDIUM RISK',
+  };
+  return {
+    strokeColor: '#dc2626',
+    iconBg: 'bg-red-50',
+    iconColor: 'text-red-600',
+    badgeBg: '#dc2626',
+    scoreColor: '#dc2626',
+    icon: AlertTriangle,
+    label: 'HIGH RISK',
+  };
 }
 
 export function RiskScoreHero({ score, level, factors }: RiskScoreHeroProps) {
   const t = useTranslations('tenders');
   const config = getRiskConfig(score);
   const Icon = config.icon;
-
-  // Semi-circular gauge: arc from 180 to 0 degrees
-  const radius = 80;
-  const circumference = Math.PI * radius; // half circle
-  const progress = (score / 10) * circumference;
-  const dashOffset = circumference - progress;
-
-  const riskLabel = score <= 3 ? t('risk.low') : score <= 6 ? t('risk.medium') : t('risk.high');
 
   const factorsList = Array.isArray(factors)
     ? factors
@@ -36,56 +52,43 @@ export function RiskScoreHero({ score, level, factors }: RiskScoreHeroProps) {
       : [];
 
   return (
-    <div className={`${config.bgColor} ${config.borderColor} border rounded-xl p-8 shadow-sm`}>
-      <div className="flex flex-col md:flex-row items-center gap-8">
-        {/* Gauge */}
-        <div className="flex flex-col items-center">
-          <svg width="200" height="120" viewBox="0 0 200 120">
-            {/* Background arc */}
-            <path
-              d="M 10 110 A 80 80 0 0 1 190 110"
-              fill="none"
-              stroke="#e2e8f0"
-              strokeWidth="12"
-              strokeLinecap="round"
-            />
-            {/* Progress arc */}
-            <path
-              d="M 10 110 A 80 80 0 0 1 190 110"
-              fill="none"
-              stroke={config.strokeColor}
-              strokeWidth="12"
-              strokeLinecap="round"
-              strokeDasharray={circumference}
-              strokeDashoffset={dashOffset}
-              className="transition-all duration-1000 ease-out"
-            />
-            {/* Score text */}
-            <text x="100" y="95" textAnchor="middle" className="fill-current" style={{ fontSize: '36px', fontWeight: 900 }}>
-              <tspan className={config.textColor}>{score}</tspan>
-              <tspan style={{ fontSize: '16px', fontWeight: 700 }} className="fill-zinc-400">/10</tspan>
-            </text>
-          </svg>
-          <div className={`flex items-center gap-2 ${config.textColor} font-black text-sm uppercase tracking-widest mt-2`}>
-            <Icon size={16} />
-            {riskLabel}
+    <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 mb-4">
+      {/* Card Header */}
+      <div className="flex items-center gap-2 mb-5 pb-3 border-b border-zinc-200">
+        <div className={`w-8 h-8 rounded-lg ${config.iconBg} ${config.iconColor} flex items-center justify-center shrink-0`}>
+          <Icon size={16} />
+        </div>
+        <h3 className="text-[15px] font-bold text-zinc-900">{t('risk.title') || 'Risk Assessment'}</h3>
+      </div>
+
+      <div className="flex gap-6 items-start">
+        {/* Score */}
+        <div className="shrink-0 pr-6 border-r border-zinc-200">
+          <div className="text-[48px] font-extrabold leading-none" style={{ color: config.scoreColor }}>
+            {score}
+            <span className="text-[18px] font-medium text-zinc-400">/10</span>
           </div>
+          <span
+            className="inline-block mt-2 px-3 py-1 rounded text-white text-[13px] font-bold"
+            style={{ backgroundColor: config.badgeBg }}
+          >
+            {config.label}
+          </span>
         </div>
 
-        {/* Risk Factors */}
-        {factorsList.length > 0 && (
-          <div className="flex-1">
-            <h4 className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-4">{t('risk.keyFactors')}</h4>
-            <ul className="space-y-2">
-              {factorsList.slice(0, 5).map((factor, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-zinc-700 font-medium">
-                  <div className={`w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0`} style={{ backgroundColor: config.strokeColor }} />
-                  {typeof factor === 'string' ? factor : JSON.stringify(factor)}
-                </li>
+        {/* Factors */}
+        <div className="flex-1">
+          <h4 className="text-[14px] font-bold text-zinc-700 mb-3">{t('risk.keyFactors') || 'Key Risk Factors'}</h4>
+          {factorsList.length > 0 ? (
+            <ul className="space-y-2 pl-4 list-disc text-[14px] text-zinc-500 leading-relaxed">
+              {factorsList.slice(0, 6).map((factor, i) => (
+                <li key={i}>{typeof factor === 'string' ? factor : JSON.stringify(factor)}</li>
               ))}
             </ul>
-          </div>
-        )}
+          ) : (
+            <p className="text-[14px] text-zinc-400">No specific risk factors identified.</p>
+          )}
+        </div>
       </div>
     </div>
   );

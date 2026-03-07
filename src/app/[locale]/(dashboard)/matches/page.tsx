@@ -33,22 +33,41 @@ export default async function MatchesPage() {
 
   if (!profile) redirect('/onboarding');
 
-  // Fetch matches from tender_matches table
-  const { data: matches, error } = await supabase
-    .from('tender_matches')
-    .select(`
-      match_score,
-      match_reasons,
-      tender_id,
-      tenders (*)
-    `)
-    .eq('client_id', profile.id)
-    .order('match_score', { ascending: false})
-    .limit(100); // Pagination: initial load of 100 matches
+  // Fetch total count + initial matches
+  const [{ count: totalCount }, { data: matches, error }] = await Promise.all([
+    supabase
+      .from('tender_matches')
+      .select('*', { count: 'exact', head: true })
+      .eq('client_id', profile.id),
+    supabase
+      .from('tender_matches')
+      .select(`
+        match_score,
+        match_reasons,
+        score_cpv,
+        score_strategic,
+        score_semantic,
+        score_keyword,
+        score_location,
+        win_probability,
+        tender_id,
+        tender_uuid,
+        tenders (*)
+      `)
+      .eq('client_id', profile.id)
+      .order('match_score', { ascending: false })
+      .limit(200),
+  ]);
 
   if (error) {
     console.error("Fetch matches error:", error);
   }
 
-  return <MatchesClient initialMatches={matches || []} clientId={profile.id} />;
+  return (
+    <MatchesClient
+      initialMatches={matches || []}
+      clientId={profile.id}
+      totalCount={totalCount || undefined}
+    />
+  );
 }

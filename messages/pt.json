@@ -228,7 +228,13 @@
     "noValue": "Não especificado",
     "estValue": "Val. Est.",
     "finalValue": "Val. Final",
-    "viewTender": "Ver"
+    "viewTender": "Ver",
+    "totalActive": "Total Ativo",
+    "closingThisWeek": "A Fechar Esta Semana",
+    "totalValue": "Valor Total",
+    "deadlinesIn7Days": "Prazos em 7 dias",
+    "acrossActiveTenders": "Em todos os concursos ativos",
+    "allTenders": "Todos os Concursos"
   },
   "intelligence": {
     "market": {
@@ -486,7 +492,13 @@
     "strategicFit": "Ajuste Estratégico",
     "aiSemantic": "Semântica IA",
     "keywordMatch": "Correspondência de Palavras-chave",
-    "location": "Localização"
+    "location": "Localização",
+    "errorLoadingMatches": "Não foi possível carregar as correspondências. Tente novamente.",
+    "activeMatches": "Correspondências Ativas",
+    "managePipeline": "Gerir pipeline",
+    "recentMatches": "Correspondências Recentes",
+    "acrossAllMatches": "Em todas as correspondências ativas",
+    "pipelineValue": "Valor do Pipeline"
   },
   "tenders": {
     "loading": "A consultar a base de dados na cloud...",

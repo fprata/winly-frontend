@@ -26,31 +26,31 @@ export default async function BuyerIntelligencePage({
     if (exactMatches && exactMatches.length > 0) {
       initialProfile = exactMatches[0];
     } else {
-      // Fallback: populate search results with full-text search (accent-insensitive)
+      // Fallback: populate search results with full-text search
       const { data } = await supabase
         .from('intel_buyers')
-        .select('name, country, total_contracts, buyer_company_id')
+        .select('name, country, total_contracts, buyer_company_id, total_spend, avg_discount, avg_bidder_count')
         .textSearch('search_vector', name, { type: 'websearch', config: 'public.simple_unaccent' })
         .order('total_contracts', { ascending: false })
         .limit(10);
       initialSearchResults = data || [];
     }
   } else {
-    // Default List View
+    // Default List View — fetch rich data for result cards
     const { data } = await supabase
       .from('intel_buyers')
-      .select('name, country, total_contracts, buyer_company_id')
+      .select('name, country, total_contracts, buyer_company_id, total_spend, avg_discount, avg_bidder_count')
       .order('total_contracts', { ascending: false })
-      .limit(10);
+      .limit(20);
     initialSearchResults = data || [];
   }
 
   return (
-    <BuyerIntelligenceClient 
-      initialProfile={initialProfile} 
+    <BuyerIntelligenceClient
+      initialProfile={initialProfile}
       initialSearchResults={initialSearchResults}
-      initialName={name || null} 
-      fromTender={fromTender || null} 
+      initialName={name || null}
+      fromTender={fromTender || null}
     />
   );
 }

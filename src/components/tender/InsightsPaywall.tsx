@@ -19,7 +19,6 @@ export function InsightsPaywall({ tenderId, initialInsights, derivedDocLink, tie
   const t = useTranslations('tenders');
   const isPro = tier === 'Professional' || tier === 'Enterprise';
 
-  // Pro/Enterprise users get full access
   if (isPro) {
     return (
       <TenderInsights
@@ -31,62 +30,62 @@ export function InsightsPaywall({ tenderId, initialInsights, derivedDocLink, tie
     );
   }
 
-  // Free tier with existing insights - show blurred preview
-  const projectSummary = initialInsights?.['pt-PT']?.project_summary || initialInsights?.['en-US']?.project_summary || initialInsights?.project_summary;
+  // Free tier with partial insights — blurred preview
+  const projectSummary =
+    initialInsights?.['pt-PT']?.project_summary ||
+    initialInsights?.['en-US']?.project_summary ||
+    initialInsights?.project_summary;
+
   if (projectSummary) {
-    const truncatedSummary = projectSummary.substring(0, 200) + '...';
-
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Truncated preview */}
-        <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles size={16} className="text-blue-600" />
-            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{t('paywall.previewLabel')}</span>
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-zinc-200">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+              <Sparkles size={16} />
+            </div>
+            <h3 className="text-[15px] font-bold text-zinc-900">{t('paywall.previewLabel')}</h3>
           </div>
-          <p className="text-sm text-zinc-700 leading-relaxed font-medium mb-4">{truncatedSummary}</p>
-
-          {/* Blurred content overlay */}
+          <p className="text-[14px] text-zinc-600 leading-relaxed mb-5">
+            {projectSummary.substring(0, 200)}…
+          </p>
+          {/* Blurred placeholder rows */}
           <div className="relative">
-            <div className="blur-[4px] select-none pointer-events-none opacity-60">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="h-24 bg-zinc-100 rounded-xl"></div>
-                <div className="h-24 bg-zinc-100 rounded-xl"></div>
-                <div className="h-24 bg-zinc-100 rounded-xl"></div>
-                <div className="h-24 bg-zinc-100 rounded-xl"></div>
-              </div>
+            <div className="blur-[4px] select-none pointer-events-none opacity-50 grid grid-cols-2 gap-3">
+              {[1, 2, 3, 4].map(i => (
+                <div key={i} className="h-20 bg-zinc-100 rounded-xl" />
+              ))}
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-xs font-bold text-zinc-500 bg-white/80 px-4 py-2 rounded-xl border border-zinc-200">{t('paywall.blurredPreview')}</p>
+              <span className="text-[12px] font-medium text-zinc-500 bg-white px-4 py-2 rounded-lg border border-zinc-200 shadow-sm">
+                {t('paywall.blurredPreview')}
+              </span>
             </div>
           </div>
         </div>
-
-        {/* Upgrade CTA */}
         <UpgradeCTA />
       </div>
     );
   }
 
-  // Free tier with no insights - disabled generate + upgrade
+  // Free tier, no insights at all
   return (
-    <div className="space-y-6">
-      <div className="bg-gradient-to-br from-zinc-50 to-white border border-zinc-200 rounded-xl p-8 flex flex-col items-center text-center">
-        <div className="w-16 h-16 rounded-3xl bg-zinc-300 shadow-xl shadow-zinc-200 flex items-center justify-center mb-6">
-          <Lock className="text-white" size={28} />
+    <div className="space-y-4">
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-10 flex flex-col items-center text-center">
+        <div className="w-12 h-12 rounded-xl bg-zinc-100 text-zinc-400 flex items-center justify-center mb-5">
+          <Lock size={22} />
         </div>
-        <h3 className="text-xl font-black text-zinc-900 mb-2 uppercase tracking-tight italic">{t('paywall.generateLocked')}</h3>
-        <p className="text-sm text-zinc-500 max-w-sm mb-8 font-medium">
-          {t('paywall.upgradeDesc')}
-        </p>
+        <h3 className="text-[17px] font-bold text-zinc-900 mb-2">{t('paywall.generateLocked')}</h3>
+        <p className="text-[13px] text-zinc-500 max-w-sm mb-7 leading-relaxed">{t('paywall.upgradeDesc')}</p>
         <Button
           type="button"
-          variant="accent"
-          size="lg"
+          variant="ghost"
+          size="md"
           disabled
-          className="px-10 py-6 rounded-xl shadow-lg font-black tracking-widest text-xs opacity-50 cursor-not-allowed"
+          className="px-8 opacity-40 cursor-not-allowed"
         >
-          <Lock size={14} />
+          <Lock size={15} />
           {t('paywall.generateLocked')}
         </Button>
       </div>
@@ -106,23 +105,21 @@ function UpgradeCTA() {
         body: JSON.stringify({ tier: 'Professional' }),
       });
       const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
+      if (data.url) window.location.href = data.url;
     } catch {
       // handled silently
     }
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white flex items-center justify-between">
+    <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 flex items-center justify-between gap-6">
       <div>
-        <h3 className="text-lg font-black uppercase tracking-tight mb-1">{t('paywall.upgradeTitle')}</h3>
-        <p className="text-sm text-blue-100 font-medium">{t('paywall.upgradeDesc')}</p>
+        <h3 className="text-[15px] font-bold text-zinc-900 mb-1">{t('paywall.upgradeTitle')}</h3>
+        <p className="text-[13px] text-zinc-500">{t('paywall.upgradeDesc')}</p>
       </div>
       <button
         onClick={handleUpgrade}
-        className="px-6 py-3 bg-white text-blue-600 font-black text-xs uppercase tracking-widest rounded-xl hover:bg-blue-50 transition-all flex items-center gap-2 flex-shrink-0"
+        className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-[13px] font-semibold rounded-lg hover:bg-blue-700 transition-all"
       >
         {t('paywall.upgradeCta')}
         <ArrowRight size={14} />

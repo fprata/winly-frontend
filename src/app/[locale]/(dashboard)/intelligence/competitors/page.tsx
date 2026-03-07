@@ -12,84 +12,43 @@ export default async function CompetitorIntelligencePage({
   const { name, fromTender } = await searchParams;
   const supabase = await createClient();
 
-    let initialSearchResults: any[] = [];
+  let initialSearchResults: any[] = [];
+  let initialProfile = null;
 
-    let initialProfile = null;
+  if (name) {
+    const { data: exactMatches } = await supabase
+      .from('intel_competitors')
+      .select('*')
+      .ilike('name', name)
+      .limit(1);
 
-  
-
-    if (name) {
-
-      const { data: exactMatches } = await supabase
-
-        .from('intel_competitors')
-
-        .select('*')
-
-        .ilike('name', name)
-
-        .limit(1);
-
-  
-
-      if (exactMatches && exactMatches.length > 0) {
-
-        initialProfile = exactMatches[0];
-
-      } else {
-
-        const { data } = await supabase
-
-          .from('intel_competitors')
-
-          .select('name, country, total_wins, competitor_id')
-
-          .textSearch('search_vector', name, { type: 'websearch', config: 'public.simple_unaccent' })
-
-          .order('total_wins', { ascending: false })
-
-          .limit(10);
-
-        initialSearchResults = data || [];
-
-      }
-
+    if (exactMatches && exactMatches.length > 0) {
+      initialProfile = exactMatches[0];
     } else {
-
-      // Default List View
-
       const { data } = await supabase
-
         .from('intel_competitors')
-
-        .select('name, country, total_wins, competitor_id')
-
+        .select('name, country, total_wins, competitor_id, total_revenue, win_rate_pct, avg_discount_pct, buyer_diversity')
+        .textSearch('search_vector', name, { type: 'websearch', config: 'public.simple_unaccent' })
         .order('total_wins', { ascending: false })
-
         .limit(10);
-
       initialSearchResults = data || [];
-
     }
-
-  
-
-    return (
-
-      <CompetitorIntelligenceClient 
-
-        initialProfile={initialProfile} 
-
-        initialSearchResults={initialSearchResults}
-
-        initialName={name || null} 
-
-        fromTender={fromTender || null} 
-
-      />
-
-    );
-
+  } else {
+    // Default List View — fetch rich data for result cards
+    const { data } = await supabase
+      .from('intel_competitors')
+      .select('name, country, total_wins, competitor_id, total_revenue, win_rate_pct, avg_discount_pct, buyer_diversity')
+      .order('total_wins', { ascending: false })
+      .limit(20);
+    initialSearchResults = data || [];
   }
 
-  
+  return (
+    <CompetitorIntelligenceClient
+      initialProfile={initialProfile}
+      initialSearchResults={initialSearchResults}
+      initialName={name || null}
+      fromTender={fromTender || null}
+    />
+  );
+}

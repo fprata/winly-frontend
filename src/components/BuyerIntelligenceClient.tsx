@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search as SearchIcon, Building2, TrendingUp, Users, ArrowUpRight, ArrowLeft, ArrowRight, ShieldCheck, Filter, Check, ChevronDown, Activity, HeartHandshake, Lock, PieChart, SearchX, MapPin } from 'lucide-react';
+import { Search as SearchIcon, Building2, TrendingUp, Users, ArrowUpRight, ArrowLeft, ArrowRight, ShieldCheck, Filter, Check, ChevronDown, Activity, HeartHandshake, Lock, PieChart, SearchX, MapPin, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/navigation';
@@ -10,7 +10,6 @@ import { BuyerCompetitorAnalysis } from './BuyerCompetitorAnalysis';
 import { PersonaBadge } from './PersonaBadge';
 import { BuyerEvolutionCharts } from './BuyerEvolutionCharts';
 import { SectorMixChart } from './SectorMixChart';
-import { PageHeader } from './ui/PageHeader';
 import { Input } from './ui/Input';
 import { Card } from './ui/Card';
 import { Badge } from './ui/Badge';
@@ -290,56 +289,118 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
   return (
     <div className="max-w-6xl mx-auto pb-20">
       {fromTender && (
-        <Link href={`/tenders/${fromTender}`} className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors mb-8 font-bold text-sm group w-fit">
+        <Link href={`/tenders/${fromTender}`} className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors mb-6 font-medium text-sm group w-fit">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           {t('backToTender')}
         </Link>
       )}
 
-      <PageHeader
-        title={t('title')}
-        subtitle={t('subtitle')}
-        icon={<Building2 size={18} />}
-        subtitleLink={{ label: t('buyerPersonasGuide'), href: '/personas' }}
-      />
-
       {!profile && (
-        <div className="relative mb-12 max-w-2xl">
-          <Card className="p-2 mb-4">
-            <form onSubmit={searchBuyers} className="flex items-center gap-2">
-              <Input
-                icon={<SearchIcon size={18} />}
-                placeholder={t('searchPlaceholder')}
-                value={query}
-                onChange={e => {
+        <>
+          {/* Page Header */}
+          <header className="mb-7">
+            <h1 className="text-[28px] font-extrabold tracking-tight text-zinc-950 leading-none mb-1">{t('title')}</h1>
+            <p className="text-[14px] text-zinc-500">{t('subtitle')}</p>
+          </header>
+
+          {/* Search + Controls */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-[13px] text-zinc-400">
+              {searchResults.length > 0 ? `${searchResults.length} buyers found` : ''}
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <SearchIcon size={15} className="absolute left-2.5 top-2.5 text-zinc-400" />
+                <input
+                  type="text"
+                  placeholder={t('searchPlaceholder') || "Search buyers by name..."}
+                  value={query}
+                  onChange={e => {
                     setQuery(e.target.value);
                     if (e.target.value.length >= 3) searchBuyers();
                     else if (e.target.value.length === 0) setSearchResults(initialSearchResults);
                     else setSearchResults([]);
-                }}
-                className="border-0 shadow-none focus:ring-0"
-              />
-            </form>
-          </Card>
+                  }}
+                  className="h-9 pl-8 pr-3 w-72 rounded-lg border border-zinc-300 text-sm outline-none bg-white shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-zinc-400 transition-all"
+                />
+              </div>
+            </div>
+          </div>
 
-          {searchResults.length > 0 && query.length >= 3 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-zinc-200 rounded-xl shadow-xl z-20 overflow-hidden">
-              {searchResults.map((b, i) => (
-                <button
+          {/* Result Cards */}
+          <div className="flex flex-col gap-3">
+            {searchResults.map((b: any, i: number) => {
+              const getBuyerTag = (b: any): { label: string; color: string } => {
+                if ((b.avg_bidder_count || 0) >= 5) return { label: 'Competitive', color: 'blue' };
+                if ((b.total_contracts || 0) >= 100) return { label: 'High Volume', color: 'green' };
+                if ((b.avg_discount || 0) < 5) return { label: 'Loyal', color: 'amber' };
+                return { label: 'Active', color: 'zinc' };
+              };
+              const tag = getBuyerTag(b);
+              const formatVal = (val: number) => {
+                if (!val) return '—';
+                if (val >= 1_000_000) return `€${(val / 1_000_000).toFixed(1)}M`;
+                if (val >= 1_000) return `€${(val / 1_000).toFixed(0)}K`;
+                return `€${val}`;
+              };
+              return (
+                <div
                   key={i}
                   onClick={() => navigateToProfile(b.buyer_company_id)}
-                  className="w-full text-left px-6 py-4 hover:bg-zinc-50 border-b border-zinc-50 last:border-0 flex items-center justify-between group"
+                  className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 cursor-pointer transition-all duration-200 hover:border-blue-500 hover:shadow-md hover:-translate-y-px group"
                 >
-                  <div>
-                    <p className="font-bold text-zinc-800 group-hover:text-blue-600 transition-colors">{b.name}</p>
-                    <p className="text-xs font-bold text-zinc-400 uppercase">{b.country}</p>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-[17px] font-bold text-zinc-900 group-hover:text-blue-600 transition-colors mb-1">{b.name}</h3>
+                      <div className="flex items-center gap-1.5 text-[13px] text-zinc-500 mb-4">
+                        <MapPin size={12} />
+                        {b.country || 'Unknown'}
+                        <span className="text-zinc-300">·</span>
+                        Public Procurement
+                      </div>
+                      <div className="flex gap-6">
+                        <div>
+                          <div className="text-[20px] font-extrabold text-blue-600 leading-none">{formatVal(b.total_spend)}</div>
+                          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Total Spend</div>
+                        </div>
+                        <div>
+                          <div className="text-[20px] font-extrabold text-zinc-900 leading-none">{b.total_contracts || 0}</div>
+                          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Contracts</div>
+                        </div>
+                        {b.avg_discount != null && (
+                          <div>
+                            <div className="text-[20px] font-extrabold text-emerald-600 leading-none">{b.avg_discount.toFixed(1)}%</div>
+                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Avg Discount</div>
+                          </div>
+                        )}
+                        {b.avg_bidder_count != null && (
+                          <div>
+                            <div className="text-[20px] font-extrabold text-zinc-900 leading-none">{b.avg_bidder_count.toFixed(1)}</div>
+                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Avg Bidders</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-2 shrink-0">
+                      <Badge color={tag.color as any}>{tag.label}</Badge>
+                      <div className="flex items-center gap-1 text-[13px] text-zinc-400 group-hover:text-blue-600 transition-colors">
+                        <span>View profile</span>
+                        <ArrowRight size={14} />
+                      </div>
+                    </div>
                   </div>
-                  <ArrowUpRight size={16} className="text-zinc-300 group-hover:text-blue-600" />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+                </div>
+              );
+            })}
+            {searchResults.length === 0 && query.length >= 3 && (
+              <EmptyState
+                icon={<SearchX size={32} />}
+                title={t('noResults') || "No buyers found"}
+                subtitle={t('noResultsHint') || "Try a different search term"}
+              />
+            )}
+          </div>
+        </>
       )}
 
       {loading ? (
@@ -347,9 +408,9 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
       ) : metrics ? (
         <div className="space-y-8 animate-in fade-in duration-500 text-zinc-800">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-            <button 
+            <button
               onClick={clearProfile}
-              className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors font-bold text-sm"
+              className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors font-medium text-sm"
             >
               <ArrowLeft size={16} />
               {backUrl ? t('back') : t('backToSearch')}

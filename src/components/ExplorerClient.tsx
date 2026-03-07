@@ -15,12 +15,13 @@ import {
   DollarSign,
   Tag,
   ArrowUpDown,
-  SearchX
+  SearchX,
+  Globe,
+  TrendingUp,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useTranslations, useLocale } from 'next-intl';
 import { getCpvDescription, CPV_DIVISIONS } from '@/utils/cpv-data';
-import { PageHeader } from './ui/PageHeader';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
 import { Input } from './ui/Input';
@@ -308,9 +309,76 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
   if (maxValue) filterChips.push({ key: "maxValue", label: `≤ €${Number(maxValue).toLocaleString()}` });
   if (status !== "All") filterChips.push({ key: "status", label: status === "active" ? t('active') : status === "inactive" ? t('inactive') : t('awarded') });
 
+  // Stat calculations
+  const closingThisWeek = tenders.filter(tender => {
+    if (!tender.submission_deadline) return false;
+    const days = getDaysUntil(tender.submission_deadline);
+    return days >= 0 && days <= 7;
+  }).length;
+
+  const totalValue = tenders.reduce((sum, t) => sum + (t.estimated_value || 0), 0);
+  const formatTotalValue = (val: number) => {
+    if (val >= 1_000_000_000) return `€${(val / 1_000_000_000).toFixed(1)}B`;
+    if (val >= 1_000_000) return `€${(val / 1_000_000).toFixed(1)}M`;
+    return `€${(val / 1_000).toFixed(0)}K`;
+  };
+
   return (
     <div className="max-w-6xl mx-auto">
-      <PageHeader title={t('title')} subtitle={t('subtitle')} />
+      {/* Page Header */}
+      <header className="flex justify-between items-start mb-7">
+        <div>
+          <h1 className="text-[28px] font-extrabold tracking-tight text-zinc-950 leading-none mb-1">{t('title')}</h1>
+          <p className="text-[14px] text-zinc-500">{t('subtitle')}</p>
+        </div>
+        <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-semibold border border-emerald-100">
+          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+          {total > 0 ? `${total.toLocaleString()} active tenders` : 'Live Feed'}
+        </div>
+      </header>
+
+      {/* Stat Cards */}
+      <div className="grid grid-cols-3 gap-5 mb-8">
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[13px] font-medium text-zinc-500">{t('totalActive') || 'Total Active'}</span>
+            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+              <Globe size={16} />
+            </div>
+          </div>
+          <div className="text-[32px] font-bold tracking-tight text-zinc-900 leading-none">{total.toLocaleString()}</div>
+          <div className="mt-2 text-[13px] text-zinc-500">
+            {tenders.length > 0 ? `+${tenders.filter(t => getDaysAgo(t.publication_date) === 0).length} new today` : 'Across all markets'}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[13px] font-medium text-zinc-500">{t('closingThisWeek') || 'Closing This Week'}</span>
+            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+              <Clock size={16} />
+            </div>
+          </div>
+          <div className="text-[32px] font-bold tracking-tight text-amber-600 leading-none">{closingThisWeek}</div>
+          <div className="mt-2 text-[13px] text-zinc-500">{t('deadlinesIn7Days') || 'Deadlines in 7 days'}</div>
+        </div>
+
+        <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[13px] font-medium text-zinc-500">{t('totalValue') || 'Total Value'}</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <TrendingUp size={16} />
+            </div>
+          </div>
+          <div className="text-[32px] font-bold tracking-tight text-zinc-900 leading-none">{formatTotalValue(totalValue)}</div>
+          <div className="mt-2 text-[13px] text-zinc-500">{t('acrossActiveTenders') || 'Across active tenders'}</div>
+        </div>
+      </div>
+
+      {/* Section title + Controls */}
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-[18px] font-bold text-zinc-900">{t('allTenders') || 'All Tenders'}</h2>
+      </div>
 
       {/* Search Bar */}
       <Card className="p-2 mb-4">
