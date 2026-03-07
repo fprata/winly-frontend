@@ -324,7 +324,9 @@
         "activeTenders": "Concursos Ativos",
         "latestAwards": "Últimas Adjudicações",
         "noData": "Nenhum concurso recente encontrado para este setor."
-      }
+      },
+      "noResults": "Nenhuma entidade encontrada",
+      "noResultsHint": "Tente um termo de pesquisa diferente"
     },
     "competitors": {
       "title": "Inteligência da Concorrência",
@@ -403,7 +405,9 @@
       },
       "contracts": "contratos",
       "awards": "adjudicações",
-      "bidders": "licitantes"
+      "bidders": "licitantes",
+      "noResults": "Nenhum concorrente encontrado",
+      "noResultsHint": "Tente um termo de pesquisa diferente"
     },
     "personas": {
       "title": "Market Personas",

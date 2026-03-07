@@ -89,7 +89,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
     const { data } = await supabase
       .from('intel_buyers')
       .select('name, country, total_contracts, buyer_company_id, total_spend, avg_discount, avg_bidder_count')
-      .textSearch('search_vector', value, { type: 'websearch', config: 'public.simple_unaccent' })
+      .ilike('name', `%${value}%`)
       .limit(10);
 
     setSearchResults(data || []);

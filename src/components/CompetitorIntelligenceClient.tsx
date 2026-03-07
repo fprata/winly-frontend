@@ -81,7 +81,7 @@ export function CompetitorIntelligenceClient({
     const { data } = await supabase
       .from('intel_competitors')
       .select('name, country, total_wins, competitor_id, win_rate_pct, total_revenue, avg_discount_pct, buyer_diversity')
-      .textSearch('search_vector', value, { type: 'websearch', config: 'public.simple_unaccent' })
+      .ilike('name', `%${value}%`)
       .limit(10);
 
     setSearchResults(data || []);

@@ -324,7 +324,9 @@
         "activeTenders": "Active Tenders",
         "latestAwards": "Latest Awards",
         "noData": "No recent tenders found for this sector."
-      }
+      },
+      "noResults": "No buyers found",
+      "noResultsHint": "Try a different search term"
     },
     "competitors": {
       "title": "Competitor Intelligence",
@@ -403,7 +405,9 @@
       },
       "contracts": "contracts",
       "awards": "awards",
-      "bidders": "bidders"
+      "bidders": "bidders",
+      "noResults": "No competitors found",
+      "noResultsHint": "Try a different search term"
     },
     "personas": {
       "title": "Market Personas",
