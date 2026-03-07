@@ -14,10 +14,14 @@ export default function UpdatePasswordForm() {
   const [state, formAction, isPending] = useActionState(updatePassword, initialState)
 
   return (
-    <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-sm border border-slate-200">
+    <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-sm border border-zinc-200">
       <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold text-slate-800">Update password</h1>
-        <p className="text-sm text-slate-500">Enter your new password below</p>
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs font-black">W</div>
+          <span className="text-xl font-bold tracking-tight text-zinc-900">WINLY<span className="text-zinc-400 font-medium">AI</span></span>
+        </div>
+        <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Update password</h1>
+        <p className="text-sm text-zinc-500">Enter your new password below</p>
       </div>
 
       {state.error && (
@@ -28,7 +32,7 @@ export default function UpdatePasswordForm() {
 
       <form action={formAction} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="password">
+          <label className="text-sm font-medium text-zinc-700" htmlFor="password">
             New Password
           </label>
           <input
@@ -36,7 +40,7 @@ export default function UpdatePasswordForm() {
             name="password"
             type="password"
             required
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             placeholder="••••••••"
             disabled={isPending}
           />
@@ -46,7 +50,7 @@ export default function UpdatePasswordForm() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="confirmPassword">
+          <label className="text-sm font-medium text-zinc-700" htmlFor="confirmPassword">
             Confirm Password
           </label>
           <input
@@ -54,7 +58,7 @@ export default function UpdatePasswordForm() {
             name="confirmPassword"
             type="password"
             required
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             placeholder="••••••••"
             disabled={isPending}
           />

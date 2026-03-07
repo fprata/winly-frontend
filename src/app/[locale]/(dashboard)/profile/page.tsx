@@ -22,8 +22,8 @@ export default async function ProfilePage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-800">{t('title')}</h1>
-        <p className="text-slate-500">{t('subtitle')}</p>
+        <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">{t('title')}</h1>
+        <p className="text-zinc-500">{t('subtitle')}</p>
       </div>
 
       <ProfileForm initialProfile={profile} />

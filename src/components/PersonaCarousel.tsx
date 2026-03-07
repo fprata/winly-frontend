@@ -31,7 +31,7 @@ export function PersonaCarousel({ personas }: PersonaCarouselProps) {
     <div className="relative group/carousel">
       <button 
         onClick={() => scroll('left')}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:scale-110 transition-all opacity-0 group-hover/carousel:opacity-100 disabled:opacity-0"
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg border border-zinc-100 flex items-center justify-center text-zinc-400 hover:text-blue-600 hover:scale-110 transition-all opacity-0 group-hover/carousel:opacity-100 disabled:opacity-0"
       >
         <ChevronLeft size={24} />
       </button>
@@ -42,24 +42,24 @@ export function PersonaCarousel({ personas }: PersonaCarouselProps) {
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {personas.map((p) => (
-          <div 
-            key={p.id} 
-            className={`min-w-[340px] max-w-[340px] h-[480px] snap-center p-8 rounded-2xl border-2 ${p.color} hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group bg-white flex flex-col relative overflow-hidden`}
+          <div
+            key={p.id}
+            className="min-w-[340px] max-w-[340px] h-[480px] snap-center p-8 rounded-xl border border-zinc-200 shadow-sm hover:border-blue-500 hover:shadow-md hover:-translate-y-px transition-all duration-200 group bg-white flex flex-col relative overflow-hidden"
           >
             <div className="mb-6 flex justify-between items-start">
-              <div className="p-4 bg-slate-50 rounded-2xl shadow-sm group-hover:scale-110 transition-transform">
+              <div className="p-4 bg-zinc-50 rounded-xl shadow-sm group-hover:scale-110 transition-transform">
                 {p.icon}
               </div>
             </div>
-            <h3 className={`text-2xl font-bold ${p.textColor} mb-3`}>{p.name}</h3>
-            <p className="text-slate-600 font-medium mb-6 leading-relaxed flex-grow text-sm overflow-y-auto hide-scrollbar">
+            <h3 className="text-2xl font-bold text-zinc-900 mb-3">{p.name}</h3>
+            <p className="text-zinc-600 font-medium mb-6 leading-relaxed flex-grow text-sm overflow-y-auto hide-scrollbar">
               {p.description}
             </p>
-            <div className="space-y-3 pt-6 border-t border-slate-100 mt-auto w-full">
+            <div className="space-y-3 pt-6 border-t border-zinc-100 mt-auto w-full">
               {p.metrics.map((m, i) => (
                 <div key={i} className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-slate-400 uppercase tracking-wider">{m.label}</span>
-                  <span className={`font-black ${p.textColor}`}>{m.value}</span>
+                  <span className="font-bold text-zinc-400 uppercase tracking-wider">{m.label}</span>
+                  <span className="font-black text-blue-600">{m.value}</span>
                 </div>
               ))}
             </div>
@@ -69,7 +69,7 @@ export function PersonaCarousel({ personas }: PersonaCarouselProps) {
 
       <button 
         onClick={() => scroll('right')}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:scale-110 transition-all opacity-0 group-hover/carousel:opacity-100"
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-white rounded-full shadow-lg border border-zinc-100 flex items-center justify-center text-zinc-400 hover:text-blue-600 hover:scale-110 transition-all opacity-0 group-hover/carousel:opacity-100"
       >
         <ChevronRight size={24} />
       </button>

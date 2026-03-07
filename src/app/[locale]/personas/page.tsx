@@ -75,9 +75,9 @@ export default async function PersonasPage() {
     {
       id: 'consistent-standard',
       name: t('types.consistentStandard.name'),
-      icon: <Building2 size={32} className="text-slate-500" />,
-      color: 'bg-slate-50 border-slate-100',
-      textColor: 'text-slate-900',
+      icon: <Building2 size={32} className="text-zinc-500" />,
+      color: 'bg-zinc-50 border-zinc-100',
+      textColor: 'text-zinc-900',
       description: t('types.consistentStandard.desc'),
       metrics: [
         { label: 'Avg Discount', value: '~10%' },
@@ -143,14 +143,14 @@ export default async function PersonasPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-zinc-50">
       <Navbar />
       
       <main className="pt-32 pb-20 px-4 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 text-center max-w-3xl mx-auto">
-            <h1 className="text-5xl font-black text-slate-900 mb-6 tracking-tight">{t('title')}</h1>
-            <p className="text-xl text-slate-600 leading-relaxed">
+            <h1 className="text-5xl font-black text-zinc-900 mb-6 tracking-tight">{t('title')}</h1>
+            <p className="text-xl text-zinc-600 leading-relaxed">
               {t('subtitle')}
             </p>
           </div>
@@ -159,12 +159,12 @@ export default async function PersonasPage() {
             {/* Buyers Section */}
             <section>
               <div className="flex items-center gap-4 mb-10 justify-center md:justify-start px-4">
-                <div className="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                <div className="w-14 h-14 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200">
                   <Building2 size={28} />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-black text-slate-900">{t('buyersTitle')}</h2>
-                  <p className="text-slate-500 font-medium">{t('buyersSubtitle')}</p>
+                  <h2 className="text-3xl font-black text-zinc-900">{t('buyersTitle')}</h2>
+                  <p className="text-zinc-500 font-medium">{t('buyersSubtitle')}</p>
                 </div>
               </div>
               
@@ -176,12 +176,12 @@ export default async function PersonasPage() {
             {/* Competitors Section */}
             <section>
               <div className="flex items-center gap-4 mb-10 justify-center md:justify-start px-4">
-                <div className="w-14 h-14 rounded-2xl bg-purple-600 flex items-center justify-center text-white shadow-lg shadow-purple-200">
+                <div className="w-14 h-14 rounded-xl bg-purple-600 flex items-center justify-center text-white shadow-lg shadow-purple-200">
                   <Users size={28} />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-black text-slate-900">{t('competitorsTitle')}</h2>
-                  <p className="text-slate-500 font-medium">{t('competitorsSubtitle')}</p>
+                  <h2 className="text-3xl font-black text-zinc-900">{t('competitorsTitle')}</h2>
+                  <p className="text-zinc-500 font-medium">{t('competitorsSubtitle')}</p>
                 </div>
               </div>
               

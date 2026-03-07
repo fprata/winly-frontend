@@ -34,7 +34,7 @@ export function PersonaBadge({ personaName }: PersonaBadgeProps) {
   
   if (!key) {
     return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-slate-900 text-white">
+      <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-zinc-900 text-white">
         {personaName}
       </span>
     );
@@ -43,7 +43,7 @@ export function PersonaBadge({ personaName }: PersonaBadgeProps) {
   return (
     <div className="relative inline-block group">
       <div className="flex items-center gap-1.5">
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-slate-900 text-white">
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-zinc-900 text-white">
           {t(`${key}.name` as any)}
         </span>
         <button 
@@ -52,7 +52,7 @@ export function PersonaBadge({ personaName }: PersonaBadgeProps) {
             e.stopPropagation();
             setIsOpen(!isOpen);
           }}
-          className="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-teal-100 hover:text-teal-600 transition-colors"
+          className="w-4 h-4 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400 hover:bg-blue-100 hover:text-blue-600 transition-colors"
         >
           <Info size={10} />
         </button>
@@ -64,20 +64,20 @@ export function PersonaBadge({ personaName }: PersonaBadgeProps) {
             className="fixed inset-0 z-40" 
             onClick={() => setIsOpen(false)}
           ></div>
-          <div className="absolute left-0 top-full mt-2 w-64 bg-slate-900 text-white p-4 rounded-xl shadow-2xl z-50 animate-in fade-in zoom-in duration-200">
+          <div className="absolute left-0 top-full mt-2 w-64 bg-zinc-900 text-white p-4 rounded-xl shadow-2xl z-50 animate-in fade-in zoom-in duration-200">
             <div className="flex justify-between items-start mb-2">
-              <p className="text-[10px] font-black uppercase tracking-widest text-teal-400">{t(`${key}.name` as any)}</p>
-              <button onClick={() => setIsOpen(false)} className="text-slate-500 hover:text-white">
+              <p className="text-[10px] font-black uppercase tracking-widest text-blue-400">{t(`${key}.name` as any)}</p>
+              <button onClick={() => setIsOpen(false)} className="text-zinc-500 hover:text-white">
                 <X size={12} />
               </button>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed font-medium">
+            <p className="text-xs text-zinc-300 leading-relaxed font-medium">
               {t(`${key}.desc` as any)}
             </p>
             <div className="mt-3 pt-3 border-t border-white/10">
               <a 
                 href="/personas" 
-                className="text-[10px] font-black text-teal-400 uppercase tracking-widest hover:underline flex items-center gap-1"
+                className="text-[10px] font-black text-blue-400 uppercase tracking-widest hover:underline flex items-center gap-1"
                 onClick={(e) => e.stopPropagation()}
               >
                 View Full Guide

@@ -73,7 +73,7 @@ export default async function LandingPage() {
   const tCommon = await getTranslations('common');
 
   return (
-    <div className="bg-gray-50 min-h-screen font-sans text-gray-900">
+    <div className="bg-zinc-50 min-h-screen font-sans text-zinc-900">
       <Navbar />
 
       {/* Hero Section */}
@@ -84,122 +84,122 @@ export default async function LandingPage() {
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
             {t('badge')}
           </div>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight text-gray-900 mb-6 leading-tight">
-            {t('title')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-600">{t('titleAmount')}</span> <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-600">{t('titleHighlight')}</span> {t('titleEnd')}
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight text-zinc-900 mb-6 leading-tight">
+            {t('title')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-500">{t('titleAmount')}</span> <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-500">{t('titleHighlight')}</span> {t('titleEnd')}
           </h1>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-xl text-zinc-500 max-w-2xl mx-auto mb-10 leading-relaxed">
             {t('subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/login" className="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white font-bold rounded-xl text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-2 group">
               {t('cta')} <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </Link>
-            <Link href="#features" className="w-full sm:w-auto px-8 py-4 bg-white text-gray-700 font-bold rounded-xl text-lg border border-gray-200 hover:bg-gray-50 transition-all flex items-center justify-center">
+            <Link href="#features" className="w-full sm:w-auto px-8 py-4 bg-white text-zinc-700 font-bold rounded-xl text-lg border border-zinc-200 hover:bg-zinc-50 transition-all flex items-center justify-center">
               {t('ctaSecondary')}
             </Link>
           </div>
-          <p className="mt-6 text-sm text-gray-400 font-medium">{t('trust')}</p>
+          <p className="mt-6 text-sm text-zinc-400 font-medium">{t('trust')}</p>
         </div>
       </section>
 
       {/* Strategic Value Stats */}
-      <section className="py-10 bg-white border-y border-gray-200/60">
+      <section className="py-10 bg-white border-y border-zinc-200/60">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-3xl font-black text-gray-900 mb-1">{tStats('scoringPoints')}</div>
-              <div className="text-sm font-bold text-gray-400 uppercase tracking-wide">{tStats('scoringPointsLabel')}</div>
+              <div className="text-3xl font-black text-zinc-900 mb-1">{tStats('scoringPoints')}</div>
+              <div className="text-sm font-bold text-zinc-400 uppercase tracking-wide">{tStats('scoringPointsLabel')}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-black text-gray-900 mb-1">{tStats('timeSaved')}</div>
-              <div className="text-sm font-bold text-gray-400 uppercase tracking-wide">{tStats('timeSavedLabel')}</div>
+              <div className="text-3xl font-black text-zinc-900 mb-1">{tStats('timeSaved')}</div>
+              <div className="text-sm font-bold text-zinc-400 uppercase tracking-wide">{tStats('timeSavedLabel')}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-black text-gray-900 mb-1">{tStats('noiseReduction')}</div>
-              <div className="text-sm font-bold text-gray-400 uppercase tracking-wide">{tStats('noiseReductionLabel')}</div>
+              <div className="text-3xl font-black text-zinc-900 mb-1">{tStats('noiseReduction')}</div>
+              <div className="text-sm font-bold text-zinc-400 uppercase tracking-wide">{tStats('noiseReductionLabel')}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-black text-gray-900 mb-1">{tStats('roi')}</div>
-              <div className="text-sm font-bold text-gray-400 uppercase tracking-wide">{tStats('roiLabel')}</div>
+              <div className="text-3xl font-black text-zinc-900 mb-1">{tStats('roi')}</div>
+              <div className="text-sm font-bold text-zinc-400 uppercase tracking-wide">{tStats('roiLabel')}</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Deep Dive Features */}
-      <section id="features" className="py-24 px-6 bg-gray-50">
+      <section id="features" className="py-24 px-6 bg-zinc-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-6">{tFeatures('title')}</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto text-lg">
+            <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-6">{tFeatures('title')}</h2>
+            <p className="text-zinc-500 max-w-2xl mx-auto text-lg">
               {tFeatures('subtitle')}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature 1 */}
-            <div className="p-8 rounded-3xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all group">
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="p-8 rounded-xl bg-white border border-zinc-200 shadow-sm hover:border-blue-500 hover:shadow-md hover:-translate-y-px transition-all duration-200 group">
+              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Cpu size={24} />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{tFeatures('aiMatching.title')}</h3>
-              <p className="text-gray-500 leading-relaxed">
+              <h3 className="text-xl font-bold text-zinc-900 mb-3">{tFeatures('aiMatching.title')}</h3>
+              <p className="text-zinc-500 leading-relaxed">
                 {tFeatures('aiMatching.description')}
               </p>
             </div>
 
             {/* Feature 2 */}
-            <div className="p-8 rounded-3xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all group">
-              <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="p-8 rounded-xl bg-white border border-zinc-200 shadow-sm hover:border-blue-500 hover:shadow-md hover:-translate-y-px transition-all duration-200 group">
+              <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Globe size={24} />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{tFeatures('multiSource.title')}</h3>
-              <p className="text-gray-500 leading-relaxed">
+              <h3 className="text-xl font-bold text-zinc-900 mb-3">{tFeatures('multiSource.title')}</h3>
+              <p className="text-zinc-500 leading-relaxed">
                 {tFeatures('multiSource.description')}
               </p>
             </div>
 
             {/* Feature 3 */}
-            <div className="p-8 rounded-3xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all group">
-              <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="p-8 rounded-xl bg-white border border-zinc-200 shadow-sm hover:border-blue-500 hover:shadow-md hover:-translate-y-px transition-all duration-200 group">
+              <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <BarChart3 size={24} />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{tFeatures('winProbability.title')}</h3>
-              <p className="text-gray-500 leading-relaxed">
+              <h3 className="text-xl font-bold text-zinc-900 mb-3">{tFeatures('winProbability.title')}</h3>
+              <p className="text-zinc-500 leading-relaxed">
                 {tFeatures('winProbability.description')}
               </p>
             </div>
 
             {/* Feature 4 */}
-            <div className="p-8 rounded-3xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all group">
-              <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="p-8 rounded-xl bg-white border border-zinc-200 shadow-sm hover:border-blue-500 hover:shadow-md hover:-translate-y-px transition-all duration-200 group">
+              <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Search size={24} />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{tFeatures('competitor.title')}</h3>
-              <p className="text-gray-500 leading-relaxed">
+              <h3 className="text-xl font-bold text-zinc-900 mb-3">{tFeatures('competitor.title')}</h3>
+              <p className="text-zinc-500 leading-relaxed">
                 {tFeatures('competitor.description')}
               </p>
             </div>
 
             {/* Feature 5 */}
-            <div className="p-8 rounded-3xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all group">
-              <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="p-8 rounded-xl bg-white border border-zinc-200 shadow-sm hover:border-blue-500 hover:shadow-md hover:-translate-y-px transition-all duration-200 group">
+              <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Briefcase size={24} />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{tFeatures('pricing.title')}</h3>
-              <p className="text-gray-500 leading-relaxed">
+              <h3 className="text-xl font-bold text-zinc-900 mb-3">{tFeatures('pricing.title')}</h3>
+              <p className="text-zinc-500 leading-relaxed">
                 {tFeatures('pricing.description')}
               </p>
             </div>
 
             {/* Feature 6 */}
-            <div className="p-8 rounded-3xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all group">
-              <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="p-8 rounded-xl bg-white border border-zinc-200 shadow-sm hover:border-blue-500 hover:shadow-md hover:-translate-y-px transition-all duration-200 group">
+              <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <FileText size={26} />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{tFeatures('documents.title')}</h3>
-              <p className="text-gray-500 leading-relaxed">
+              <h3 className="text-xl font-bold text-zinc-900 mb-3">{tFeatures('documents.title')}</h3>
+              <p className="text-zinc-500 leading-relaxed">
                 {tFeatures('documents.description')}
               </p>
             </div>
@@ -221,7 +221,7 @@ export default async function LandingPage() {
                 {tFeatures('strategic.title')} <br/>
                 <span className="text-blue-500">{tFeatures('strategic.highlight')}</span>
               </h2>
-              <p className="text-gray-400 text-lg mb-10 leading-relaxed max-w-xl">
+              <p className="text-zinc-400 text-lg mb-10 leading-relaxed max-w-xl">
                 {tFeatures('strategic.description')}
               </p>
               
@@ -233,20 +233,20 @@ export default async function LandingPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-colors">
+              <div className="p-6 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors">
                 <Users className="text-purple-400 mb-4" size={32} />
                 <h3 className="text-lg font-bold mb-2">{tFeatures('strategic.fingerprinting.title')}</h3>
-                <p className="text-sm text-gray-400">{tFeatures('strategic.fingerprinting.desc')}</p>
+                <p className="text-sm text-zinc-400">{tFeatures('strategic.fingerprinting.desc')}</p>
               </div>
-              <div className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-colors">
+              <div className="p-6 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors">
                 <Search className="text-emerald-400 mb-4" size={32} />
                 <h3 className="text-lg font-bold mb-2">{tFeatures('strategic.discovery.title')}</h3>
-                <p className="text-sm text-gray-400">{tFeatures('strategic.discovery.desc')}</p>
+                <p className="text-sm text-zinc-400">{tFeatures('strategic.discovery.desc')}</p>
               </div>
-              <div className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-colors sm:col-span-2">
+              <div className="p-6 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors sm:col-span-2">
                 <Zap className="text-amber-400 mb-4" size={32} />
                 <h3 className="text-lg font-bold mb-2">{tFeatures('strategic.prediction.title')}</h3>
-                <p className="text-sm text-gray-400">{tFeatures('strategic.prediction.desc')}</p>
+                <p className="text-sm text-zinc-400">{tFeatures('strategic.prediction.desc')}</p>
               </div>
             </div>
           </div>
@@ -254,37 +254,37 @@ export default async function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-24 px-6 bg-white border-t border-slate-200">
+      <section className="py-24 px-6 bg-white border-t border-zinc-200">
         <div className="max-w-7xl mx-auto">
            <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4">{tPricing('title')}</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto text-lg">{tPricing('subtitle')}</p>
+            <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">{tPricing('title')}</h2>
+            <p className="text-zinc-500 max-w-2xl mx-auto text-lg">{tPricing('subtitle')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
              {/* Starter Tier */}
-            <div className="p-8 rounded-3xl bg-white border border-slate-200 relative flex flex-col">
-               <h3 className="text-xl font-bold text-slate-900 mb-2">{tPricing('starter')}</h3>
-               <p className="text-slate-500 text-sm mb-6">{tPricing('starterDesc')}</p>
-               <div className="text-4xl font-black text-slate-900 mb-6">{tPricing('starterPrice')}<span className="text-base font-medium text-slate-400">/mo</span></div>
+            <div className="p-8 rounded-xl bg-white border border-zinc-200 relative flex flex-col">
+               <h3 className="text-xl font-bold text-zinc-900 mb-2">{tPricing('starter')}</h3>
+               <p className="text-zinc-500 text-sm mb-6">{tPricing('starterDesc')}</p>
+               <div className="text-4xl font-black text-zinc-900 mb-6">{tPricing('starterPrice')}<span className="text-base font-medium text-zinc-400">/mo</span></div>
                <ul className="space-y-4 mb-8 flex-1">
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature1')}</li>
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature2')}</li>
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature3')}</li>
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature4')}</li>
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature5')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature1')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature2')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature3')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature4')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('starterFeature5')}</li>
                </ul>
-               <Link href="/login" className="block w-full py-4 px-4 bg-slate-100 text-slate-700 font-bold text-center rounded-xl hover:bg-slate-200 transition-all">{tCommon('startTrial')}</Link>
+               <Link href="/login" className="block w-full py-4 px-4 bg-zinc-100 text-zinc-700 font-bold text-center rounded-xl hover:bg-zinc-200 transition-all">{tCommon('startTrial')}</Link>
             </div>
 
             {/* Professional Tier */}
-             <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 relative transform md:-translate-y-4 shadow-2xl flex flex-col">
+             <div className="p-8 rounded-xl bg-zinc-900 border border-zinc-800 relative transform md:-translate-y-4 shadow-2xl flex flex-col">
                <div className="absolute top-0 right-0 p-4">
                  <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg shadow-blue-900/50">{tPricing('popular')}</span>
                </div>
                <h3 className="text-xl font-bold text-white mb-2">{tPricing('professional')}</h3>
-               <p className="text-slate-400 text-sm mb-6">{tPricing('professionalDesc')}</p>
-               <div className="text-5xl font-black text-white mb-6">{tPricing('professionalPrice')}<span className="text-base font-medium text-slate-50">/mo</span></div>
+               <p className="text-zinc-400 text-sm mb-6">{tPricing('professionalDesc')}</p>
+               <div className="text-5xl font-black text-white mb-6">{tPricing('professionalPrice')}<span className="text-base font-medium text-zinc-50">/mo</span></div>
                <ul className="space-y-4 mb-8 flex-1">
                  <li className="flex items-center gap-3 text-white font-medium"><Check size={18} className="text-blue-400" /> {tPricing('professionalFeature1')}</li>
                  <li className="flex items-center gap-3 text-white font-medium"><Check size={18} className="text-blue-400" /> {tPricing('professionalFeature2')}</li>
@@ -298,20 +298,20 @@ export default async function LandingPage() {
             </div>
 
             {/* Enterprise Tier */}
-            <div className="p-8 rounded-3xl bg-white border border-slate-200 relative flex flex-col">
-               <h3 className="text-xl font-bold text-slate-900 mb-2">{tPricing('enterprise')}</h3>
-               <p className="text-slate-500 text-sm mb-6">{tPricing('enterpriseDesc')}</p>
-               <div className="text-4xl font-black text-slate-900 mb-6">{tPricing('enterprisePrice')}<span className="text-base font-medium text-slate-400">/mo</span></div>
+            <div className="p-8 rounded-xl bg-white border border-zinc-200 relative flex flex-col">
+               <h3 className="text-xl font-bold text-zinc-900 mb-2">{tPricing('enterprise')}</h3>
+               <p className="text-zinc-500 text-sm mb-6">{tPricing('enterpriseDesc')}</p>
+               <div className="text-4xl font-black text-zinc-900 mb-6">{tPricing('enterprisePrice')}<span className="text-base font-medium text-zinc-400">/mo</span></div>
                <ul className="space-y-4 mb-8 flex-1">
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature1')}</li>
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature2')}</li>
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature3')}</li>
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature4')}</li>
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature5')}</li>
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature6')}</li>
-                 <li className="flex items-center gap-3 text-slate-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature7')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature1')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature2')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature3')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature4')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature5')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature6')}</li>
+                 <li className="flex items-center gap-3 text-zinc-700 font-medium"><Check size={18} className="text-blue-600" /> {tPricing('enterpriseFeature7')}</li>
                </ul>
-               <Link href="/login" className="block w-full py-4 px-4 bg-slate-100 text-slate-700 font-bold text-center rounded-xl hover:bg-slate-200 transition-all">{tCommon('contactSales')}</Link>
+               <Link href="/login" className="block w-full py-4 px-4 bg-zinc-100 text-zinc-700 font-bold text-center rounded-xl hover:bg-zinc-200 transition-all">{tCommon('contactSales')}</Link>
             </div>
           </div>
         </div>

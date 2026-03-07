@@ -34,32 +34,32 @@ export function UserMenu({ initials, tier, email, signOutAction }: UserMenuProps
         className="flex items-center gap-3 group focus:outline-none"
       >
         <div className="text-right hidden sm:block">
-          <p className="text-sm font-bold text-slate-900 group-hover:text-teal-600 transition-colors">{t('myAccount')}</p>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{tier} {t('planSuffix')}</p>
+          <p className="text-sm font-bold text-zinc-900 group-hover:text-blue-600 transition-colors">{t('myAccount')}</p>
+          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">{tier} {t('planSuffix')}</p>
         </div>
-        <div className="w-10 h-10 rounded-lg bg-teal-600 flex items-center justify-center text-white text-sm font-black shadow-md shadow-teal-600/20 group-hover:shadow-lg transition-all">
+        <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-white text-sm font-black shadow-md shadow-blue-600/20 group-hover:shadow-lg transition-all">
           {initials}
         </div>
-        <ChevronDown size={16} className={`text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown size={16} className={`text-zinc-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden z-50">
-          <div className="p-4 border-b border-slate-100">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{t('signedInAs')}</p>
-            <p className="text-sm font-semibold text-slate-900 truncate">{email}</p>
+        <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-zinc-200 overflow-hidden z-50">
+          <div className="p-4 border-b border-zinc-100">
+            <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">{t('signedInAs')}</p>
+            <p className="text-sm font-semibold text-zinc-900 truncate">{email}</p>
           </div>
           <div className="p-2">
             <Link
               href="/profile"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-teal-600 rounded-lg transition-colors"
+              className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 rounded-lg transition-colors"
             >
               <User size={16} />
               {t('profileSettings')}
             </Link>
             <form action={signOutAction}>
-              <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors text-left">
+              <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors text-left">
                 <LogOut size={16} />
                 {t('signOut')}
               </button>
