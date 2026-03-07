@@ -14,6 +14,7 @@ import { getTranslations, getLocale } from 'next-intl/server';
 import { Link } from '@/navigation';
 import { notFound, redirect } from 'next/navigation';
 import { getCpvDescription } from '@/utils/cpv-data';
+import { getServerUser } from '@/utils/dev-auth';
 import { TenderDetailsTabs } from '@/components/tender/TenderDetailsTabs';
 import { OverviewTab } from '@/components/tender/OverviewTab';
 import { AwardTab } from '@/components/tender/AwardTab';
@@ -76,7 +77,7 @@ export default async function TenderDetailsPage({
   const t = await getTranslations('tenders');
   const locale = await getLocale();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const { user } = await getServerUser(supabase);
   if (!user) redirect('/login');
 
   // Simple, direct lookup by internal UUID

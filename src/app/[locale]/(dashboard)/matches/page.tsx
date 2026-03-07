@@ -1,5 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
+import { getServerUser } from '@/utils/dev-auth';
 import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
@@ -22,7 +23,7 @@ export async function generateMetadata() {
 export default async function MatchesPage() {
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const { user } = await getServerUser(supabase);
   if (!user) redirect('/login');
 
   const { data: profile } = await supabase

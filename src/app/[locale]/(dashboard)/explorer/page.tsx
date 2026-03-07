@@ -1,5 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
+import { getServerUser } from '@/utils/dev-auth';
 import { ExplorerClient } from '@/components/ExplorerClient';
 import { redirect } from 'next/navigation';
 
@@ -32,7 +33,7 @@ export default async function ExplorerPage({
 
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const { user } = await getServerUser(supabase);
   if (!user) redirect('/login');
 
   const { data: profile } = await supabase

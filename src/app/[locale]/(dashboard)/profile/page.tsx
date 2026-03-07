@@ -1,5 +1,6 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
+import { getServerUser } from '@/utils/dev-auth';
 import { getTranslations } from 'next-intl/server';
 import { ProfileForm } from '@/components/ProfileForm';
 import { redirect } from 'next/navigation';
@@ -10,7 +11,7 @@ export default async function ProfilePage() {
   const t = await getTranslations('profile');
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const { user } = await getServerUser(supabase);
   if (!user) redirect('/login');
 
   const { data: profile } = await supabase

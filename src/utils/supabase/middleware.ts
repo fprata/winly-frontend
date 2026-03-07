@@ -1,7 +1,11 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { BYPASS_AUTH } from '@/utils/dev-auth'
 
 export async function updateSession(request: NextRequest, response?: NextResponse) {
+  // Skip all auth logic in dev bypass mode
+  if (BYPASS_AUTH) return response || NextResponse.next({ request: { headers: request.headers } });
+
   // Use the response passed from next-intl, or create a new one
   let supabaseResponse = response || NextResponse.next({
     request: {

@@ -4,6 +4,7 @@ import { DashboardLayoutClient } from "@/components/DashboardLayoutClient";
 import { DashboardFooter } from "@/components/DashboardFooter";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { getServerUser } from "@/utils/dev-auth";
 import { DashboardHeader } from "@/components/DashboardHeader";
 
 export default async function DashboardLayout({
@@ -12,7 +13,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { user } = await getServerUser(supabase);
 
   if (!user) {
     redirect('/login');
