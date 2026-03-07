@@ -75,14 +75,13 @@ export function CompetitorIntelligenceClient({
     fetchWins();
   }, [profile?.name]);
 
-  const searchCompetitors = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (query.length < 3) return;
-    
+  const searchCompetitors = async (value: string) => {
+    if (value.length < 3) return;
+
     const { data } = await supabase
       .from('intel_competitors')
-      .select('name, country, total_wins, competitor_id')
-      .textSearch('search_vector', query, { type: 'websearch', config: 'public.simple_unaccent' })
+      .select('name, country, total_wins, competitor_id, win_rate_pct, total_revenue, avg_discount_pct, buyer_diversity')
+      .textSearch('search_vector', value, { type: 'websearch', config: 'public.simple_unaccent' })
       .limit(10);
 
     setSearchResults(data || []);
@@ -141,9 +140,10 @@ export function CompetitorIntelligenceClient({
                   placeholder={t('searchPlaceholder') || "Search competitors..."}
                   value={query}
                   onChange={e => {
-                    setQuery(e.target.value);
-                    if (e.target.value.length >= 3) searchCompetitors();
-                    else if (e.target.value.length === 0) setSearchResults(initialSearchResults);
+                    const val = e.target.value;
+                    setQuery(val);
+                    if (val.length >= 3) searchCompetitors(val);
+                    else if (val.length === 0) setSearchResults(initialSearchResults);
                     else setSearchResults([]);
                   }}
                   className="h-9 pl-8 pr-3 w-72 rounded-lg border border-zinc-300 text-sm outline-none bg-white shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-zinc-400 transition-all"
