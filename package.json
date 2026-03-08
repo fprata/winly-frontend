@@ -9,7 +9,12 @@
     "lint": "eslint",
     "test": "vitest",
     "test:e2e": "playwright test",
-    "test:ci": "vitest run && playwright test"
+    "test:ci": "vitest run && playwright test",
+    "load:smoke": "k6 run load-tests/smoke.js",
+    "load:load": "k6 run load-tests/load.js",
+    "load:stress": "k6 run load-tests/stress.js",
+    "load:soak": "k6 run load-tests/soak.js",
+    "load:prod": "K6_BASE_URL=https://winly-frontend.vercel.app k6 run load-tests/load.js"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.95",
