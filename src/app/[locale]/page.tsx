@@ -8,6 +8,7 @@ import {
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import type { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
 
 export const metadata: Metadata = {
   title: "Winly AI | Win EU Public Procurement Contracts with AI Intelligence",
@@ -414,36 +415,7 @@ function CompetitorMockup() {
   );
 }
 
-// ─── FAQ ─────────────────────────────────────────────────────────────────────
-
-const FAQS = [
-  {
-    q: 'How does the 150-point scoring algorithm work?',
-    a: 'Each tender is scored across six dimensions: CPV sector match (how closely your services align with the procurement category), geographic relevance (your region vs. the buyer\'s location), capacity fit (whether your budget range matches the contract value), keyword semantic match (AI analysis of your service description against tender requirements), buyer openness (historical tendency to award to new vendors), and market opportunity (competition level and strategic timing). The sum is normalized to a 0–100 match score.',
-  },
-  {
-    q: 'What data sources does Winly use?',
-    a: 'Winly aggregates from TED (Tenders Electronic Daily) — the official EU procurement journal covering 30+ European countries — and BASE (Portuguese Public Contracts Portal), which publishes all Portuguese public contracts. New tenders are synchronized daily and processed through our AI pipeline within hours of publication.',
-  },
-  {
-    q: 'What is included in the AI Document Analysis?',
-    a: 'The AI Document Analysis (Pro/Enterprise) downloads the actual tender documents, extracts and organizes all key information using Google Gemini 2.5 Flash, and produces a structured report covering: project summary, budget and evaluation criteria (price vs. quality weights), submission timeline, mandatory certifications, strategic intelligence (incumbent vendors, lock-in risks, advance payment clauses), and a 0–10 risk assessment. You can also export the report as a branded PDF or generate strategic clarification questions.',
-  },
-  {
-    q: 'How accurate is the win probability?',
-    a: 'Win probability is calculated from your historical performance (if available via VAT ID), the buyer\'s award patterns for your sector (how often they switch suppliers, their average discount), the competition density (average number of bidders), and your match score. It is a data-driven estimate — not a guarantee — based on patterns observed across 100,000+ past awards. Use it as a prioritization signal, not an absolute prediction.',
-  },
-  {
-    q: 'Can I use Winly for TED (EU-wide) tenders, or only Portuguese ones?',
-    a: 'Both. Winly covers TED tenders from across the EU (30+ countries) and BASE tenders from Portugal. Your matching engine can be configured for any geography via your company profile — set your target regions, CPV codes, and budget range to receive relevant matches regardless of country.',
-  },
-  {
-    q: 'Is there a free trial and what does it include?',
-    a: 'Yes — all plans start with a 14-day free trial, no credit card required. During the trial you have full access to the plan features you selected. The free/explorer tier (no subscription) gives you access to the Tender Explorer search tool and basic match cards without scores or intelligence features.',
-  },
-];
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
+// ─── JSON-LD ──────────────────────────────────────────────────────────────────
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -460,7 +432,20 @@ const jsonLd = {
   description: 'AI-powered procurement intelligence platform for EU public tenders.',
 }
 
-export default function LandingPage() {
+// ─── Main Page ────────────────────────────────────────────────────────────────
+
+export default async function LandingPage() {
+  const t = await getTranslations('landing')
+
+  const FAQS = [
+    { q: t('faq1q'), a: t('faq1a') },
+    { q: t('faq2q'), a: t('faq2a') },
+    { q: t('faq3q'), a: t('faq3a') },
+    { q: t('faq4q'), a: t('faq4a') },
+    { q: t('faq5q'), a: t('faq5a') },
+    { q: t('faq6q'), a: t('faq6a') },
+  ]
+
   return (
     <div className="bg-zinc-50 min-h-screen font-sans text-zinc-900 overflow-x-hidden">
       <Navbar />
@@ -473,25 +458,25 @@ export default function LandingPage() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-bold uppercase tracking-wider mb-6">
                 <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-                V3 AI Matching Engine Live
+                {t('heroBadge')}
               </div>
               <h1 className="text-5xl md:text-6xl font-black tracking-tight text-zinc-900 mb-6 leading-tight">
-                Win more.<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">Bid smarter.</span><br />
-                Know your market.
+                {t('heroLine1')}<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">{t('heroLine2')}</span><br />
+                {t('heroLine3')}
               </h1>
               <p className="text-xl text-zinc-500 mb-8 leading-relaxed">
-                The only intelligence platform combining TED &amp; BASE data with a <strong className="text-zinc-700">150-point AI scoring system</strong>. Predict win probabilities, analyze competitors, and extract strategic intelligence from tender documents — automatically.
+                {t('heroSubtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
                 <Link href="/login" className="px-8 py-4 bg-blue-600 text-white font-bold rounded-xl text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-2 group">
-                  Start Free Trial <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                  {t('heroCta')} <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
                 </Link>
                 <Link href="#product" className="px-8 py-4 bg-white text-zinc-700 font-bold rounded-xl text-lg border border-zinc-200 hover:bg-zinc-50 transition-all flex items-center justify-center">
-                  See how it works
+                  {t('heroCtaSecondary')}
                 </Link>
               </div>
-              <p className="text-sm text-zinc-400 font-medium">No credit card required · 14-day free trial · Cancel anytime</p>
+              <p className="text-sm text-zinc-400 font-medium">{t('heroTrust')}</p>
             </div>
 
             {/* Hero mockup */}
@@ -508,10 +493,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              ['150+', 'AI Scoring Points'],
-              ['12,000+', 'Tenders Tracked Daily'],
-              ['98%', 'Noise Reduction'],
-              ['€2T+', 'EU Market Coverage'],
+              [t('stat1Val'), t('stat1Label')],
+              [t('stat2Val'), t('stat2Label')],
+              [t('stat3Val'), t('stat3Label')],
+              [t('stat4Val'), t('stat4Label')],
             ].map(([val, label]) => (
               <div key={label} className="text-center">
                 <div className="text-3xl font-black text-zinc-900 mb-1">{val}</div>
@@ -527,13 +512,13 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">
-              <Sparkles size={12} /> Pro Intelligence Features
+              <Sparkles size={12} /> {t('showcaseBadge')}
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">
-              Everything your bid team needs, in one platform
+              {t('showcaseTitle')}
             </h2>
             <p className="text-zinc-500 max-w-2xl mx-auto text-lg">
-              From finding the right tenders to understanding exactly how to win them — see what Professional subscribers get.
+              {t('showcaseSubtitle')}
             </p>
           </div>
 
@@ -541,21 +526,21 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
             <div>
               <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-wider">
-                <Lock size={10} /> Professional Plan
+                <Lock size={10} /> {t('proTag')}
               </div>
               <h3 className="text-2xl md:text-3xl font-black text-zinc-900 mb-4">
-                150-point score breakdown &amp; win probability
+                {t('screen1Title')}
               </h3>
               <p className="text-zinc-500 text-lg mb-6 leading-relaxed">
-                Every tender in your matches list gets a detailed intelligence report. See exactly <em>why</em> you scored 94 points — CPV alignment, geographic relevance, capacity fit, semantic keyword match — and your calculated win probability against this specific buyer.
+                {t('screen1Desc')}
               </p>
               <ul className="space-y-3">
                 {[
-                  'Score broken down across 6 dimensions (not just a single number)',
-                  'Win probability calculated from buyer history + your profile',
-                  'Price recommendation with P25 / P50 / P75 historical ranges',
-                  'Incumbent detection — know if you\'re challenging a sitting supplier',
-                  'Expected competitors ranked by historical wins with this buyer',
+                  t('screen1b1'),
+                  t('screen1b2'),
+                  t('screen1b3'),
+                  t('screen1b4'),
+                  t('screen1b5'),
                 ].map(f => (
                   <li key={f} className="flex items-start gap-3">
                     <Check size={18} className="text-blue-600 mt-0.5 shrink-0" />
@@ -573,21 +558,21 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
             <div className="lg:order-2">
               <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-purple-50 border border-purple-200 text-purple-700 text-xs font-bold uppercase tracking-wider">
-                <Lock size={10} /> Professional Plan
+                <Lock size={10} /> {t('proTag')}
               </div>
               <h3 className="text-2xl md:text-3xl font-black text-zinc-900 mb-4">
-                AI document intelligence — in 30 seconds
+                {t('screen2Title')}
               </h3>
               <p className="text-zinc-500 text-lg mb-6 leading-relaxed">
-                Click "Analyze Documents" on any active tender and Winly downloads the procurement package, extracts every relevant detail using Gemini 2.5 Flash, and presents a structured intelligence report — so you never miss a hidden requirement or risk clause again.
+                {t('screen2Desc')}
               </p>
               <ul className="space-y-3">
                 {[
-                  'Risk score (0–10) with key risk factors extracted from the actual document',
-                  'Financials: exact budget, price vs. quality weighting, required guarantees',
-                  'Timeline: submission deadline, clarification windows, contract duration',
-                  'Strategic flags: incumbent vendors, proprietary lock-ins, advance payment rules',
-                  'Export as branded PDF or generate strategic clarification questions',
+                  t('screen2b1'),
+                  t('screen2b2'),
+                  t('screen2b3'),
+                  t('screen2b4'),
+                  t('screen2b5'),
                 ].map(f => (
                   <li key={f} className="flex items-start gap-3">
                     <Check size={18} className="text-purple-600 mt-0.5 shrink-0" />
@@ -604,27 +589,27 @@ export default function LandingPage() {
           {/* Screenshot row 3 & 4: Intelligence side by side */}
           <div className="mb-12 text-center">
             <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold uppercase tracking-wider">
-              <Lock size={10} /> Professional &amp; Enterprise Plans
+              <Lock size={10} /> {t('proEntTag')}
             </div>
             <h3 className="text-2xl md:text-3xl font-black text-zinc-900 mb-4">
-              Deep buyer &amp; competitor intelligence
+              {t('intelTitle')}
             </h3>
             <p className="text-zinc-500 max-w-2xl mx-auto text-lg">
-              Before you bid, know exactly who you're bidding to and who you're bidding against. Winly profiles every public authority and every active competitor in the market.
+              {t('intelSubtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div>
               <div className="mb-4">
-                <h4 className="text-lg font-bold text-zinc-900 mb-1">Buyer DNA Profiles</h4>
-                <p className="text-zinc-500 text-sm">See total spend, avg bidders, top winning suppliers, and behavioral persona classification for any public authority.</p>
+                <h4 className="text-lg font-bold text-zinc-900 mb-1">{t('intelBuyerTitle')}</h4>
+                <p className="text-zinc-500 text-sm">{t('intelBuyerDesc')}</p>
               </div>
               <BuyerIntelMockup />
             </div>
             <div>
               <div className="mb-4">
-                <h4 className="text-lg font-bold text-zinc-900 mb-1">Competitor Intelligence</h4>
-                <p className="text-zinc-500 text-sm">Track any competitor's win rate, sector specialization, average discount, and threat level — with persona classification.</p>
+                <h4 className="text-lg font-bold text-zinc-900 mb-1">{t('intelCompTitle')}</h4>
+                <p className="text-zinc-500 text-sm">{t('intelCompDesc')}</p>
               </div>
               <CompetitorMockup />
             </div>
@@ -636,9 +621,9 @@ export default function LandingPage() {
       <section id="features" className="py-24 px-6 bg-white border-t border-zinc-200">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">Built for serious bid teams</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">{t('featuresTitle')}</h2>
             <p className="text-zinc-500 max-w-2xl mx-auto text-lg">
-              Most platforms just send keyword alerts. Winly gives you the strategic intelligence to actually win.
+              {t('featuresSubtitle')}
             </p>
           </div>
 
@@ -646,66 +631,66 @@ export default function LandingPage() {
             {[
               {
                 icon: <Cpu size={22} />, color: 'bg-blue-100 text-blue-600',
-                title: 'V3 AI Matching Engine',
-                tag: 'All Plans',
+                title: t('f1Title'),
+                tag: t('tagAllPlans'),
                 tagColor: 'bg-zinc-100 text-zinc-600',
-                desc: 'Our 150-point algorithm scores tenders across geographic feasibility, buyer openness, CPV alignment, semantic keyword matching, and historical performance — not just keyword presence.',
+                desc: t('f1Desc'),
               },
               {
                 icon: <Globe size={22} />, color: 'bg-indigo-100 text-indigo-600',
-                title: 'TED + BASE Integration',
-                tag: 'All Plans',
+                title: t('f2Title'),
+                tag: t('tagAllPlans'),
                 tagColor: 'bg-zinc-100 text-zinc-600',
-                desc: 'Complete coverage of TED (30+ EU countries) and BASE (Portugal). New tenders are synced daily and scored against your profile within hours of publication.',
+                desc: t('f2Desc'),
               },
               {
                 icon: <BarChart3 size={22} />, color: 'bg-emerald-100 text-emerald-600',
-                title: 'Win Probability Score',
-                tag: 'Professional',
+                title: t('f3Title'),
+                tag: t('tagPro'),
                 tagColor: 'bg-blue-100 text-blue-700',
-                desc: 'Don\'t bid blindly. See your calculated win probability based on this buyer\'s award history, your sector fit, and the competition density for similar tenders.',
+                desc: t('f3Desc'),
               },
               {
                 icon: <Search size={22} />, color: 'bg-amber-100 text-amber-600',
-                title: 'Competitor Intelligence',
-                tag: 'Professional',
+                title: t('f4Title'),
+                tag: t('tagPro'),
                 tagColor: 'bg-blue-100 text-blue-700',
-                desc: 'Identify incumbents and their pricing patterns. Track national dominators, niche specialists, and rising stars before they show up in the award results against you.',
+                desc: t('f4Desc'),
               },
               {
                 icon: <DollarSign size={22} />, color: 'bg-purple-100 text-purple-600',
-                title: 'Price Recommendation Engine',
-                tag: 'Professional',
+                title: t('f5Title'),
+                tag: t('tagPro'),
                 tagColor: 'bg-blue-100 text-blue-700',
-                desc: 'Maximize margins without losing bids. Get data-driven price bands (P25 / P50 / P75) derived from actual historical award values for this buyer and sector.',
+                desc: t('f5Desc'),
               },
               {
                 icon: <FileText size={22} />, color: 'bg-rose-100 text-rose-600',
-                title: 'AI Document Analysis',
-                tag: 'Professional',
+                title: t('f6Title'),
+                tag: t('tagPro'),
                 tagColor: 'bg-blue-100 text-blue-700',
-                desc: 'Automatically download and analyze the tender procurement package. Extract risk scores, financial criteria, timeline constraints, and strategic flags in under 30 seconds.',
+                desc: t('f6Desc'),
               },
               {
                 icon: <Building2 size={22} />, color: 'bg-blue-100 text-blue-600',
-                title: 'Buyer DNA Profiles',
-                tag: 'Professional',
+                title: t('f7Title'),
+                tag: t('tagPro'),
                 tagColor: 'bg-blue-100 text-blue-700',
-                desc: 'Every public authority profiled: total spend, avg bidders, avg discount, direct award rate, top suppliers, and behavioral persona (Open Innovator, Loyalist, Aggressive Discounter…).',
+                desc: t('f7Desc'),
               },
               {
                 icon: <ShieldCheck size={22} />, color: 'bg-emerald-100 text-emerald-600',
-                title: 'Risk Assessment',
-                tag: 'Professional',
+                title: t('f8Title'),
+                tag: t('tagPro'),
                 tagColor: 'bg-blue-100 text-blue-700',
-                desc: 'Each AI analysis includes a 0–10 risk score and extracted key risk factors: proprietary lock-ins, tight clarification windows, aggressive SLAs, and incumbent strength signals.',
+                desc: t('f8Desc'),
               },
               {
                 icon: <Zap size={22} />, color: 'bg-amber-100 text-amber-600',
-                title: 'Tender Chatbot Assistant',
-                tag: 'Professional',
+                title: t('f9Title'),
+                tag: t('tagPro'),
                 tagColor: 'bg-blue-100 text-blue-700',
-                desc: 'Ask questions about any analyzed tender in natural language. "What are the main risks?", "Who are the likely competitors?", "What price should I bid?" — grounded in the actual document.',
+                desc: t('f9Desc'),
               },
             ].map(f => (
               <div key={f.title} className="p-7 rounded-xl bg-zinc-50 border border-zinc-200 hover:border-blue-400 hover:shadow-md hover:-translate-y-px transition-all duration-200 group flex flex-col">
@@ -727,8 +712,8 @@ export default function LandingPage() {
       <section className="py-24 px-6 bg-zinc-50 border-t border-zinc-200">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">Up and running in 5 minutes</h2>
-            <p className="text-zinc-500 text-lg">No integration required. No data export. Works with your existing workflow.</p>
+            <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">{t('howTitle')}</h2>
+            <p className="text-zinc-500 text-lg">{t('howSubtitle')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -736,22 +721,22 @@ export default function LandingPage() {
                 step: '01',
                 icon: <Users size={28} />,
                 color: 'bg-blue-600',
-                title: 'Set up your bidding profile',
-                desc: 'Enter your services, CPV codes, target budget range, and geographic focus. Optionally enter your VAT ID to auto-import historical win data and calibrate your win probability model.',
+                title: t('step1Title'),
+                desc: t('step1Desc'),
               },
               {
                 step: '02',
                 icon: <Cpu size={28} />,
                 color: 'bg-indigo-600',
-                title: 'Get AI-scored matches daily',
-                desc: 'The V3 engine scores every new tender on TED and BASE against your profile using 150 data points. You receive only relevant matches — not keyword noise — sorted by match score.',
+                title: t('step2Title'),
+                desc: t('step2Desc'),
               },
               {
                 step: '03',
                 icon: <TrendingUp size={28} />,
                 color: 'bg-emerald-600',
-                title: 'Win with strategic intelligence',
-                desc: 'For each opportunity: analyze the buyer\'s history, check competitor threats, get a price recommendation, and run AI document analysis on the procurement package — all in one tab.',
+                title: t('step3Title'),
+                desc: t('step3Desc'),
               },
             ].map(s => (
               <div key={s.step} className="relative">
@@ -774,28 +759,28 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/50 border border-blue-500/30 text-blue-400 text-xs font-bold uppercase tracking-wider mb-6">
-                <Users size={12} /> Market Personas Live
+                <Users size={12} /> {t('personasBadge')}
               </div>
               <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
-                Know your market<br />
-                <span className="text-blue-500">before you bid</span>
+                {t('personasTitle')}<br />
+                <span className="text-blue-500">{t('personasHighlight')}</span>
               </h2>
               <p className="text-zinc-400 text-lg mb-8 leading-relaxed">
-                Winly AI fingerprints the behavioral DNA of every buyer and competitor in the EU procurement market — classifying them into strategic personas so you can predict their next move.
+                {t('personasDesc1')}
               </p>
               <p className="text-zinc-400 mb-10 leading-relaxed">
-                Is this buyer a <strong className="text-white">Loyalist</strong> (top supplier wins 60%+ of contracts)? Or an <strong className="text-white">Open Innovator</strong> (actively diversifying)? Is that competitor a <strong className="text-white">National Dominator</strong> or a vulnerable <strong className="text-white">Local King</strong>? Knowing this changes your strategy entirely.
+                {t('personasDesc2')}
               </p>
               <Link href="/personas" className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-bold rounded-xl text-lg hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/50 group">
-                Explore Market Personas <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                {t('personasCta')} <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
               </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {[
-                { icon: <Users size={28} />, color: 'text-purple-400', title: 'Buyer Archetypes', desc: '5 buyer personas classified by spending habit, openness to new vendors, and price sensitivity — from The Loyalist to The Open Innovator.' },
-                { icon: <Search size={28} />, color: 'text-emerald-400', title: 'Competitor Archetypes', desc: '4 competitor personas classified by win volume, market reach, and sector specialization — from The National Dominator to The Rising Star.' },
-                { icon: <Target size={28} />, color: 'text-amber-400', title: 'Ghost Bidding Prediction', desc: 'Our engine predicts which specific competitors are likely to bid on a tender before they even submit, based on behavioral patterns.', wide: true },
+                { icon: <Users size={28} />, color: 'text-purple-400', title: t('personasCard1Title'), desc: t('personasCard1Desc') },
+                { icon: <Search size={28} />, color: 'text-emerald-400', title: t('personasCard2Title'), desc: t('personasCard2Desc') },
+                { icon: <Target size={28} />, color: 'text-amber-400', title: t('personasCard3Title'), desc: t('personasCard3Desc'), wide: true },
               ].map(c => (
                 <div key={c.title} className={`p-6 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors ${(c as any).wide ? 'sm:col-span-2' : ''}`}>
                   <div className={`${c.color} mb-4`}>{c.icon}</div>
@@ -812,8 +797,8 @@ export default function LandingPage() {
       <section id="pricing" className="py-24 px-6 bg-white border-t border-zinc-200">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">Transparent pricing</h2>
-            <p className="text-zinc-500 max-w-2xl mx-auto text-lg">Choose the plan that fits your ambition. All plans include a 14-day free trial.</p>
+            <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">{t('pricingTitle')}</h2>
+            <p className="text-zinc-500 max-w-2xl mx-auto text-lg">{t('pricingSubtitle')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
@@ -821,128 +806,128 @@ export default function LandingPage() {
             {/* Starter */}
             <div className="p-8 rounded-xl bg-zinc-50 border border-zinc-200 flex flex-col">
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-zinc-900 mb-1">Starter</h3>
-                <p className="text-zinc-500 text-sm">For freelancers &amp; micro-businesses starting with public procurement.</p>
+                <h3 className="text-xl font-bold text-zinc-900 mb-1">{t('starterName')}</h3>
+                <p className="text-zinc-500 text-sm">{t('starterDesc')}</p>
               </div>
-              <div className="text-4xl font-black text-zinc-900 mb-2">€149<span className="text-base font-medium text-zinc-400">/mo</span></div>
-              <p className="text-sm text-zinc-400 mb-8">or €124/mo billed annually</p>
+              <div className="text-4xl font-black text-zinc-900 mb-2">{t('starterPrice')}<span className="text-base font-medium text-zinc-400">/mo</span></div>
+              <p className="text-sm text-zinc-400 mb-8">{t('starterAnnual')}</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  'Up to 50 AI-matched tenders / month',
-                  'Basic V3 match score (overall only)',
-                  'Tender Explorer full-text search',
-                  'Daily email digest of new matches',
-                  'PT & ES market coverage',
-                  '1 user seat',
+                  t('sf1'),
+                  t('sf2'),
+                  t('sf3'),
+                  t('sf4'),
+                  t('sf5'),
+                  t('sf6'),
                 ].map(f => <li key={f} className="flex items-start gap-3 text-zinc-700 text-sm"><Check size={16} className="text-blue-600 mt-0.5 shrink-0" /> {f}</li>)}
                 {[
-                  'Score breakdown & win probability',
-                  'AI Document Analysis',
-                  'Price recommendations',
-                  'Buyer & competitor profiles',
+                  t('sl1'),
+                  t('sl2'),
+                  t('sl3'),
+                  t('sl4'),
                 ].map(f => <li key={f} className="flex items-start gap-3 text-zinc-400 text-sm"><Lock size={14} className="mt-0.5 shrink-0" /> {f}</li>)}
               </ul>
               <Link href="/login" className="block w-full py-3.5 px-4 bg-zinc-100 text-zinc-700 font-bold text-center rounded-xl hover:bg-zinc-200 transition-all text-sm">
-                Start Free Trial
+                {t('pricingCtaTrial')}
               </Link>
             </div>
 
             {/* Professional */}
             <div className="p-8 rounded-xl bg-zinc-900 border border-zinc-800 relative transform md:-translate-y-4 shadow-2xl flex flex-col">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg">Most Popular</span>
+                <span className="bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg">{t('pricingMostPopular')}</span>
               </div>
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-white mb-1">Professional</h3>
-                <p className="text-zinc-400 text-sm">For SMEs who need a competitive edge and full strategic intelligence.</p>
+                <h3 className="text-xl font-bold text-white mb-1">{t('proName')}</h3>
+                <p className="text-zinc-400 text-sm">{t('proDesc')}</p>
               </div>
-              <div className="text-5xl font-black text-white mb-2">€399<span className="text-base font-medium text-zinc-400">/mo</span></div>
-              <p className="text-sm text-zinc-500 mb-8">or €329/mo billed annually</p>
+              <div className="text-5xl font-black text-white mb-2">{t('proPrice')}<span className="text-base font-medium text-zinc-400">/mo</span></div>
+              <p className="text-sm text-zinc-500 mb-8">{t('proAnnual')}</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  'Unlimited AI-matched tenders',
-                  'Full 150-point score breakdown',
-                  'Win probability per tender',
-                  'Price recommendation engine (P25/P50/P75)',
-                  'AI document analysis (Gemini 2.5 Flash)',
-                  'Risk assessment — 0–10 score + key factors',
-                  'Tender chatbot assistant',
-                  'Export: PDF report + strategic questions',
-                  'Buyer DNA profiles (all authorities)',
-                  'Competitor intelligence (all companies)',
-                  'Market overview & sector trends',
-                  'TED + BASE full EU coverage',
-                  '5 user seats',
+                  t('pf1'),
+                  t('pf2'),
+                  t('pf3'),
+                  t('pf4'),
+                  t('pf5'),
+                  t('pf6'),
+                  t('pf7'),
+                  t('pf8'),
+                  t('pf9'),
+                  t('pf10'),
+                  t('pf11'),
+                  t('pf12'),
+                  t('pf13'),
                 ].map(f => <li key={f} className="flex items-start gap-3 text-white text-sm"><Check size={16} className="text-blue-400 mt-0.5 shrink-0" /> {f}</li>)}
               </ul>
               <Link href="/login" className="block w-full py-3.5 px-4 bg-blue-600 text-white font-bold text-center rounded-xl hover:bg-blue-500 transition-all text-sm shadow-lg shadow-blue-900/30">
-                Start Free Trial
+                {t('pricingCtaTrial')}
               </Link>
             </div>
 
             {/* Enterprise */}
             <div className="p-8 rounded-xl bg-zinc-50 border border-zinc-200 flex flex-col">
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-zinc-900 mb-1">Enterprise</h3>
-                <p className="text-zinc-500 text-sm">For consortiums, bid management teams, and mid-size firms with high pipeline volume.</p>
+                <h3 className="text-xl font-bold text-zinc-900 mb-1">{t('entName')}</h3>
+                <p className="text-zinc-500 text-sm">{t('entDesc')}</p>
               </div>
-              <div className="text-4xl font-black text-zinc-900 mb-2">€999<span className="text-base font-medium text-zinc-400">/mo</span></div>
-              <p className="text-sm text-zinc-400 mb-8">or €829/mo billed annually</p>
+              <div className="text-4xl font-black text-zinc-900 mb-2">{t('entPrice')}<span className="text-base font-medium text-zinc-400">/mo</span></div>
+              <p className="text-sm text-zinc-400 mb-8">{t('entAnnual')}</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  'Everything in Professional',
-                  'Bid/No-Bid Assistant (AI-powered)',
-                  'Team collaboration tools',
-                  'Pipeline CRM & bid tracking',
-                  'API access & webhook integrations',
-                  'Priority document analysis queue',
-                  'Unlimited user seats',
-                  'Custom CPV & market configurations',
-                  'Dedicated account manager',
-                  'White-label options',
-                  'Custom data exports',
+                  t('ef1'),
+                  t('ef2'),
+                  t('ef3'),
+                  t('ef4'),
+                  t('ef5'),
+                  t('ef6'),
+                  t('ef7'),
+                  t('ef8'),
+                  t('ef9'),
+                  t('ef10'),
+                  t('ef11'),
                 ].map(f => <li key={f} className="flex items-start gap-3 text-zinc-700 text-sm"><Check size={16} className="text-blue-600 mt-0.5 shrink-0" /> {f}</li>)}
               </ul>
               <Link href="/contact" className="block w-full py-3.5 px-4 bg-zinc-100 text-zinc-700 font-bold text-center rounded-xl hover:bg-zinc-200 transition-all text-sm">
-                Contact Sales
+                {t('pricingCtaSales')}
               </Link>
             </div>
           </div>
 
           {/* Feature comparison table */}
           <div className="max-w-4xl mx-auto">
-            <h3 className="text-xl font-black text-zinc-900 text-center mb-8">Full feature comparison</h3>
+            <h3 className="text-xl font-black text-zinc-900 text-center mb-8">{t('compareTitle')}</h3>
             <div className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
               {/* Header */}
               <div className="grid grid-cols-4 bg-zinc-50 border-b border-zinc-200">
-                <div className="p-4 text-sm font-bold text-zinc-500">Feature</div>
-                {['Starter', 'Professional', 'Enterprise'].map(p => (
-                  <div key={p} className={`p-4 text-center text-sm font-bold ${p === 'Professional' ? 'text-blue-600' : 'text-zinc-900'}`}>{p}</div>
+                <div className="p-4 text-sm font-bold text-zinc-500">{t('compareFeatureCol')}</div>
+                {[t('starterName'), t('proName'), t('entName')].map(p => (
+                  <div key={p} className={`p-4 text-center text-sm font-bold ${p === t('proName') ? 'text-blue-600' : 'text-zinc-900'}`}>{p}</div>
                 ))}
               </div>
               {/* Rows */}
               {[
-                ['Tender matching', '50/mo', 'Unlimited', 'Unlimited'],
-                ['Match score (overall)', '✓', '✓', '✓'],
-                ['Score breakdown (6 factors)', '—', '✓', '✓'],
-                ['Win probability', '—', '✓', '✓'],
-                ['Price recommendation', '—', '✓', '✓'],
-                ['AI document analysis', '—', '✓', '✓'],
-                ['Risk assessment', '—', '✓', '✓'],
-                ['Tender chatbot', '—', '✓', '✓'],
-                ['Export PDF / Questions', '—', '✓', '✓'],
-                ['Buyer DNA profiles', '—', '✓', '✓'],
-                ['Competitor intelligence', '—', '✓', '✓'],
-                ['Market overview', '—', '✓', '✓'],
-                ['User seats', '1', '5', 'Unlimited'],
-                ['API access', '—', '—', '✓'],
-                ['Pipeline CRM', '—', '—', '✓'],
-                ['White-label', '—', '—', '✓'],
+                [t('cr1'), t('cr1s'), t('crUnlimited'), t('crUnlimited')],
+                [t('cr2'), t('crYes'), t('crYes'), t('crYes')],
+                [t('cr3'), t('crNo'), t('crYes'), t('crYes')],
+                [t('cr4'), t('crNo'), t('crYes'), t('crYes')],
+                [t('cr5'), t('crNo'), t('crYes'), t('crYes')],
+                [t('cr6'), t('crNo'), t('crYes'), t('crYes')],
+                [t('cr7'), t('crNo'), t('crYes'), t('crYes')],
+                [t('cr8'), t('crNo'), t('crYes'), t('crYes')],
+                [t('cr9'), t('crNo'), t('crYes'), t('crYes')],
+                [t('cr10'), t('crNo'), t('crYes'), t('crYes')],
+                [t('cr11'), t('crNo'), t('crYes'), t('crYes')],
+                [t('cr12'), t('crNo'), t('crYes'), t('crYes')],
+                [t('cr13'), t('cr13s'), t('cr13p'), t('cr13e')],
+                [t('cr14'), t('crNo'), t('crNo'), t('crYes')],
+                [t('cr15'), t('crNo'), t('crNo'), t('crYes')],
+                [t('cr16'), t('crNo'), t('crNo'), t('crYes')],
               ].map(([feat, starter, pro, ent], i) => (
                 <div key={feat} className={`grid grid-cols-4 border-b border-zinc-100 last:border-0 ${i % 2 === 0 ? 'bg-white' : 'bg-zinc-50/50'}`}>
                   <div className="p-4 text-sm text-zinc-700 font-medium">{feat}</div>
                   {[starter, pro, ent].map((v, j) => (
-                    <div key={j} className={`p-4 text-center text-sm font-semibold ${v === '✓' ? 'text-emerald-600' : v === '—' ? 'text-zinc-300' : j === 1 ? 'text-blue-600' : 'text-zinc-700'}`}>{v}</div>
+                    <div key={j} className={`p-4 text-center text-sm font-semibold ${v === t('crYes') ? 'text-emerald-600' : v === t('crNo') ? 'text-zinc-300' : j === 1 ? 'text-blue-600' : 'text-zinc-700'}`}>{v}</div>
                   ))}
                 </div>
               ))}
@@ -955,7 +940,7 @@ export default function LandingPage() {
       <section className="py-24 px-6 bg-zinc-50 border-t border-zinc-200">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">Frequently asked questions</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">{t('faqTitle')}</h2>
           </div>
           <div className="space-y-4">
             {FAQS.map((faq, i) => (
@@ -979,17 +964,17 @@ export default function LandingPage() {
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto text-center relative">
           <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
-            Ready to win your next<br />public contract?
+            {t('ctaTitle')}
           </h2>
           <p className="text-blue-100 text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
-            Join bid teams across Europe who use Winly to find better opportunities, understand their competition, and bid with confidence. First 14 days free — no credit card required.
+            {t('ctaSubtitle')}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/login" className="px-10 py-4 bg-white text-blue-600 font-black rounded-xl text-lg hover:bg-blue-50 transition-all shadow-2xl flex items-center gap-2 group">
-              Start Free Trial <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+              {t('ctaPrimary')} <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </Link>
             <Link href="/contact" className="px-10 py-4 bg-transparent text-white font-bold rounded-xl text-lg border-2 border-white/40 hover:border-white/80 transition-all flex items-center gap-2">
-              Talk to Sales
+              {t('ctaSecondaryBtn')}
             </Link>
           </div>
         </div>
