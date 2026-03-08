@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { createClient } from '@/utils/supabase/server';
+import { getServerUser } from '@/utils/dev-auth';
 
 export async function POST(req: Request) {
   try {
     const { tier } = await req.json();
     const supabase = await createClient();
-    
-    const { data: { user } } = await supabase.auth.getUser();
+
+    const { user } = await getServerUser(supabase);
 
     if (!user) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
     } else {
       return new NextResponse('Bad Request: Invalid tier.', { status: 400 });
     }
-    
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [

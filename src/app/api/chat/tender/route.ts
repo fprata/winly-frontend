@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { getServerUser, getDataClient } from '@/utils/dev-auth';
 
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user } = await getServerUser(supabase);
     if (!user) return new NextResponse('Unauthorized', { status: 401 });
 
+    const db = await getDataClient(supabase);
+
     // Check tier
-    const { data: profile } = await supabase
+    const { data: profile } = await db
       .from('clients')
       .select('tier, name, services, tech_stack')
       .eq('email', user.email)
@@ -24,7 +27,7 @@ export async function POST(request: Request) {
     }
 
     // Fetch ALL tender data for rich context
-    const { data: tender, error } = await supabase
+    const { data: tender, error } = await db
       .from('tenders')
       .select('tender_id, title, buyer_name, description, insights, estimated_value, currency, country, cpv_code, cpv_description, submission_deadline, procedure_type, is_active')
       .eq('tender_uuid', tenderId)
@@ -33,7 +36,7 @@ export async function POST(request: Request) {
     if (error || !tender) return NextResponse.json({ error: 'Tender not found' }, { status: 404 });
 
     // Fetch match data
-    const { data: matchData } = await supabase
+    const { data: matchData } = await db
       .from('tender_matches')
       .select('match_score, match_reasons, win_probability')
       .eq('tender_uuid', tenderId)
@@ -41,7 +44,7 @@ export async function POST(request: Request) {
       .maybeSingle();
 
     // Fetch buyer intel
-    const { data: buyerIntel } = await supabase
+    const { data: buyerIntel } = await db
       .from('intel_buyers')
       .select('persona_name, avg_discount, avg_bidder_count, top_winners')
       .eq('name', tender.buyer_name)
@@ -375,4 +378,3 @@ function generateFallbackResponse(question: string, context: any, locale: string
 
   return lines.join('\n');
 }
-

@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { getServerUser, getDataClient } from '@/utils/dev-auth';
 
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user } = await getServerUser(supabase);
     if (!user) return new NextResponse('Unauthorized', { status: 401 });
 
+    const db = await getDataClient(supabase);
+
     // Check tier
-    const { data: profile } = await supabase
+    const { data: profile } = await db
       .from('clients')
       .select('tier')
       .eq('email', user.email)
@@ -22,7 +25,7 @@ export async function POST(request: Request) {
     if (!tenderId) return NextResponse.json({ error: 'Missing tenderId' }, { status: 400 });
 
     // Fetch tender + insights
-    const { data: tender, error } = await supabase
+    const { data: tender, error } = await db
       .from('tenders')
       .select('tender_id, title, buyer_name, insights, estimated_value, currency, country, cpv_code')
       .eq('tender_uuid', tenderId)
