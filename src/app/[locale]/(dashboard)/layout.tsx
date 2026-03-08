@@ -35,7 +35,7 @@ export default async function DashboardLayout({
   const userEmail = profile?.email || user.email || '';
 
   return (
-    <div className="flex min-h-screen bg-zinc-50">
+    <div className="flex min-h-screen bg-zinc-50 overflow-x-hidden">
       <DashboardLayoutClient
         signOutAction={signOut}
         userInitials={userInitials}
@@ -43,7 +43,7 @@ export default async function DashboardLayout({
         userEmail={userEmail}
       >
         {/* Main Content */}
-        <main className="flex-1 md:ml-60 min-h-screen flex flex-col">
+        <main className="flex-1 min-w-0 md:ml-60 min-h-screen flex flex-col">
           <Suspense fallback={
             <header className="h-14 bg-white border-b border-zinc-200 flex items-center justify-end px-6 sticky top-0 z-30">
               <div className="flex gap-1">

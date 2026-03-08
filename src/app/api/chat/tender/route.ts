@@ -86,7 +86,7 @@ export async function POST(request: Request) {
 
     // Try Cloud Run microservice first
     try {
-      const res = await fetch(`${analyticsApiUrl}/api/v1/chat`, {
+      const res = await fetch(`${analyticsApiUrl}/api/v1/tender/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

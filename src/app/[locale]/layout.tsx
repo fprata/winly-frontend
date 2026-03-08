@@ -98,7 +98,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={inter.variable}>
-      <body className="bg-zinc-50 min-h-screen text-zinc-900 font-sans antialiased">
+      <body className="bg-zinc-50 min-h-screen text-zinc-900 font-sans antialiased overflow-x-hidden">
         <QueryProvider>
           <NextIntlClientProvider messages={messages}>
             {children}
