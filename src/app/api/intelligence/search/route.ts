@@ -12,6 +12,11 @@ export async function GET(request: NextRequest) {
 
   const supabase = createAdminClient();
 
+  // Cache search results for 60 s at the CDN edge; serve stale for up to 5 min while revalidating
+  const cacheHeaders = {
+    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+  };
+
   if (type === 'competitors') {
     const { data, error } = await supabase
       .from('intel_competitors')
@@ -20,7 +25,7 @@ export async function GET(request: NextRequest) {
       .limit(10);
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ data: data || [] });
+    return NextResponse.json({ data: data || [] }, { headers: cacheHeaders });
   }
 
   // Default: buyers
@@ -31,5 +36,5 @@ export async function GET(request: NextRequest) {
     .limit(10);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ data: data || [] });
+  return NextResponse.json({ data: data || [] }, { headers: cacheHeaders });
 }

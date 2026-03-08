@@ -18,5 +18,8 @@ export async function GET(request: NextRequest) {
     .order('publication_date', { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ data: data || [] });
+  // Buyer tender lists change only on daily sync — cache at CDN for 5 min, stale for 30 min
+  return NextResponse.json({ data: data || [] }, {
+    headers: { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=1800' },
+  });
 }
