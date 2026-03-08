@@ -1,4 +1,4 @@
-import { GoogleAuth } from 'google-auth-library';
+import { JWT } from 'google-auth-library';
 
 /**
  * Returns an Authorization header value for calling a Cloud Run service
@@ -22,12 +22,15 @@ export async function getCloudRunAuthHeader(targetUrl: string): Promise<string |
 
   try {
     const credentials = JSON.parse(credJson);
-    const auth = new GoogleAuth({ credentials });
     // audience must be the base service URL (no path)
     const audience = new URL(targetUrl).origin;
-    const client = await auth.getIdTokenClient(audience);
-    const headers = await client.getRequestHeaders(audience) as unknown as Record<string, string>;
-    return headers['Authorization'] ?? null;
+    const client = new JWT({
+      email: credentials.client_email,
+      key: credentials.private_key,
+      additionalClaims: { target_audience: audience },
+    });
+    const idToken = await client.fetchIdToken(audience);
+    return `Bearer ${idToken}`;
   } catch (err) {
     console.error('[gcp-auth] Failed to get identity token:', err);
     return null;
