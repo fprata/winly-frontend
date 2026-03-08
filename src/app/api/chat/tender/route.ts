@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { getServerUser, getDataClient } from '@/utils/dev-auth';
+import { getCloudRunAuthHeader } from '@/lib/gcp-auth';
 
 export async function POST(request: Request) {
   try {
@@ -84,11 +85,16 @@ export async function POST(request: Request) {
       },
     };
 
+    const authHeader = await getCloudRunAuthHeader(analyticsApiUrl);
+
     // Try Cloud Run microservice first
     try {
       const res = await fetch(`${analyticsApiUrl}/api/v1/tender/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authHeader ? { Authorization: authHeader } : {}),
+        },
         body: JSON.stringify({
           question,
           conversation_history: conversationHistory || [],

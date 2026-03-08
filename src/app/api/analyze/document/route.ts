@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
+import { getCloudRunAuthHeader } from '@/lib/gcp-auth';
 
 export async function POST(request: Request) {
   try {
@@ -80,12 +81,14 @@ export async function POST(request: Request) {
 
     // 3. AI Generation via Microservice
     const analyticsApiUrl = process.env.DOCUMENT_ANALYTICS_API_URL || 'http://localhost:8000';
-    
+    const authHeader = await getCloudRunAuthHeader(analyticsApiUrl);
+
     const formData = new FormData();
     formData.append('file', extractedFile, fileName);
 
     const analyticsResponse = await fetch(`${analyticsApiUrl}/api/v1/tender/upload`, {
       method: 'POST',
+      headers: authHeader ? { Authorization: authHeader } : {},
       body: formData,
     });
 

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { getServerUser, getDataClient } from '@/utils/dev-auth';
+import { getCloudRunAuthHeader } from '@/lib/gcp-auth';
 
 export async function POST(request: Request) {
   try {
@@ -35,10 +36,14 @@ export async function POST(request: Request) {
     if (!tender.insights) return NextResponse.json({ error: 'No insights available' }, { status: 422 });
 
     const analyticsApiUrl = process.env.DOCUMENT_ANALYTICS_API_URL || 'http://localhost:8000';
+    const authHeader = await getCloudRunAuthHeader(analyticsApiUrl);
 
     const res = await fetch(`${analyticsApiUrl}/api/v1/tender/export-questions`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(authHeader ? { Authorization: authHeader } : {}),
+      },
       body: JSON.stringify({
         tender_id: tender.tender_id,
         title: tender.title,
