@@ -158,7 +158,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
   return (
     <div className="pb-16">
       {/* Page Header */}
-      <header className="flex justify-between items-start mb-7">
+      <header className="flex flex-wrap justify-between items-start mb-7 gap-3">
         <div>
           <h1 className="text-[28px] font-extrabold tracking-tight text-zinc-950 leading-none mb-1">{t('title')}</h1>
           <p className="text-[14px] text-zinc-500">{t('subtitle')}</p>
@@ -170,7 +170,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
       </header>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-3 gap-5 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-8">
         <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
             <span className="text-[13px] font-medium text-zinc-500">{t('activeMatches') || 'Active Matches'}</span>
@@ -216,9 +216,9 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
       </div>
 
       {/* Section header with controls */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-2">
         <h2 className="text-[18px] font-bold text-zinc-900">{t('recentMatches') || 'Recent Matches'}</h2>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => setMinScoreFilter(minScoreFilter > 0 ? 0 : 60)}
             className="h-9 px-3 rounded-lg border border-zinc-200 bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 shadow-sm transition-all"
@@ -231,14 +231,14 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
           >
             <ArrowUpDown size={15} /> Score
           </button>
-          <div className="relative">
+          <div className="relative flex-1 sm:flex-none">
             <SearchIcon size={15} className="absolute left-2.5 top-2.5 text-zinc-400" />
             <input
               type="text"
               placeholder={t('searchPlaceholder') || "Search tenders..."}
               value={searchTerm}
               onChange={e => { setSearchTerm(e.target.value); setPage(0); }}
-              className="h-9 pl-8 pr-3 w-64 rounded-lg border border-zinc-300 text-sm outline-none bg-white shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-zinc-400 transition-all"
+              className="h-9 pl-8 pr-3 w-full sm:w-64 rounded-lg border border-zinc-300 text-sm outline-none bg-white shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 placeholder:text-zinc-400 transition-all"
             />
           </div>
         </div>
@@ -310,12 +310,12 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
               <Link
                 key={match.tender_id}
                 href={`/tenders/${match.tender_uuid}`}
-                className="bg-white rounded-xl border border-zinc-200 shadow-sm flex overflow-hidden cursor-pointer transition-all duration-200 hover:border-blue-500 hover:shadow-md hover:-translate-y-px group"
+                className="bg-white rounded-xl border border-zinc-200 shadow-sm flex flex-col sm:flex-row overflow-hidden cursor-pointer transition-all duration-200 hover:border-blue-500 hover:shadow-md hover:-translate-y-px group"
               >
                 {/* Score Column */}
-                <div className="w-[140px] shrink-0 bg-zinc-50 border-r border-zinc-200 flex flex-col items-center justify-center py-5 px-3 gap-2">
-                  <div className="relative w-20 h-20">
-                    <svg viewBox="0 0 80 80" width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                <div className="sm:w-[140px] sm:shrink-0 bg-zinc-50 border-b sm:border-b-0 sm:border-r border-zinc-200 flex flex-row sm:flex-col items-center sm:justify-center py-3 sm:py-5 px-4 sm:px-3 gap-3 sm:gap-2">
+                  <div className="relative w-14 h-14 sm:w-20 sm:h-20 shrink-0">
+                    <svg viewBox="0 0 80 80" width="100%" height="100%" style={{ transform: 'rotate(-90deg)' }}>
                       <circle cx="40" cy="40" r="34" stroke="#e4e4e7" strokeWidth="6" fill="none" />
                       <circle
                         cx="40" cy="40" r="34"
@@ -327,30 +327,32 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                       />
                     </svg>
                     <span
-                      className="absolute inset-0 flex items-center justify-center text-[22px] font-extrabold"
+                      className="absolute inset-0 flex items-center justify-center text-[18px] sm:text-[22px] font-extrabold"
                       style={{ color: scoreColor }}
                     >
                       {score}
                     </span>
                   </div>
-                  <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">{t('matchScore')}</span>
-                  <div className="w-full px-1 space-y-1">
-                    {miniBarData.map(bar => (
-                      <div key={bar.label} className="flex items-center gap-1">
-                        <span className="text-[9px] font-semibold text-zinc-400 uppercase w-7 text-right">{bar.label}</span>
-                        <div className="flex-1 h-[3px] bg-zinc-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full rounded-full"
-                            style={{ width: `${Math.min(bar.value, 100)}%`, backgroundColor: bar.color }}
-                          />
+                  <div className="flex flex-col sm:items-center gap-1 sm:gap-2 flex-1 sm:w-full">
+                    <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">{t('matchScore')}</span>
+                    <div className="w-full sm:px-1 space-y-1">
+                      {miniBarData.map(bar => (
+                        <div key={bar.label} className="flex items-center gap-1">
+                          <span className="text-[9px] font-semibold text-zinc-400 uppercase w-7 text-right">{bar.label}</span>
+                          <div className="flex-1 h-[3px] bg-zinc-200 rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full"
+                              style={{ width: `${Math.min(bar.value, 100)}%`, backgroundColor: bar.color }}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
 
                 {/* Body */}
-                <div className="flex-1 p-5 flex flex-col gap-1.5 min-w-0">
+                <div className="flex-1 p-4 sm:p-5 flex flex-col gap-1.5 min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <Badge color={priorityColor}>
                       {t(`matchTypes.${(match.priority || 'low').toLowerCase()}`)}
@@ -362,7 +364,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                     )}
                   </div>
 
-                  <h3 className="text-[15px] font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors leading-snug">
+                  <h3 className="text-[15px] font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors leading-snug line-clamp-2">
                     {match.title}
                   </h3>
 
@@ -377,7 +379,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                     )}
                   </div>
 
-                  <div className="flex items-center gap-4 mt-1">
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-1">
                     <div className="flex items-center gap-1.5">
                       <div className="w-[26px] h-[26px] rounded-md bg-emerald-50 flex items-center justify-center text-emerald-600">
                         <DollarSign size={13} />
@@ -408,7 +410,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                 </div>
 
                 {/* Arrow */}
-                <div className="w-11 shrink-0 flex items-center justify-center border-l border-zinc-200 text-zinc-400 group-hover:text-blue-600 transition-colors">
+                <div className="hidden sm:flex w-11 shrink-0 items-center justify-center border-l border-zinc-200 text-zinc-400 group-hover:text-blue-600 transition-colors">
                   <ChevronRight size={18} />
                 </div>
               </Link>
