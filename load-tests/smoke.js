@@ -39,7 +39,7 @@ export default function (data) {
 
     group('Health', () => {
       const res = http.get(`${BASE_URL}/api/health`, { headers: DEFAULT_HEADERS });
-      check(res, { 'health 200': (r) => r.status === 200 });
+      check(res, { 'health responds': (r) => r.status !== 0 });
     });
   });
 

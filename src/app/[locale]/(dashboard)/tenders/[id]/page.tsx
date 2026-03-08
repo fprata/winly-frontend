@@ -232,9 +232,11 @@ export default async function TenderDetailsPage({
 
   const isAwarded = !tender.is_active;
 
-  // Risk score from existing insights
-  const riskScore = tender.insights?.risk_assessment?.overall_risk_score ?? null;
-  const riskLevel = tender.insights?.risk_assessment?.risk_level ?? null;
+  // Risk score from existing insights — resolve language nesting (pt-PT / en-US / flat)
+  const insightsData = tender.insights?.['pt-PT'] || tender.insights?.['en-US'] || tender.insights;
+  const riskScore = insightsData?.risk_assessment?.overall_risk_score ?? null;
+  const riskLevel = insightsData?.risk_assessment?.risk_level ?? null;
+  const riskFactorsData = insightsData?.risk_assessment?.key_risk_factors ?? null;
 
   // Filter embedding before passing to client components
   const { embedding, ...tenderWithoutEmbedding } = tender;
@@ -274,6 +276,8 @@ export default async function TenderDetailsPage({
         <OverviewTab
           tenderId={id}
           tender={tenderForOverview}
+          derivedDocLink={derivedDocLink}
+          sourceLink={sourceLink}
           match={match}
           buyerIntel={buyerIntel ? {
             top_winners: buyerIntel.top_winners,
@@ -294,7 +298,7 @@ export default async function TenderDetailsPage({
           relatedTenders={relatedTenders}
           riskScore={riskScore}
           riskLevel={riskLevel}
-          riskFactors={tender.insights?.risk_assessment?.key_risk_factors}
+          riskFactors={riskFactorsData}
           userTier={userTier}
         />
       ),

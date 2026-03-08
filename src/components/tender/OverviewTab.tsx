@@ -39,6 +39,8 @@ interface OverviewTabProps {
     source_system?: string | null;
     tender_id?: string | null;
   };
+  derivedDocLink?: string | null;
+  sourceLink?: string | null;
   match: any | null;
   buyerIntel: any;
   relevantCompetitors: any[];
@@ -107,6 +109,8 @@ const DESCRIPTION_CHAR_LIMIT = 600;
 export function OverviewTab({
   tenderId,
   tender,
+  derivedDocLink,
+  sourceLink,
   match,
   buyerIntel,
   relevantCompetitors,
@@ -410,6 +414,18 @@ export function OverviewTab({
       <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
         <CardHeader icon={<IconBox color="blue"><Download size={16} /></IconBox>} title={t('actions')} />
         <div className="flex flex-wrap gap-3">
+          {/* View Documents — direct link to tender documents */}
+          {(derivedDocLink || sourceLink) && (
+            <a
+              href={derivedDocLink || sourceLink || '#'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-purple-600 text-white text-sm font-semibold hover:bg-purple-700 transition-colors"
+            >
+              <FileText size={16} /> {t('viewDocuments')}
+            </a>
+          )}
+
           {/* Analyze Documents → goes to Insights tab */}
           <Link
             href={`/tenders/${tenderId}?tab=insights`}

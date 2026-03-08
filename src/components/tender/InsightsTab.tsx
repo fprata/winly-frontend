@@ -19,17 +19,19 @@ export function InsightsTab({ tenderId, initialInsights, derivedDocLink, tier, o
 
   const handleInsightsGenerated = useCallback((insights: any) => {
     setCurrentInsights(insights);
-    if (insights?.risk_assessment?.overall_risk_score != null) {
+    const data = insights?.['pt-PT'] || insights?.['en-US'] || insights;
+    if (data?.risk_assessment?.overall_risk_score != null) {
       onRiskScoreUpdate?.(
-        insights.risk_assessment.overall_risk_score,
-        insights.risk_assessment.risk_level || 'unknown'
+        data.risk_assessment.overall_risk_score,
+        data.risk_assessment.risk_level || 'unknown'
       );
     }
   }, [onRiskScoreUpdate]);
 
-  const riskScore = currentInsights?.risk_assessment?.overall_risk_score;
-  const riskLevel = currentInsights?.risk_assessment?.risk_level;
-  const riskFactors = currentInsights?.risk_assessment?.key_risk_factors;
+  const insightsData = currentInsights?.['pt-PT'] || currentInsights?.['en-US'] || currentInsights;
+  const riskScore = insightsData?.risk_assessment?.overall_risk_score;
+  const riskLevel = insightsData?.risk_assessment?.risk_level;
+  const riskFactors = insightsData?.risk_assessment?.key_risk_factors;
 
   const isPro = tier === 'Professional' || tier === 'Enterprise';
 
