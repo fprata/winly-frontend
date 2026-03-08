@@ -300,10 +300,10 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
 
             const miniBarData = [
               { label: 'CPV', value: match.score_cpv || 0, color: '#8b5cf6' },
-              { label: 'Str', value: match.score_strategic || 0, color: '#0ea5e9' },
-              { label: 'AI', value: match.score_semantic || 0, color: '#14b8a6' },
+              { label: 'Loc', value: match.score_location || 0, color: '#f59e0b' },
+              { label: 'Cap', value: match.score_capacity || 0, color: '#0ea5e9' },
               { label: 'Key', value: match.score_keyword || 0, color: '#10b981' },
-              { label: 'Urg', value: match.score_location || 0, color: '#f59e0b' },
+              { label: 'Mkt', value: match.score_market_opp || 0, color: '#a1a1aa' },
             ];
 
             return (

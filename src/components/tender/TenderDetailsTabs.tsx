@@ -45,6 +45,8 @@ export function TenderDetailsTabs({ tabs, riskScore, riskLevel }: TenderDetailsT
     const tabFromUrl = searchParams.get('tab');
     if (tabFromUrl && visibleTabs.some(tab => tab.id === tabFromUrl)) {
       setActiveTab(tabFromUrl);
+    } else if (!tabFromUrl) {
+      setActiveTab(visibleTabs[0]?.id || 'overview');
     }
   }, [searchParams, visibleTabs]);
 

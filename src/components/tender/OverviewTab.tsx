@@ -251,10 +251,9 @@ export function OverviewTab({
               </div>
               <div>
                 {match.score_cpv > 0 && <ScoreBar label="CPV" value={match.score_cpv} color="#8b5cf6" />}
-                {match.score_strategic > 0 && <ScoreBar label={t('strategic')} value={match.score_strategic} color="#0ea5e9" />}
-                {match.score_semantic > 0 && <ScoreBar label={t('semantic')} value={match.score_semantic} color="#14b8a6" />}
-                {match.score_keyword > 0 && <ScoreBar label={t('keyword')} value={match.score_keyword} color="#10b981" />}
                 {match.score_location > 0 && <ScoreBar label={t('location')} value={match.score_location} color="#f59e0b" />}
+                {match.score_capacity > 0 && <ScoreBar label={t('capacity')} value={match.score_capacity} color="#0ea5e9" />}
+                {match.score_keyword > 0 && <ScoreBar label={t('keyword')} value={match.score_keyword} color="#10b981" />}
                 {match.score_market_opp > 0 && <ScoreBar label={t('marketOpp')} value={match.score_market_opp} color="#a1a1aa" />}
               </div>
             </>
