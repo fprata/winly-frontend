@@ -44,16 +44,23 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
   const t = useTranslations('intelligence.buyers');
   const locale = useLocale();
 
-  // Sync profile when props change (Server navigation)
+  // Sync only when the server sends a different profile (e.g. navigating via ?name= param).
+  // Deliberately excludes initialSearchResults — it's a new array reference on every server render
+  // and syncing it unconditionally would wipe client-side search state.
   useEffect(() => {
     setProfile(initialProfile);
     if (!initialProfile) {
+      // Only restore the server list when it's non-empty, so a transient empty
+      // server response doesn't wipe a valid client-side search result set.
+      if (initialSearchResults.length > 0) {
         setSearchResults(initialSearchResults);
-        setQuery("");
+      }
+      setQuery("");
     } else {
-        setQuery(initialProfile.name);
+      setQuery(initialProfile.name);
     }
-  }, [initialProfile, initialSearchResults]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialProfile]);
 
   // Reset filter when profile changes
   useEffect(() => {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, ReactNode } from 'react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useSearchParams, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { AlertTriangle } from 'lucide-react';
 
@@ -33,36 +33,40 @@ function getRiskTextColor(score: number): string {
 
 export function TenderDetailsTabs({ tabs, riskScore, riskLevel }: TenderDetailsTabsProps) {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations('tenders');
 
   const visibleTabs = tabs.filter(tab => !tab.hidden);
-  const initialTab = searchParams.get('tab') || visibleTabs[0]?.id || 'overview';
-  const [activeTab, setActiveTab] = useState(initialTab);
 
+  const [activeTab, setActiveTab] = useState(() => {
+    const tabFromUrl = searchParams.get('tab');
+    const ids = visibleTabs.map(t => t.id);
+    return (tabFromUrl && ids.includes(tabFromUrl)) ? tabFromUrl : (visibleTabs[0]?.id || 'overview');
+  });
+
+  // Sync only when the URL changes externally (browser back/forward) — not on every render.
   useEffect(() => {
     const tabFromUrl = searchParams.get('tab');
-    if (tabFromUrl && visibleTabs.some(tab => tab.id === tabFromUrl)) {
-      setActiveTab(tabFromUrl);
-    } else if (!tabFromUrl) {
-      setActiveTab(visibleTabs[0]?.id || 'overview');
-    }
-  }, [searchParams, visibleTabs]);
+    const ids = visibleTabs.map(t => t.id);
+    const resolved = (tabFromUrl && ids.includes(tabFromUrl)) ? tabFromUrl : (visibleTabs[0]?.id || 'overview');
+    setActiveTab(resolved);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
-    const params = new URLSearchParams(searchParams.toString());
+    // Use history.replaceState so the URL reflects the active tab
+    // without triggering a Next.js server re-render (router.replace would
+    // change searchParams → re-render the server page + refetch all data).
+    const params = new URLSearchParams(window.location.search);
     if (tabId === visibleTabs[0]?.id) {
       params.delete('tab');
     } else {
       params.set('tab', tabId);
     }
     const query = params.toString();
-    router.replace(`${pathname}${query ? `?${query}` : ''}`, { scroll: false });
+    window.history.replaceState(null, '', `${pathname}${query ? `?${query}` : ''}`);
   };
-
-  const activeContent = visibleTabs.find(tab => tab.id === activeTab)?.content || visibleTabs[0]?.content;
 
   return (
     <div>
@@ -89,10 +93,13 @@ export function TenderDetailsTabs({ tabs, riskScore, riskLevel }: TenderDetailsT
         ))}
       </div>
 
-      {/* Tab Content */}
-      <div className="animate-in fade-in duration-300">
-        {activeContent}
-      </div>
+      {/* Render all tabs but only show the active one — this keeps each tab's
+          internal state (e.g. InsightsTab's generated insights) alive across switches. */}
+      {visibleTabs.map(tab => (
+        <div key={tab.id} className={tab.id === activeTab ? 'animate-in fade-in duration-200' : 'hidden'}>
+          {tab.content}
+        </div>
+      ))}
     </div>
   );
 }
