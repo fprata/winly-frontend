@@ -11,6 +11,28 @@ import { toast } from './ui/Toast';
 
 const LOCALE_MAP: Record<string, string> = { pt: 'pt-PT', en: 'en-US' };
 
+function formatCurrency(value: any, currency: any, locale: string): string {
+  const num = typeof value === 'number' ? value : parseFloat(String(value).replace(',', '.'));
+  if (isNaN(num)) return '—';
+  const cur = typeof currency === 'string' && currency.length === 3 ? currency : 'EUR';
+  try {
+    return new Intl.NumberFormat(LOCALE_MAP[locale] || 'en-US', {
+      style: 'currency', currency: cur, maximumFractionDigits: 0,
+    }).format(num);
+  } catch {
+    return `${num.toLocaleString(LOCALE_MAP[locale] || 'en-US')} ${cur}`;
+  }
+}
+
+function formatIsoDate(iso: any, locale: string): string {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return String(iso);
+  return new Intl.DateTimeFormat(LOCALE_MAP[locale] || 'en-US', {
+    day: 'numeric', month: 'short', year: 'numeric',
+  }).format(d);
+}
+
 function resolveLocalizedInsights(insights: any, locale: string): any {
   const localeKey = LOCALE_MAP[locale] || 'en-US';
   if (insights?.['pt-PT'] || insights?.['en-US']) {
@@ -75,6 +97,8 @@ function InsightCard({ children, className }: { children: React.ReactNode; class
 export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onInsightsGenerated }: TenderInsightsProps) {
   const t = useTranslations('tenders');
   const locale = useLocale();
+  const fmtCurrency = (val: any, cur: any) => formatCurrency(val, cur, locale);
+  const fmtDate = (iso: any) => formatIsoDate(iso, locale);
   const [rawInsights, setRawInsights] = useState<any>(initialInsights);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
@@ -166,7 +190,9 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
             />
             <DataGroup
               label={t('insights.budget')}
-              value={`${insights.financials?.base_budget_value ?? '—'} ${insights.financials?.base_budget_currency ?? ''}`.trim() || '—'}
+              value={insights.financials?.base_budget_value != null
+                ? fmtCurrency(insights.financials.base_budget_value, insights.financials.base_budget_currency)
+                : '—'}
               valueClass="text-[16px] font-extrabold text-blue-600"
             />
             <DataGroup
@@ -191,7 +217,7 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
             />
             <DataGroup
               label={t('submissionDeadline')}
-              value={insights.proposal_timeline?.submission_deadline_iso || '—'}
+              value={fmtDate(insights.proposal_timeline?.submission_deadline_iso)}
             />
             <DataGroup
               label={t('insights.demoRequired')}

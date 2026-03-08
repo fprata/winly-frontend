@@ -9,7 +9,6 @@ import {
   Link2,
   Download,
   Sparkles,
-  MessageCircle,
   ListChecks,
   AlertTriangle,
   ShieldCheck,
@@ -431,14 +430,6 @@ export function OverviewTab({
             {exportingPdf ? <Loader2 size={16} className="animate-spin" /> : isPro ? <FileDown size={16} /> : <Lock size={16} />}
             {exportingPdf ? t('export.exporting') : t('export.pdf')}
           </button>
-
-          {/* Ask AI Assistant → goes to chat tab */}
-          <Link
-            href={`/tenders/${tenderId}?tab=chat`}
-            className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-emerald-500 text-white text-sm font-semibold hover:bg-emerald-600 transition-colors"
-          >
-            <MessageCircle size={16} /> {t('askAiAssistant')}
-          </Link>
 
           {/* Export Questions */}
           <button
