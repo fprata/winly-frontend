@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useTransition } from 'react';
 import { Link, useRouter, usePathname } from '@/navigation'
 import { useSearchParams } from 'next/navigation';
 import {
@@ -19,7 +19,6 @@ import {
   Globe,
   TrendingUp,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import { useTranslations, useLocale } from 'next-intl';
 import { getCpvDescription, CPV_DIVISIONS } from '@/utils/cpv-data';
 import { Button } from './ui/Button';
@@ -103,8 +102,9 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
   const [tenders, setTenders] = useState<Tender[]>(initialTenders);
   const [total, setTotal] = useState(initialTotal);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const isFirstRender = useRef(true);
   const t = useTranslations('explorer');
   const tCommon = useTranslations('common');
 
@@ -130,33 +130,36 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
   const pageSize = PAGINATION.DEFAULT_PAGE_SIZE;
 
   // Count active filters (excluding defaults)
-  const activeFilterCount = [
+  const activeFilterCount = useMemo(() => [
     country !== "All",
     cpv !== "All",
     minValue !== "",
     maxValue !== "",
     status !== "All",
-  ].filter(Boolean).length;
+  ].filter(Boolean).length, [country, cpv, minValue, maxValue, status]);
 
+  // Sync tenders when server provides fresh data (after navigation)
   useEffect(() => {
-    const urlQuery = searchParams.get('q') || "";
-    const urlCountry = searchParams.get('country') || "All";
-    const urlCpv = searchParams.get('cpv') || "All";
-    const urlMinValue = searchParams.get('minValue') || "";
-    const urlMaxValue = searchParams.get('maxValue') || "";
-    const urlStatus = searchParams.get('status') || "All";
-    const urlSort = searchParams.get('sort') || "newest";
-    const urlPage = parseInt(searchParams.get('page') || "0");
+    setTenders(initialTenders);
+    setTotal(initialTotal);
+  }, [initialTenders, initialTotal]);
 
-    setQuery(urlQuery);
-    setCountry(urlCountry);
-    setCpv(urlCpv);
-    setMinValue(urlMinValue);
-    setMaxValue(urlMaxValue);
-    setStatus(urlStatus);
-    setSort(urlSort);
-    setPage(urlPage);
-    fetchTenders(urlQuery, urlCountry, urlCpv, urlMinValue, urlMaxValue, urlStatus, urlSort, urlPage);
+  // Sync filter UI state from URL (for browser back/forward)
+  useEffect(() => {
+    setQuery(searchParams.get('q') || "");
+    setCountry(searchParams.get('country') || "All");
+    setCpv(searchParams.get('cpv') || "All");
+    setMinValue(searchParams.get('minValue') || "");
+    setMaxValue(searchParams.get('maxValue') || "");
+    setStatus(searchParams.get('status') || "All");
+    setSort(searchParams.get('sort') || "newest");
+    setPage(parseInt(searchParams.get('page') || "0"));
+
+    // On mount the server already provided data — skip the extra client fetch
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
   }, [searchParams]);
 
   const updateUrl = (
@@ -175,40 +178,9 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
     if (newPage > 0) params.set('page', newPage.toString());
 
     const qs = params.toString();
-    router.push(qs ? `${pathname}?${qs}` : pathname);
-  };
-
-  const fetchTenders = async (
-    q: string, c: string, cpvFilter: string,
-    minVal: string, maxVal: string, statusFilter: string,
-    sortBy: string, p: number
-  ) => {
-    setLoading(true);
-    setError(null);
-
-    const params = new URLSearchParams();
-    if (q) params.set('q', q);
-    if (c !== 'All') params.set('country', c);
-    if (cpvFilter !== 'All') params.set('cpv', cpvFilter);
-    if (minVal) params.set('minValue', minVal);
-    if (maxVal) params.set('maxValue', maxVal);
-    if (statusFilter !== 'All') params.set('status', statusFilter);
-    if (sortBy !== 'newest') params.set('sort', sortBy);
-    if (p > 0) params.set('page', p.toString());
-
-    try {
-      const res = await fetch(`/api/explorer/search?${params.toString()}`);
-      if (!res.ok) throw new Error('Search failed');
-      const { data, count } = await res.json();
-      setTenders(data || []);
-      setTotal(count || 0);
-    } catch (err) {
-      console.error("Search failed:", err);
-      setError(tCommon('errorLoadingData') || "Error loading data");
-      setTenders([]);
-      setTotal(0);
-    }
-    setLoading(false);
+    startTransition(() => {
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    });
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -264,33 +236,37 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
   const from = page * pageSize + 1;
   const to = Math.min((page + 1) * pageSize, total);
 
-  const cpvOptions = CPV_DIVISIONS.map(d => ({
+  const cpvOptions = useMemo(() => CPV_DIVISIONS.map(d => ({
     value: d.value,
     label: locale === 'pt' ? d.label_pt : d.label,
-  }));
+  })), [locale]);
 
   // Active filter chips
-  const filterChips: { key: string; label: string }[] = [];
-  if (country !== "All") {
-    const c = COUNTRY_OPTIONS.find(o => o.value === country);
-    filterChips.push({ key: "country", label: c ? (locale === 'pt' ? c.labelPt : c.label) : country });
-  }
-  if (cpv !== "All") {
-    const div = cpvOptions.find(o => o.value === cpv);
-    filterChips.push({ key: "cpv", label: div ? div.label : cpv });
-  }
-  if (minValue) filterChips.push({ key: "minValue", label: `≥ €${Number(minValue).toLocaleString()}` });
-  if (maxValue) filterChips.push({ key: "maxValue", label: `≤ €${Number(maxValue).toLocaleString()}` });
-  if (status !== "All") filterChips.push({ key: "status", label: status === "active" ? t('active') : status === "inactive" ? t('inactive') : t('awarded') });
+  const filterChips = useMemo(() => {
+    const chips: { key: string; label: string }[] = [];
+    if (country !== "All") {
+      const c = COUNTRY_OPTIONS.find(o => o.value === country);
+      chips.push({ key: "country", label: c ? (locale === 'pt' ? c.labelPt : c.label) : country });
+    }
+    if (cpv !== "All") {
+      const div = cpvOptions.find(o => o.value === cpv);
+      chips.push({ key: "cpv", label: div ? div.label : cpv });
+    }
+    if (minValue) chips.push({ key: "minValue", label: `≥ €${Number(minValue).toLocaleString()}` });
+    if (maxValue) chips.push({ key: "maxValue", label: `≤ €${Number(maxValue).toLocaleString()}` });
+    if (status !== "All") chips.push({ key: "status", label: status === "active" ? t('active') : status === "inactive" ? t('inactive') : t('awarded') });
+    return chips;
+  }, [country, cpv, cpvOptions, minValue, maxValue, status, locale, t]);
 
   // Stat calculations
-  const closingThisWeek = tenders.filter(tender => {
+  const closingThisWeek = useMemo(() => tenders.filter(tender => {
     if (!tender.submission_deadline) return false;
     const days = getDaysUntil(tender.submission_deadline);
     return days >= 0 && days <= 7;
-  }).length;
+  }).length, [tenders]);
 
-  const totalValue = tenders.reduce((sum, t) => sum + (t.estimated_value || 0), 0);
+  const totalValue = useMemo(() => tenders.reduce((sum, t) => sum + (t.estimated_value || 0), 0), [tenders]);
+
   const formatTotalValue = (val: number) => {
     if (val >= 1_000_000_000) return `€${(val / 1_000_000_000).toFixed(1)}B`;
     if (val >= 1_000_000) return `€${(val / 1_000_000).toFixed(1)}M`;
@@ -525,7 +501,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
             </button>
           )}
         </div>
-        {total > 0 && !loading && (
+        {total > 0 && !isPending && (
           <p className="text-xs text-zinc-400 font-medium">
             {t('showingResults', { from: from.toLocaleString(), to: to.toLocaleString(), total: total.toLocaleString() })}
           </p>
@@ -550,7 +526,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
       )}
 
       {/* Results */}
-      {loading ? (
+      {isPending ? (
         <div className="space-y-3">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="bg-white rounded-xl border border-zinc-200 p-6 animate-pulse">
@@ -705,7 +681,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
       )}
 
       {/* Pagination */}
-      {total > pageSize && !loading && (
+      {total > pageSize && !isPending && (
         <div className="flex items-center justify-between mt-6 bg-white rounded-xl border border-zinc-200 shadow-sm px-5 py-3">
           <p className="text-xs text-zinc-400 font-medium">
             {t('pageOf', { current: page + 1, total: totalPages })}

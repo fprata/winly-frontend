@@ -44,9 +44,11 @@ export default async function ExplorerPage({
     .eq('email', user.email)
     .single();
 
+  const COLUMNS = 'tender_id, tender_uuid, title, buyer_name, estimated_value, final_contract_value, currency, publication_date, submission_deadline, country, cpv_code, is_active, tender_matches(match_score)';
+
   let supabaseQuery = db
     .from('tenders')
-    .select('*, tender_matches(match_score)', { count: 'estimated' });
+    .select(COLUMNS, { count: 'estimated' });
 
   if (query) {
     supabaseQuery = supabaseQuery.textSearch('search_vector', query, { type: 'websearch', config: 'public.portuguese_unaccent' });

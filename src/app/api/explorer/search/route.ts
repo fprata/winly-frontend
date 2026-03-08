@@ -15,9 +15,11 @@ export async function GET(request: NextRequest) {
 
   const supabase = createAdminClient();
 
+  const COLUMNS = 'tender_id, tender_uuid, title, buyer_name, estimated_value, final_contract_value, currency, publication_date, submission_deadline, country, cpv_code, is_active, tender_matches(match_score)';
+
   let query = supabase
     .from('tenders')
-    .select('*, tender_matches(match_score)', { count: 'estimated' });
+    .select(COLUMNS, { count: 'estimated' });
 
   if (q) {
     query = query.textSearch('search_vector', q, { type: 'websearch', config: 'public.portuguese_unaccent' });
