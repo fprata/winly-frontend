@@ -22,7 +22,7 @@ export async function getCloudRunAuthHeader(targetUrl: string): Promise<string |
 
   try {
     const credentials = JSON.parse(credJson);
-    const auth = new GoogleAuth({ credentials, scopes: 'https://www.googleapis.com/auth/cloud-platform' });
+    const auth = new GoogleAuth({ credentials });
     // audience must be the base service URL (no path)
     const audience = new URL(targetUrl).origin;
     const client = await auth.getIdTokenClient(audience);
