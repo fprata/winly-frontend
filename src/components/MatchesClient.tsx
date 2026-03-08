@@ -156,7 +156,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
   };
 
   return (
-    <div className="pb-16">
+    <div className="pb-16 overflow-x-hidden">
       {/* Page Header */}
       <header className="flex flex-wrap justify-between items-start mb-7 gap-3">
         <div>
@@ -289,7 +289,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
           subtitle={t('adjustFilters')}
         />
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 w-full min-w-0">
           {paginatedMatches.map((match: any) => {
             const daysLeft = getDaysRemaining(match.submission_deadline);
             const score = Math.round(match.match_score);
@@ -310,7 +310,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
               <Link
                 key={match.tender_id}
                 href={`/tenders/${match.tender_uuid}`}
-                className="bg-white rounded-xl border border-zinc-200 shadow-sm flex flex-col sm:flex-row overflow-hidden cursor-pointer transition-all duration-200 hover:border-blue-500 hover:shadow-md hover:-translate-y-px group"
+                className="w-full min-w-0 bg-white rounded-xl border border-zinc-200 shadow-sm flex flex-col sm:flex-row overflow-hidden cursor-pointer transition-all duration-200 hover:border-blue-500 hover:shadow-md hover:-translate-y-px group"
               >
                 {/* Score Column */}
                 <div className="sm:w-[140px] sm:shrink-0 bg-zinc-50 border-b sm:border-b-0 sm:border-r border-zinc-200 flex flex-row sm:flex-col items-center sm:justify-center py-3 sm:py-5 px-4 sm:px-3 gap-3 sm:gap-2">
@@ -368,8 +368,8 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                     {match.title}
                   </h3>
 
-                  <div className="flex items-center gap-1.5 text-[13px] text-zinc-500">
-                    <Building2 size={13} />
+                  <div className="flex items-center gap-1.5 text-[13px] text-zinc-500 min-w-0">
+                    <Building2 size={13} className="shrink-0" />
                     <span className="truncate">{match.buyer_name}</span>
                     {match.country && (
                       <>
@@ -395,7 +395,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                       </div>
                     )}
                     {match.cpv_code && (
-                      <Badge color="blue">
+                      <Badge color="blue" className="hidden sm:inline-flex max-w-[240px] truncate">
                         {match.cpv_code} — {getCpvDescription(match.cpv_code, locale)}
                       </Badge>
                     )}
