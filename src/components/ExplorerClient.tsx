@@ -276,7 +276,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
   return (
     <div className="max-w-6xl mx-auto">
       {/* Page Header */}
-      <header className="flex justify-between items-start mb-7">
+      <header className="flex flex-wrap justify-between items-start mb-7 gap-3">
         <div>
           <h1 className="text-[28px] font-extrabold tracking-tight text-zinc-950 leading-none mb-1">{t('title')}</h1>
           <p className="text-[14px] text-zinc-500">{t('subtitle')}</p>
@@ -288,7 +288,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
       </header>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-3 gap-5 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-8">
         <div className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
             <span className="text-[13px] font-medium text-zinc-500">{t('totalActive') || 'Total Active'}</span>
@@ -332,7 +332,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
 
       {/* Search Bar */}
       <Card className="p-2 mb-4">
-        <form onSubmit={handleSearch} className="flex items-center gap-2">
+        <form onSubmit={handleSearch} className="flex items-center gap-2 flex-wrap">
           <Input
             icon={<SearchIcon size={18} />}
             placeholder={t('searchPlaceholder')}
@@ -589,7 +589,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                 className="bg-white rounded-xl border border-zinc-200 shadow-sm p-5 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer group"
                 onClick={() => router.push(`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent('/explorer')}`)}
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                   {/* Left: Tender Info */}
                   <div className="flex-1 min-w-0">
                     <Link
@@ -603,7 +603,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                     <div className="flex items-center gap-2 mt-1.5">
                       <span className="flex items-center gap-1 text-xs text-zinc-500 font-medium">
                         <Building2 size={12} className="text-zinc-400 shrink-0" />
-                        <span className="truncate max-w-[200px]">{tender.buyer_name}</span>
+                        <span className="truncate max-w-[140px] sm:max-w-[200px]">{tender.buyer_name}</span>
                       </span>
                       <span className="text-zinc-200">·</span>
                       <span className="text-xs text-zinc-500">
@@ -652,12 +652,12 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                   </div>
 
                   {/* Right: Value + Action */}
-                  <div className="text-right shrink-0 flex flex-col justify-between gap-2">
+                  <div className="flex sm:flex-col sm:text-right sm:shrink-0 items-center sm:items-end justify-between sm:justify-between gap-3 sm:gap-2">
                     <div>
                       <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
                         {tender.final_contract_value ? t('finalValue') : t('estValue')}
                       </div>
-                      <div className={`text-[20px] font-extrabold leading-tight tabular-nums ${tender.final_contract_value ? 'text-emerald-600' : 'text-zinc-900'}`}>
+                      <div className={`text-[17px] sm:text-[20px] font-extrabold leading-tight tabular-nums ${tender.final_contract_value ? 'text-emerald-600' : 'text-zinc-900'}`}>
                         {(tender.final_contract_value || tender.estimated_value)
                           ? `€${((tender.final_contract_value || tender.estimated_value) as number).toLocaleString()}`
                           : <span className="text-sm text-zinc-300 font-medium">{t('noValue')}</span>
@@ -667,7 +667,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                         <div className="text-xs text-zinc-400 line-through">€{tender.estimated_value.toLocaleString()} est.</div>
                       )}
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-end shrink-0">
                       <div className="w-8 h-8 rounded-lg bg-zinc-50 border border-zinc-200 flex items-center justify-center text-zinc-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all">
                         <ChevronRight size={16} />
                       </div>
