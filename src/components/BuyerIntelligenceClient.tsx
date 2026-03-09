@@ -303,7 +303,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
           {/* Search + Controls */}
           <div className="flex items-center justify-between mb-4">
             <div className="text-[13px] text-zinc-400">
-              {searchResults.length > 0 ? `${searchResults.length} buyers found` : ''}
+              {searchResults.length > 0 ? t('buyersFound', { count: searchResults.length }) : ''}
             </div>
             <div className="flex items-center gap-2">
               <div className="relative">
@@ -329,10 +329,10 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
           <div className="flex flex-col gap-3">
             {searchResults.map((b: any, i: number) => {
               const getBuyerTag = (b: any): { label: string; color: string } => {
-                if ((b.avg_bidder_count || 0) >= 5) return { label: 'Competitive', color: 'blue' };
-                if ((b.total_contracts || 0) >= 100) return { label: 'High Volume', color: 'green' };
-                if ((b.avg_discount || 0) < 5) return { label: 'Loyal', color: 'amber' };
-                return { label: 'Active', color: 'zinc' };
+                if ((b.avg_bidder_count || 0) >= 5) return { label: t('tagCompetitive'), color: 'blue' };
+                if ((b.total_contracts || 0) >= 100) return { label: t('tagHighVolume'), color: 'green' };
+                if ((b.avg_discount || 0) < 5) return { label: t('tagLoyal'), color: 'amber' };
+                return { label: t('tagActive'), color: 'zinc' };
               };
               const tag = getBuyerTag(b);
               const formatVal = (val: number) => {
@@ -354,27 +354,27 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                         <MapPin size={12} />
                         {b.country || 'Unknown'}
                         <span className="text-zinc-300">·</span>
-                        Public Procurement
+                        {t('publicProcurement')}
                       </div>
                       <div className="flex gap-6">
                         <div>
                           <div className="text-[20px] font-extrabold text-blue-600 leading-none">{formatVal(b.total_spend)}</div>
-                          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Total Spend</div>
+                          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">{t('totalSpend')}</div>
                         </div>
                         <div>
                           <div className="text-[20px] font-extrabold text-zinc-900 leading-none">{b.total_contracts || 0}</div>
-                          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Contracts</div>
+                          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">{t('contracts')}</div>
                         </div>
                         {b.avg_discount != null && (
                           <div>
                             <div className="text-[20px] font-extrabold text-emerald-600 leading-none">{b.avg_discount.toFixed(1)}%</div>
-                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Avg Discount</div>
+                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">{t('avgDiscount')}</div>
                           </div>
                         )}
                         {b.avg_bidder_count != null && (
                           <div>
                             <div className="text-[20px] font-extrabold text-zinc-900 leading-none">{b.avg_bidder_count.toFixed(1)}</div>
-                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Avg Bidders</div>
+                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">{t('avgBidders')}</div>
                           </div>
                         )}
                       </div>
@@ -382,7 +382,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                     <div className="flex flex-col items-end gap-2 shrink-0">
                       <Badge color={tag.color as any}>{tag.label}</Badge>
                       <div className="flex items-center gap-1 text-[13px] text-zinc-400 group-hover:text-blue-600 transition-colors">
-                        <span>View profile</span>
+                        <span>{t('viewProfile')}</span>
                         <ArrowRight size={14} />
                       </div>
                     </div>
@@ -496,33 +496,33 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
               <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8 h-full flex flex-col">
                 <h3 className="text-sm font-black text-zinc-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                   <Activity size={18} className="text-blue-600" />
-                  Buyer Strategy & DNA
+                  {t('buyerStrategyDna')}
                 </h3>
                 <div className="space-y-6 flex-1">
                   <div className="flex justify-between items-end pb-4 border-b border-zinc-50">
                     <div>
-                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Openness Score</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('opennessScore')}</p>
                       <p className="text-2xl font-black text-emerald-600 tabular-nums">{(100 - (metrics.direct_award_pct || 0)).toFixed(1)}%</p>
-                      <p className="text-[9px] font-bold text-zinc-400 mt-1">Inverse of Direct Awards</p>
+                      <p className="text-[9px] font-bold text-zinc-400 mt-1">{t('inverseOfDirectAwards')}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Loyalty Score</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('loyaltyScore')}</p>
                       <p className="text-2xl font-black text-indigo-600 tabular-nums">
                         {profile.incumbency_rate_pct ? profile.incumbency_rate_pct : '—'}%
                       </p>
-                      <p className="text-[9px] font-bold text-zinc-400 mt-1">% Spend to Top Vendor</p>
+                      <p className="text-[9px] font-bold text-zinc-400 mt-1">{t('spendToTopVendor')}</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Avg Bidders</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('avgBidders')}</p>
                       <div className="flex items-center gap-2">
                         <p className="text-xl font-black text-zinc-900 tabular-nums">{metrics.avg_bidder_count !== null ? metrics.avg_bidder_count.toFixed(1) : '—'}</p>
-                        <span className="text-[10px] font-bold text-zinc-400">per tender</span>
+                        <span className="text-[10px] font-bold text-zinc-400">{t('perTender')}</span>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Avg Discount</p>
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">{t('avgDiscount')}</p>
                       <p className={`text-xl font-black tabular-nums ${metrics.avg_discount < 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
                         {metrics.avg_discount ? `${metrics.avg_discount.toFixed(1)}%` : '0.0%'}
                       </p>
@@ -535,7 +535,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
               <div className="bg-white rounded-xl border border-zinc-200/60 shadow-sm p-8 h-full flex flex-col">
                 <h3 className="text-sm font-black text-zinc-900 uppercase tracking-widest mb-6 flex items-center gap-2">
                   <Lock size={18} className="text-rose-600" />
-                  Risk Factors
+                  {t('riskFactors')}
                 </h3>
                 <div className="space-y-6 flex-1">
                   <div className="flex justify-between items-end pb-4 border-b border-zinc-50">
@@ -692,11 +692,11 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                             </div>
                             <div className="flex justify-between items-center mt-2">
                                 <p className="text-[10px] font-bold text-zinc-500">{formatValue(td.estimated_value)} (Est)</p>
-                                <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 uppercase">Active</span>
+                                <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 uppercase">{t('active')}</span>
                             </div>
                         </div>
                     )) : (
-                        <p className="text-zinc-400 italic text-sm text-center py-4">No active tenders found.</p>
+                        <p className="text-zinc-400 italic text-sm text-center py-4">{t('noActiveTenders')}</p>
                     )}
                 </div>
              </div>
@@ -731,7 +731,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                             </div>
                         </div>
                     )) : (
-                        <p className="text-zinc-400 italic text-sm text-center py-4">No awarded tenders found.</p>
+                        <p className="text-zinc-400 italic text-sm text-center py-4">{t('noAwardedTenders')}</p>
                     )}
                 </div>
              </div>

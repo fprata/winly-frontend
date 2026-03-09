@@ -153,7 +153,7 @@ export function OverviewTab({
 
   const riskColor = riskScore == null ? '' : riskScore <= 3 ? '#10b981' : riskScore <= 6 ? '#f59e0b' : '#dc2626';
   const riskBg = riskScore == null ? '' : riskScore <= 3 ? 'bg-emerald-500' : riskScore <= 6 ? 'bg-amber-500' : 'bg-rose-600';
-  const riskLabel = riskScore == null ? '' : riskScore <= 3 ? 'LOW RISK' : riskScore <= 6 ? 'MEDIUM RISK' : 'HIGH RISK';
+  const riskLabel = riskScore == null ? '' : riskScore <= 3 ? t('riskLow') : riskScore <= 6 ? t('riskMedium') : t('riskHigh');
 
   const handleExportPdf = async () => {
     if (!isPro) return;
@@ -347,15 +347,15 @@ export function OverviewTab({
             <DataGroup label={t('historicalRange')}>
               <div className="flex gap-4 mt-1">
                 <div>
-                  <span className="text-[11px] text-zinc-400 font-semibold uppercase block">LOW</span>
+                  <span className="text-[11px] text-zinc-400 font-semibold uppercase block">{t('benchmarkLow')}</span>
                   <span className="text-base font-bold">{formatValue(tender.estimated_value * (1 + (benchmarks.p25_discount_rate || -0.2)))}</span>
                 </div>
                 <div>
-                  <span className="text-[11px] text-zinc-400 font-semibold uppercase block">MEDIAN</span>
+                  <span className="text-[11px] text-zinc-400 font-semibold uppercase block">{t('benchmarkMedian')}</span>
                   <span className="text-base font-bold">{formatValue(tender.estimated_value * (1 + (benchmarks.median_discount_rate || -0.1)))}</span>
                 </div>
                 <div>
-                  <span className="text-[11px] text-zinc-400 font-semibold uppercase block">HIGH</span>
+                  <span className="text-[11px] text-zinc-400 font-semibold uppercase block">{t('benchmarkHigh')}</span>
                   <span className="text-base font-bold">{formatValue(tender.estimated_value)}</span>
                 </div>
               </div>

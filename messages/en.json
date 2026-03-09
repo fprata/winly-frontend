@@ -236,7 +236,12 @@
     "totalValue": "Total Value",
     "deadlinesIn7Days": "Deadlines in 7 days",
     "acrossActiveTenders": "Across active tenders",
-    "allTenders": "All Tenders"
+    "allTenders": "All Tenders",
+    "liveFeedActive": "{total} active tenders",
+    "liveFeed": "Live Feed",
+    "newToday": "+{count} new today",
+    "acrossAllMarkets": "Across all markets",
+    "estAbbrev": "est."
   },
   "intelligence": {
     "market": {
@@ -331,7 +336,25 @@
       "cpvSectors": "CPV Sectors",
       "sectorSpecialization": "Sector Specialization",
       "noResults": "No buyers found",
-      "noResultsHint": "Try a different search term"
+      "noResultsHint": "Try a different search term",
+      "buyersFound": "{count} buyers found",
+      "contracts": "Contracts",
+      "avgDiscount": "Avg. Discount",
+      "publicProcurement": "Public Procurement",
+      "buyerStrategyDna": "Buyer Strategy & DNA",
+      "opennessScore": "Openness Score",
+      "inverseOfDirectAwards": "Inverse of Direct Awards",
+      "loyaltyScore": "Loyalty Score",
+      "spendToTopVendor": "% Spend to Top Vendor",
+      "perTender": "per tender",
+      "riskFactors": "Risk Factors",
+      "active": "Active",
+      "noActiveTenders": "No active tenders found.",
+      "noAwardedTenders": "No awarded tenders found.",
+      "tagCompetitive": "Competitive",
+      "tagHighVolume": "High Volume",
+      "tagLoyal": "Loyal",
+      "tagActive": "Active"
     },
     "competitors": {
       "title": "Competitor Intelligence",
@@ -412,7 +435,12 @@
       "awards": "awards",
       "bidders": "bidders",
       "noResults": "No competitors found",
-      "noResultsHint": "Try a different search term"
+      "noResultsHint": "Try a different search term",
+      "competitorsTracked": "{count} competitors tracked",
+      "contractsWon": "Contracts Won",
+      "tagTopThreat": "Top Threat",
+      "tagHighThreat": "High Threat",
+      "tagModerate": "Moderate"
     },
     "personas": {
       "title": "Market Personas",
@@ -458,7 +486,8 @@
           "name": "The Rising Star",
           "desc": "Successful SMEs that are rapidly expanding their client base. They have broken out of \"Local\" status and are scaling up."
         }
-      }
+      },
+      "viewFullGuide": "View Full Guide"
     }
   },
   "matches": {
@@ -498,7 +527,7 @@
       "proceduralExperience": "Procedural Experience"
     },
     "cpvMatch": "CPV Match",
-    "strategicFit": "Strategic Fit",
+    "strategicFit": "Strategic fit",
     "aiSemantic": "AI Semantic",
     "keywordMatch": "Keyword Match",
     "location": "Location",
@@ -507,7 +536,19 @@
     "managePipeline": "Manage pipeline",
     "recentMatches": "Recent Matches",
     "acrossAllMatches": "Across all active matches",
-    "pipelineValue": "Pipeline Value"
+    "pipelineValue": "Pipeline Value",
+    "liveFeedActive": "Live Feed Active",
+    "filters": "Filters",
+    "sortByScore": "Score",
+    "clearAll": "Clear all",
+    "showingResults": "Showing {from}–{to} of {total} matches",
+    "tryAgain": "Try again",
+    "sectorMatch": "Sector match",
+    "budgetFit": "Budget fit",
+    "win": "Win",
+    "previous": "Previous",
+    "pageOf": "Page {current} of {total}",
+    "next": "Next"
   },
   "tenders": {
     "loading": "Consulting cloud database...",
@@ -714,7 +755,14 @@
       "analysisComplete": "AI Analysis complete!",
       "analysisError": "Failed to analyze document",
       "analysisException": "An error occurred during analysis"
-    }
+    },
+    "riskLow": "LOW RISK",
+    "riskMedium": "MEDIUM RISK",
+    "riskHigh": "HIGH RISK",
+    "benchmarkLow": "LOW",
+    "benchmarkMedian": "MEDIAN",
+    "benchmarkHigh": "HIGH",
+    "estAbbrev": "est."
   },
   "profile": {
     "title": "Bidding Profile",
@@ -758,7 +806,24 @@
     "enterpriseDesc": "Everything in Professional, Bid/No-Bid assistant, team collaboration, pipeline CRM, API access, unlimited seats.",
     "upgradeToStarter": "Upgrade to Starter",
     "upgradeToProfessional": "Upgrade to Professional",
-    "upgradeToEnterprise": "Upgrade to Enterprise"
+    "upgradeToEnterprise": "Upgrade to Enterprise",
+    "lookupFailed": "Lookup failed",
+    "companyNameUpdated": "Company name updated from records",
+    "useThisName": "Use this name",
+    "vatNotFoundDesc": "We couldn't find this company in our historical database. You can still save it to build your own history.",
+    "vatInvalidDesc": "Please double-check the Tax Number format.",
+    "emailNotifications": "Email Notifications",
+    "dailyDigest": "Daily match digest",
+    "dailyDigestDesc": "Receive a daily summary of your top-matching tenders by email",
+    "minMatchScore": "Minimum match score to include",
+    "score50": "50+ (more matches)",
+    "score60": "60+ (recommended)",
+    "score70": "70+ (high quality only)",
+    "score80": "80+ (only top matches)",
+    "saving": "Saving…",
+    "saveNotifications": "Save notifications",
+    "notificationsSaved": "Notification preferences saved",
+    "notificationsSaveFailed": "Failed to save notification preferences"
   },
   "about": {
     "heroTitle": "Democratizing Access to",

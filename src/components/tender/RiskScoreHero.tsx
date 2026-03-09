@@ -18,7 +18,7 @@ function getRiskConfig(score: number) {
     badgeBg: '#10b981',
     scoreColor: '#10b981',
     icon: Shield,
-    label: 'LOW RISK',
+    labelKey: 'riskLow' as const,
   };
   if (score <= 6) return {
     strokeColor: '#f59e0b',
@@ -27,7 +27,7 @@ function getRiskConfig(score: number) {
     badgeBg: '#f59e0b',
     scoreColor: '#f59e0b',
     icon: ShieldAlert,
-    label: 'MEDIUM RISK',
+    labelKey: 'riskMedium' as const,
   };
   return {
     strokeColor: '#dc2626',
@@ -36,7 +36,7 @@ function getRiskConfig(score: number) {
     badgeBg: '#dc2626',
     scoreColor: '#dc2626',
     icon: AlertTriangle,
-    label: 'HIGH RISK',
+    labelKey: 'riskHigh' as const,
   };
 }
 
@@ -72,7 +72,7 @@ export function RiskScoreHero({ score, level, factors }: RiskScoreHeroProps) {
             className="inline-block mt-2 px-3 py-1 rounded text-white text-[13px] font-bold"
             style={{ backgroundColor: config.badgeBg }}
           >
-            {config.label}
+            {t(config.labelKey)}
           </span>
         </div>
 
@@ -86,7 +86,7 @@ export function RiskScoreHero({ score, level, factors }: RiskScoreHeroProps) {
               ))}
             </ul>
           ) : (
-            <p className="text-[14px] text-zinc-400">No specific risk factors identified.</p>
+            <p className="text-[14px] text-zinc-400">{t('noRiskFactors')}</p>
           )}
         </div>
       </div>

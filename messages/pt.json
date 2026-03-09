@@ -236,7 +236,12 @@
     "totalValue": "Valor Total",
     "deadlinesIn7Days": "Prazos em 7 dias",
     "acrossActiveTenders": "Em todos os concursos ativos",
-    "allTenders": "Todos os Concursos"
+    "allTenders": "Todos os Concursos",
+    "liveFeedActive": "{total} concursos ativos",
+    "liveFeed": "Feed em Tempo Real",
+    "newToday": "+{count} novos hoje",
+    "acrossAllMarkets": "Em todos os mercados",
+    "estAbbrev": "est."
   },
   "intelligence": {
     "market": {
@@ -331,7 +336,25 @@
       "cpvSectors": "Setores CPV",
       "sectorSpecialization": "Especialização por Setor",
       "noResults": "Nenhuma entidade encontrada",
-      "noResultsHint": "Tente um termo de pesquisa diferente"
+      "noResultsHint": "Tente um termo de pesquisa diferente",
+      "buyersFound": "{count} compradores encontrados",
+      "contracts": "Contratos",
+      "avgDiscount": "Desconto Médio",
+      "publicProcurement": "Contratação Pública",
+      "buyerStrategyDna": "Estratégia & DNA do Comprador",
+      "opennessScore": "Índice de Abertura",
+      "inverseOfDirectAwards": "Inverso dos Ajustes Diretos",
+      "loyaltyScore": "Índice de Lealdade",
+      "spendToTopVendor": "% Gasto no Top Fornecedor",
+      "perTender": "por concurso",
+      "riskFactors": "Fatores de Risco",
+      "active": "Ativo",
+      "noActiveTenders": "Nenhum concurso ativo encontrado.",
+      "noAwardedTenders": "Nenhum contrato adjudicado encontrado.",
+      "tagCompetitive": "Competitivo",
+      "tagHighVolume": "Alto Volume",
+      "tagLoyal": "Leal",
+      "tagActive": "Ativo"
     },
     "competitors": {
       "title": "Inteligência da Concorrência",
@@ -412,7 +435,12 @@
       "awards": "adjudicações",
       "bidders": "licitantes",
       "noResults": "Nenhum concorrente encontrado",
-      "noResultsHint": "Tente um termo de pesquisa diferente"
+      "noResultsHint": "Tente um termo de pesquisa diferente",
+      "competitorsTracked": "{count} concorrentes rastreados",
+      "contractsWon": "Contratos Ganhos",
+      "tagTopThreat": "Ameaça Máxima",
+      "tagHighThreat": "Ameaça Alta",
+      "tagModerate": "Moderado"
     },
     "personas": {
       "title": "Market Personas",
@@ -458,7 +486,8 @@
           "name": "A Estrela em Ascensão",
           "desc": "PMEs de sucesso que estão a expandir rapidamente a sua base de clientes. Saíram do estatuto \"Local\" e estão a crescer."
         }
-      }
+      },
+      "viewFullGuide": "Ver Guia Completo"
     }
   },
   "matches": {
@@ -498,7 +527,7 @@
       "proceduralExperience": "Experiência Procedimental"
     },
     "cpvMatch": "Correspondência CPV",
-    "strategicFit": "Ajuste Estratégico",
+    "strategicFit": "Alinhamento estratégico",
     "aiSemantic": "Semântica IA",
     "keywordMatch": "Correspondência de Palavras-chave",
     "location": "Localização",
@@ -507,7 +536,19 @@
     "managePipeline": "Gerir pipeline",
     "recentMatches": "Correspondências Recentes",
     "acrossAllMatches": "Em todas as correspondências ativas",
-    "pipelineValue": "Valor do Pipeline"
+    "pipelineValue": "Valor do Pipeline",
+    "liveFeedActive": "Feed em Tempo Real",
+    "filters": "Filtros",
+    "sortByScore": "Pontuação",
+    "clearAll": "Limpar tudo",
+    "showingResults": "A mostrar {from}–{to} de {total} correspondências",
+    "tryAgain": "Tentar novamente",
+    "sectorMatch": "Setor correspondente",
+    "budgetFit": "Orçamento adequado",
+    "win": "Vitória",
+    "previous": "Anterior",
+    "pageOf": "Página {current} de {total}",
+    "next": "Seguinte"
   },
   "tenders": {
     "loading": "A consultar a base de dados na cloud...",
@@ -714,7 +755,14 @@
       "analysisComplete": "Análise de IA concluída!",
       "analysisError": "Falha ao analisar o documento",
       "analysisException": "Ocorreu um erro durante a análise"
-    }
+    },
+    "riskLow": "RISCO BAIXO",
+    "riskMedium": "RISCO MÉDIO",
+    "riskHigh": "RISCO ALTO",
+    "benchmarkLow": "BAIXO",
+    "benchmarkMedian": "MEDIANA",
+    "benchmarkHigh": "ALTO",
+    "estAbbrev": "est."
   },
   "profile": {
     "title": "Perfil de Licitação",
@@ -758,7 +806,24 @@
     "enterpriseDesc": "Tudo no Professional, assistente Bid/No-Bid, colaboração de equipa, CRM de pipeline, acesso API, utilizadores ilimitados.",
     "upgradeToStarter": "Upgrade para Starter",
     "upgradeToProfessional": "Upgrade para Professional",
-    "upgradeToEnterprise": "Upgrade para Enterprise"
+    "upgradeToEnterprise": "Upgrade para Enterprise",
+    "lookupFailed": "Falha na pesquisa",
+    "companyNameUpdated": "Nome da empresa atualizado a partir dos registos",
+    "useThisName": "Usar este nome",
+    "vatNotFoundDesc": "Não encontrámos esta empresa na nossa base de dados histórica. Pode guardar mesmo assim para construir o seu próprio histórico.",
+    "vatInvalidDesc": "Por favor verifique o formato do Número de Contribuinte.",
+    "emailNotifications": "Notificações por Email",
+    "dailyDigest": "Resumo diário de correspondências",
+    "dailyDigestDesc": "Receba um resumo diário dos seus concursos com melhor correspondência por email",
+    "minMatchScore": "Pontuação mínima de correspondência a incluir",
+    "score50": "50+ (mais correspondências)",
+    "score60": "60+ (recomendado)",
+    "score70": "70+ (apenas alta qualidade)",
+    "score80": "80+ (apenas top correspondências)",
+    "saving": "A guardar…",
+    "saveNotifications": "Guardar notificações",
+    "notificationsSaved": "Preferências de notificação guardadas",
+    "notificationsSaveFailed": "Falha ao guardar preferências de notificação"
   },
   "about": {
     "heroTitle": "Democratizando o Acesso à",

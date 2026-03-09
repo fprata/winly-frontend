@@ -147,7 +147,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
 
   // Active filter chips
   const activeChips: { key: string; label: string }[] = [];
-  if (minScoreFilter > 0) activeChips.push({ key: 'score', label: `Score: ${minScoreFilter}+` });
+  if (minScoreFilter > 0) activeChips.push({ key: 'score', label: `${t('sortByScore')}: ${minScoreFilter}+` });
   if (selectedCountry !== 'All') activeChips.push({ key: 'country', label: selectedCountry });
 
   const removeChip = (key: string) => {
@@ -165,7 +165,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
         </div>
         <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-semibold border border-emerald-100">
           <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-          Live Feed Active
+          {t('liveFeedActive')}
         </div>
       </header>
 
@@ -223,13 +223,13 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
             onClick={() => setMinScoreFilter(minScoreFilter > 0 ? 0 : 60)}
             className="h-9 px-3 rounded-lg border border-zinc-200 bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 shadow-sm transition-all"
           >
-            <Filter size={15} /> Filters
+            <Filter size={15} /> {t('filters')}
           </button>
           <button
             onClick={() => setMinScoreFilter(minScoreFilter === 75 ? 0 : 75)}
             className={`h-9 px-3 rounded-lg border text-sm font-medium flex items-center gap-1.5 shadow-sm transition-all ${minScoreFilter === 75 ? 'border-blue-300 bg-blue-50 text-blue-700' : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50'}`}
           >
-            <ArrowUpDown size={15} /> Score
+            <ArrowUpDown size={15} /> {t('sortByScore')}
           </button>
           <div className="relative flex-1 sm:flex-none">
             <SearchIcon size={15} className="absolute left-2.5 top-2.5 text-zinc-400" />
@@ -256,7 +256,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
             </span>
           ))}
           <button onClick={() => { setMinScoreFilter(0); setSelectedCountry('All'); }} className="text-xs text-zinc-400 hover:text-zinc-600">
-            Clear all
+            {t('clearAll')}
           </button>
         </div>
       )}
@@ -264,7 +264,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
       {/* Results count */}
       {!loading && displayedMatches.length > 0 && (
         <div className="text-xs text-zinc-400 mb-3">
-          Showing {from}–{to} of {displayedMatches.length.toLocaleString()} matches
+          {t('showingResults', { from, to, total: displayedMatches.length.toLocaleString() })}
         </div>
       )}
 
@@ -279,7 +279,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
         <div className="p-8 text-center rounded-xl bg-red-50 border border-red-100">
           <p className="text-red-600 font-medium mb-2">{error}</p>
           <button onClick={() => window.location.reload()} className="text-sm text-red-700 underline hover:text-red-800">
-            Try again
+            {t('tryAgain')}
           </button>
         </div>
       ) : displayedMatches.length === 0 ? (
@@ -391,7 +391,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                         <div className="w-[26px] h-[26px] rounded-md bg-indigo-50 flex items-center justify-center text-indigo-600">
                           <Target size={13} />
                         </div>
-                        <span className="text-sm font-semibold text-zinc-900">Win: {Math.round(match.win_probability)}%</span>
+                        <span className="text-sm font-semibold text-zinc-900">{t('win')}: {Math.round(match.win_probability)}%</span>
                       </div>
                     )}
                     {match.cpv_code && (
@@ -402,10 +402,10 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                   </div>
 
                   <div className="flex flex-wrap gap-1.5 mt-1">
-                    {match.priority === 'High' && <Badge color="blue">Sector match</Badge>}
-                    {match.win_probability >= 60 && <Badge color="blue">Budget fit</Badge>}
-                    {match.score_strategic >= 70 && <Badge color="blue">Strategic fit</Badge>}
-                    {match.country && <Badge color="zinc">{match.country === 'PT' ? 'Portugal' : match.country}</Badge>}
+                    {match.priority === 'High' && <Badge color="blue">{t('sectorMatch')}</Badge>}
+                    {match.win_probability >= 60 && <Badge color="blue">{t('budgetFit')}</Badge>}
+                    {match.score_strategic >= 70 && <Badge color="blue">{t('strategicFit')}</Badge>}
+                    {match.country && <Badge color="zinc">{match.country}</Badge>}
                   </div>
                 </div>
 
@@ -427,17 +427,17 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
             onClick={() => setPage(p => p - 1)}
             className="h-9 px-3 rounded-lg border border-zinc-200 bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
-            <ChevronLeft size={15} /> Previous
+            <ChevronLeft size={15} /> {t('previous')}
           </button>
           <span className="text-sm text-zinc-500">
-            Page {page + 1} of {totalPages}
+            {t('pageOf', { current: page + 1, total: totalPages })}
           </span>
           <button
             disabled={page >= totalPages - 1}
             onClick={() => setPage(p => p + 1)}
             className="h-9 px-3 rounded-lg border border-zinc-200 bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 flex items-center gap-1.5 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
-            Next <ChevronRight size={15} />
+            {t('next')} <ChevronRight size={15} />
           </button>
         </div>
       )}

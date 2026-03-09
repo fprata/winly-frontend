@@ -61,7 +61,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
         toast("error", t('vatInvalid'));
       }
     } catch (e) {
-      toast("error", "Lookup failed");
+      toast("error", t('lookupFailed'));
     } finally {
       setIsLookingUp(false);
     }
@@ -88,10 +88,10 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(notifPrefs),
       });
-      if (res.ok) toast("success", "Notification preferences saved");
-      else toast("error", "Failed to save notification preferences");
+      if (res.ok) toast("success", t('notificationsSaved'));
+      else toast("error", t('notificationsSaveFailed'));
     } catch {
-      toast("error", "Failed to save notification preferences");
+      toast("error", t('notificationsSaveFailed'));
     } finally {
       setNotifSaving(false);
     }
@@ -222,10 +222,10 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
                     className="bg-white border-emerald-200 text-emerald-700 hover:bg-emerald-50"
                     onClick={() => {
                       setProfile({ ...profile, name: lookupResult.company.name });
-                      toast("info", "Company name updated from records");
+                      toast("info", t('companyNameUpdated'));
                     }}
                   >
-                    Use this name
+                    {t('useThisName')}
                   </Button>
                 </div>
               ) : (
@@ -238,9 +238,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
                       {lookupResult.valid ? t('vatNotFound') : t('vatInvalid')}
                     </p>
                     <p className="text-xs text-amber-700 mt-0.5">
-                      {lookupResult.valid 
-                        ? "We couldn't find this company in our historical database. You can still save it to build your own history."
-                        : "Please double-check the Tax Number format."}
+                      {lookupResult.valid ? t('vatNotFoundDesc') : t('vatInvalidDesc')}
                     </p>
                   </div>
                 </div>
@@ -310,13 +308,13 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
 
       {/* Notifications */}
       <Card>
-        <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-4">Email Notifications</p>
+        <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-4">{t('emailNotifications')}</p>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-zinc-800">Daily match digest</p>
-              <p className="text-xs text-zinc-400 mt-0.5">Receive a daily summary of your top-matching tenders by email</p>
+              <p className="text-sm font-medium text-zinc-800">{t('dailyDigest')}</p>
+              <p className="text-xs text-zinc-400 mt-0.5">{t('dailyDigestDesc')}</p>
             </div>
             <button
               type="button"
@@ -338,24 +336,24 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
           {notifPrefs.email_digest_enabled && (
             <div>
               <label className="text-xs font-medium text-zinc-600 block mb-1.5">
-                Minimum match score to include
+                {t('minMatchScore')}
               </label>
               <select
                 value={notifPrefs.min_score_threshold}
                 onChange={e => setNotifPrefs(p => ({ ...p, min_score_threshold: Number(e.target.value) }))}
                 className="text-sm border border-zinc-200 rounded-md px-3 py-1.5 text-zinc-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value={50}>50+ (more matches)</option>
-                <option value={60}>60+ (recommended)</option>
-                <option value={70}>70+ (high quality only)</option>
-                <option value={80}>80+ (only top matches)</option>
+                <option value={50}>{t('score50')}</option>
+                <option value={60}>{t('score60')}</option>
+                <option value={70}>{t('score70')}</option>
+                <option value={80}>{t('score80')}</option>
               </select>
             </div>
           )}
 
           <div className="flex justify-end">
             <Button type="button" variant="secondary" size="sm" onClick={saveNotifPrefs} disabled={notifSaving}>
-              {notifSaving ? 'Saving…' : 'Save notifications'}
+              {notifSaving ? t('saving') : t('saveNotifications')}
             </Button>
           </div>
         </div>

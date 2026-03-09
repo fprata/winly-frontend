@@ -11,6 +11,7 @@ interface PersonaBadgeProps {
 export function PersonaBadge({ personaName }: PersonaBadgeProps) {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations('intelligence.personas.types');
+  const tPersonas = useTranslations('intelligence.personas');
 
   // Map the persona_name from DB/Cluster logic to the translation keys
   const getPersonaKey = (name: string) => {
@@ -80,7 +81,7 @@ export function PersonaBadge({ personaName }: PersonaBadgeProps) {
                 className="text-[10px] font-black text-blue-400 uppercase tracking-widest hover:underline flex items-center gap-1"
                 onClick={(e) => e.stopPropagation()}
               >
-                View Full Guide
+                {tPersonas('viewFullGuide')}
               </a>
             </div>
           </div>

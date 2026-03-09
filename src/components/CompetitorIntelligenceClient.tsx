@@ -107,7 +107,7 @@ export function CompetitorIntelligenceClient({
           {/* Search + Controls */}
           <div className="flex items-center justify-between mb-4">
             <div className="text-[13px] text-zinc-400">
-              {searchResults.length > 0 ? `${searchResults.length} competitors tracked` : ''}
+              {searchResults.length > 0 ? t('competitorsTracked', { count: searchResults.length }) : ''}
             </div>
             <div className="flex items-center gap-2">
               <div className="relative">
@@ -134,9 +134,9 @@ export function CompetitorIntelligenceClient({
             {searchResults.map((c: any, i: number) => {
               const getThreatTag = (c: any): { label: string; color: string } => {
                 const wr = c.win_rate_pct || 0;
-                if (wr >= 60) return { label: 'Top Threat', color: 'rose' };
-                if (wr >= 45) return { label: 'High Threat', color: 'amber' };
-                return { label: 'Moderate', color: 'zinc' };
+                if (wr >= 60) return { label: t('tagTopThreat'), color: 'rose' };
+                if (wr >= 45) return { label: t('tagHighThreat'), color: 'amber' };
+                return { label: t('tagModerate'), color: 'zinc' };
               };
               const tag = getThreatTag(c);
               const formatVal = (val: number) => {
@@ -157,38 +157,34 @@ export function CompetitorIntelligenceClient({
                       <div className="flex items-center gap-1.5 text-[13px] text-zinc-500 mb-4">
                         <MapPin size={12} />
                         {c.country || 'Unknown'}
-                        <span className="text-zinc-300">·</span>
-                        IT Consulting &amp; Services
-                        <span className="text-zinc-300">·</span>
-                        Active since {new Date().getFullYear() - 5}
                       </div>
                       <div className="flex gap-6">
                         {c.win_rate_pct != null && (
                           <div>
                             <div className="text-[20px] font-extrabold text-blue-600 leading-none">{c.win_rate_pct.toFixed(0)}%</div>
-                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Win Rate</div>
+                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">{t('winRate')}</div>
                           </div>
                         )}
                         {c.total_revenue != null && (
                           <div>
                             <div className="text-[20px] font-extrabold text-zinc-900 leading-none">{formatVal(c.total_revenue)}</div>
-                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Revenue</div>
+                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">{t('revenue')}</div>
                           </div>
                         )}
                         <div>
                           <div className="text-[20px] font-extrabold text-zinc-900 leading-none">{c.total_wins || 0}</div>
-                          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Contracts Won</div>
+                          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">{t('contractsWon')}</div>
                         </div>
                         {c.avg_discount_pct != null && (
                           <div>
                             <div className="text-[20px] font-extrabold text-emerald-600 leading-none">{c.avg_discount_pct.toFixed(1)}%</div>
-                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Avg Discount</div>
+                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">{t('avgDiscount')}</div>
                           </div>
                         )}
                         {c.buyer_diversity != null && (
                           <div>
                             <div className="text-[20px] font-extrabold text-zinc-900 leading-none">{c.buyer_diversity}</div>
-                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">Unique Buyers</div>
+                            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">{t('uniqueClients')}</div>
                           </div>
                         )}
                       </div>
@@ -196,7 +192,7 @@ export function CompetitorIntelligenceClient({
                     <div className="flex flex-col items-end gap-2 shrink-0">
                       <Badge color={tag.color as any}>{tag.label}</Badge>
                       <div className="flex items-center gap-1 text-[13px] text-zinc-400 group-hover:text-blue-600 transition-colors">
-                        <span>View profile</span>
+                        <span>{t('viewProfile')}</span>
                         <ArrowRight size={14} />
                       </div>
                     </div>

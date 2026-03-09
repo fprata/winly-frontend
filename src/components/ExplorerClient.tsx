@@ -283,7 +283,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
         </div>
         <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-semibold border border-emerald-100">
           <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-          {total > 0 ? `${total.toLocaleString()} active tenders` : 'Live Feed'}
+          {total > 0 ? t('liveFeedActive', { total: total.toLocaleString() }) : t('liveFeed')}
         </div>
       </header>
 
@@ -298,7 +298,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
           </div>
           <div className="text-[32px] font-bold tracking-tight text-zinc-900 leading-none">{total.toLocaleString()}</div>
           <div className="mt-2 text-[13px] text-zinc-500">
-            {tenders.length > 0 ? `+${tenders.filter(t => getDaysAgo(t.publication_date) === 0).length} new today` : 'Across all markets'}
+            {tenders.length > 0 ? t('newToday', { count: tenders.filter(td => getDaysAgo(td.publication_date) === 0).length }) : t('acrossAllMarkets')}
           </div>
         </div>
 
@@ -664,7 +664,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                         }
                       </div>
                       {tender.final_contract_value && tender.estimated_value && (
-                        <div className="text-xs text-zinc-400 line-through">€{tender.estimated_value.toLocaleString()} est.</div>
+                        <div className="text-xs text-zinc-400 line-through">€{tender.estimated_value.toLocaleString()} {t('estAbbrev')}</div>
                       )}
                     </div>
                     <div className="flex justify-end shrink-0">
