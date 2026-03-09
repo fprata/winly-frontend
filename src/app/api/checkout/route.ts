@@ -61,12 +61,11 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ url: session.url });
   } catch (err: any) {
-    console.error('Stripe Checkout Detailed Error:', {
-        message: err.message,
-        type: err.type,
-        code: err.code,
-        stack: err.stack
+    console.error('Stripe Checkout Error:', {
+      message: err.message,
+      type: err.type,
+      code: err.code,
     });
-    return new NextResponse(`Internal Server Error: ${err.message}`, { status: 500 });
+    return NextResponse.json({ error: 'Checkout session creation failed' }, { status: 500 });
   }
 }

@@ -1,17 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createAdminClient } from '@/utils/supabase/server';
+import { createAdminClient, createClient } from '@/utils/supabase/server';
+import { getServerUser } from '@/utils/dev-auth';
+
+const ALLOWED_SORTS = new Set(['newest', 'valueDesc', 'valueAsc', 'matchScore']);
+const ALLOWED_STATUSES = new Set(['All', 'active', 'inactive', 'awarded']);
 
 export async function GET(request: NextRequest) {
+  const sessionClient = await createClient();
+  const { user } = await getServerUser(sessionClient);
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const { searchParams } = request.nextUrl;
-  const q = searchParams.get('q') || '';
+  const q = (searchParams.get('q') || '').slice(0, 500); // cap query length
   const country = searchParams.get('country') || 'All';
   const cpv = searchParams.get('cpv') || 'All';
   const minValue = searchParams.get('minValue');
   const maxValue = searchParams.get('maxValue');
-  const status = searchParams.get('status') || 'All';
-  const sort = searchParams.get('sort') || 'newest';
-  const page = parseInt(searchParams.get('page') || '0');
+  const rawStatus = searchParams.get('status') || 'All';
+  const rawSort = searchParams.get('sort') || 'newest';
+  const page = Math.max(0, parseInt(searchParams.get('page') || '0'));
   const pageSize = 15;
+
+  // Whitelist enum-like params to prevent unexpected filter injection
+  const status = ALLOWED_STATUSES.has(rawStatus) ? rawStatus : 'All';
+  const sort = ALLOWED_SORTS.has(rawSort) ? rawSort : 'newest';
 
   const supabase = createAdminClient();
 

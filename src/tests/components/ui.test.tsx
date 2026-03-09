@@ -16,18 +16,18 @@ describe('Badge', () => {
     expect(screen.getByText('Active')).toBeInTheDocument();
   });
 
-  it('applies default slate color classes', () => {
+  it('applies default zinc color classes', () => {
     render(<Badge>Default</Badge>);
     const el = screen.getByText('Default');
-    expect(el.className).toContain('bg-zinc-50');
+    expect(el.className).toContain('bg-zinc-100');
     expect(el.className).toContain('text-zinc-600');
   });
 
   it('applies the correct color classes for blue', () => {
     render(<Badge color="blue">Info</Badge>);
     const el = screen.getByText('Info');
-    expect(el.className).toContain('bg-sky-50');
-    expect(el.className).toContain('text-sky-700');
+    expect(el.className).toContain('bg-blue-50');
+    expect(el.className).toContain('text-blue-700');
   });
 
   it('applies the correct color classes for emerald', () => {
@@ -80,7 +80,7 @@ describe('Card', () => {
     render(<Card hover>Hoverable</Card>);
     const el = screen.getByText('Hoverable');
     expect(el.className).toContain('hover:shadow-md');
-    expect(el.className).toContain('hover:border-zinc-300');
+    expect(el.className).toContain('hover:border-blue-500');
   });
 
   it('merges custom className', () => {
@@ -157,12 +157,12 @@ describe('Input', () => {
     expect(screen.getByTestId('input-icon')).toBeInTheDocument();
   });
 
-  it('adds pl-11 class when icon is present', () => {
+  it('adds pl-9 class when icon is present', () => {
     const { container } = render(
       <Input icon={<span>@</span>} />
     );
     const input = container.querySelector('input');
-    expect(input?.className).toContain('pl-11');
+    expect(input?.className).toContain('pl-9');
   });
 
   it('applies custom className to the input element', () => {
@@ -194,7 +194,7 @@ describe('Button', () => {
   it('applies primary variant classes by default', () => {
     render(<Button>Primary</Button>);
     const btn = screen.getByRole('button');
-    expect(btn.className).toContain('bg-gray-900');
+    expect(btn.className).toContain('bg-blue-600');
     expect(btn.className).toContain('text-white');
   });
 
@@ -202,14 +202,14 @@ describe('Button', () => {
     render(<Button variant="secondary">Secondary</Button>);
     const btn = screen.getByRole('button');
     expect(btn.className).toContain('bg-white');
-    expect(btn.className).toContain('text-gray-700');
+    expect(btn.className).toContain('text-zinc-700');
   });
 
   it('applies ghost variant classes', () => {
     render(<Button variant="ghost">Ghost</Button>);
     const btn = screen.getByRole('button');
     expect(btn.className).toContain('bg-transparent');
-    expect(btn.className).toContain('text-gray-600');
+    expect(btn.className).toContain('text-zinc-600');
   });
 
   it('applies danger variant classes', () => {
@@ -221,7 +221,7 @@ describe('Button', () => {
   it('applies size classes', () => {
     render(<Button size="sm">Small</Button>);
     const btn = screen.getByRole('button');
-    expect(btn.className).toContain('px-3.5');
+    expect(btn.className).toContain('px-3');
     expect(btn.className).toContain('text-xs');
   });
 

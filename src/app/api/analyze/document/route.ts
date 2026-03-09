@@ -1,13 +1,28 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
+import { getServerUser, getDataClient } from '@/utils/dev-auth';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { getCloudRunAuthHeader } from '@/lib/gcp-auth';
+import { isSafeUrl } from '@/lib/security';
+
+const MAX_DOC_BYTES = 50 * 1024 * 1024; // 50 MB
+const ALLOWED_CONTENT_TYPES = new Set(['application/pdf', 'application/zip', 'application/octet-stream', 'text/plain', 'application/x-zip-compressed']);
 
 export async function POST(request: Request) {
   try {
+    const sessionClient = await createClient();
+    const { user } = await getServerUser(sessionClient);
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
     const payload = await request.json().catch(() => ({}));
     const { tenderId, documentUrl } = payload;
 
     if (!tenderId) return NextResponse.json({ error: 'Missing tenderId' }, { status: 400 });
+
+    // Validate user-supplied documentUrl to prevent SSRF
+    if (documentUrl && !isSafeUrl(documentUrl)) {
+      return NextResponse.json({ error: 'Invalid document URL' }, { status: 400 });
+    }
 
     const supabase = createAdminClient();
 
@@ -22,7 +37,8 @@ export async function POST(request: Request) {
 
     // 2. Collect and Prioritize URLs
     const rawUrls: string[] = [];
-    if (documentUrl?.startsWith('http')) rawUrls.push(documentUrl);
+    // documentUrl already validated above; DB URLs are trusted
+    if (documentUrl && isSafeUrl(documentUrl)) rawUrls.push(documentUrl);
     
     [tender.procedure_documents_url, tender.document_urls].forEach(field => {
       if (field) field.split(',').forEach((u: string) => {
@@ -44,11 +60,21 @@ export async function POST(request: Request) {
     for (const url of urlsToTry) {
       try {
         console.log(`[AnalyzeAPI] Fetching: ${url}`);
-        const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, cache: 'no-store' });
+        const res = await fetch(url, {
+          headers: { 'User-Agent': 'Winly/1.0' },
+          cache: 'no-store',
+          signal: AbortSignal.timeout(20_000),
+        });
         if (!res.ok) continue;
+
+        // Validate content type
+        const ct = res.headers.get('content-type')?.split(';')[0].trim() || '';
+        const isAllowedType = ALLOWED_CONTENT_TYPES.has(ct) || ct.includes('pdf') || ct.includes('zip') || ct.includes('octet');
+        if (!isAllowedType) { console.warn(`[AnalyzeAPI] Blocked content-type: ${ct}`); continue; }
 
         const buffer = await res.arrayBuffer();
         if (buffer.byteLength < 500) continue;
+        if (buffer.byteLength > MAX_DOC_BYTES) { console.warn(`[AnalyzeAPI] File too large: ${buffer.byteLength}`); continue; }
         
         extractedFile = new Blob([buffer]);
         fetchedFrom = url;
@@ -90,6 +116,7 @@ export async function POST(request: Request) {
       method: 'POST',
       headers: authHeader ? { Authorization: authHeader } : {},
       body: formData,
+      signal: AbortSignal.timeout(120_000), // 2 min for AI processing
     });
 
     if (!analyticsResponse.ok) {

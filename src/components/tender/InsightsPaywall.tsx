@@ -105,7 +105,9 @@ function UpgradeCTA() {
         body: JSON.stringify({ tier: 'Professional' }),
       });
       const data = await res.json();
-      if (data.url) window.location.href = data.url;
+      if (data.url && /^https:\/\/(checkout\.)?stripe\.com\//.test(data.url)) {
+        window.location.href = data.url;
+      }
     } catch {
       // handled silently
     }

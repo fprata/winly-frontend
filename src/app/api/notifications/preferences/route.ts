@@ -35,8 +35,19 @@ export async function PATCH(request: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const db = await getDataClient(supabase)
-  const body = await request.json()
+
+  let body: any;
+  try { body = await request.json() } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }) }
+
   const { email_digest_enabled, min_score_threshold } = body
+
+  const VALID_THRESHOLDS = new Set([50, 60, 70, 80]);
+  if (typeof email_digest_enabled !== 'boolean') {
+    return NextResponse.json({ error: 'email_digest_enabled must be boolean' }, { status: 400 });
+  }
+  if (!VALID_THRESHOLDS.has(Number(min_score_threshold))) {
+    return NextResponse.json({ error: 'min_score_threshold must be one of 50, 60, 70, 80' }, { status: 400 });
+  }
 
   const { data: client } = await db
     .from('clients')

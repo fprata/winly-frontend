@@ -121,7 +121,9 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
 
       if (!response.ok) throw new Error('Network response was not ok');
       const { url } = await response.json();
-      window.location.href = url;
+      if (url && /^https:\/\/(checkout\.)?stripe\.com\//.test(url)) {
+        window.location.href = url;
+      }
     } catch (error) {
       console.error("Upgrade failed:", error);
       toast("error", t('upgradeError'));

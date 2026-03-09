@@ -95,6 +95,7 @@ export async function POST(request: Request) {
           'Content-Type': 'application/json',
           ...(authHeader ? { Authorization: authHeader } : {}),
         },
+        signal: AbortSignal.timeout(30_000),
         body: JSON.stringify({
           question,
           conversation_history: conversationHistory || [],

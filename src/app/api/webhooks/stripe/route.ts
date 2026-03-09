@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     );
   } catch (err: any) {
     console.error('Webhook signature verification failed:', err.message);
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+    return new NextResponse('Webhook signature verification failed', { status: 400 });
   }
 
   const session = event.data.object as any;

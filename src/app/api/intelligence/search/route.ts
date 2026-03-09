@@ -1,13 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createAdminClient } from '@/utils/supabase/server';
+import { createAdminClient, createClient } from '@/utils/supabase/server';
+import { getServerUser } from '@/utils/dev-auth';
+
+const ALLOWED_TYPES = new Set(['buyers', 'competitors']);
 
 export async function GET(request: NextRequest) {
+  const sessionClient = await createClient();
+  const { user } = await getServerUser(sessionClient);
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const { searchParams } = request.nextUrl;
   const q = searchParams.get('q') || '';
-  const type = searchParams.get('type') || 'buyers'; // 'buyers' or 'competitors'
+  const type = searchParams.get('type') || 'buyers';
+
+  if (!ALLOWED_TYPES.has(type)) {
+    return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
+  }
 
   if (!q || q.length < 3) {
     return NextResponse.json({ data: [] });
+  }
+
+  if (q.length > 200) {
+    return NextResponse.json({ error: 'Query too long' }, { status: 400 });
   }
 
   const supabase = createAdminClient();

@@ -44,6 +44,7 @@ export async function POST(request: Request) {
         'Content-Type': 'application/json',
         ...(authHeader ? { Authorization: authHeader } : {}),
       },
+      signal: AbortSignal.timeout(60_000),
       body: JSON.stringify({
         tender_id: tender.tender_id,
         title: tender.title,
