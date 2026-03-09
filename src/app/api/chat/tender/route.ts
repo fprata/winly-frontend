@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { getServerUser, getDataClient } from '@/utils/dev-auth';
 import { getCloudRunAuthHeader } from '@/lib/gcp-auth';
+import { checkRateLimit } from '@/lib/rate-limit';
+
+// 20 chat messages per user per minute
+const CHAT_LIMIT = 20;
+const CHAT_WINDOW_MS = 60_000;
 
 export async function POST(request: Request) {
   try {
@@ -9,12 +14,20 @@ export async function POST(request: Request) {
     const { user } = await getServerUser(supabase);
     if (!user) return new NextResponse('Unauthorized', { status: 401 });
 
+    const rl = checkRateLimit(`chat:${user.id}`, CHAT_LIMIT, CHAT_WINDOW_MS);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please wait a moment.' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+      );
+    }
+
     const db = await getDataClient(supabase);
 
     // Check tier
     const { data: profile } = await db
       .from('clients')
-      .select('tier, name, services, tech_stack')
+      .select('id, tier, name, services, tech_stack')
       .eq('email', user.email)
       .single();
 
@@ -41,7 +54,7 @@ export async function POST(request: Request) {
       .from('tender_matches')
       .select('match_score, match_reasons, win_probability')
       .eq('tender_uuid', tenderId)
-      .eq('client_id', profile.name)
+      .eq('client_id', profile.id)
       .maybeSingle();
 
     // Fetch buyer intel

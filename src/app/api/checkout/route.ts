@@ -14,22 +14,32 @@ export async function POST(req: Request) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    // Determine price dynamically based on tier selection
-    let unitAmount = 0;
-    let description = '';
+    // Prices in euro cents — configure via environment variables to avoid code deploys for pricing changes
+    const TIER_CONFIG: Record<string, { cents: number; description: string; envKey: string }> = {
+      Starter: {
+        cents: Number(process.env.STRIPE_PRICE_STARTER_CENTS) || 14900,
+        envKey: 'STRIPE_PRICE_STARTER_CENTS',
+        description: 'Up to 50 matches/month, basic search algorithms, daily email digest, 1 seat, PT & ES markets.',
+      },
+      Professional: {
+        cents: Number(process.env.STRIPE_PRICE_PRO_CENTS) || 39900,
+        envKey: 'STRIPE_PRICE_PRO_CENTS',
+        description: 'Unlimited matches, full V3 AI algorithm, real-time updates, win probability, price recommendations, competitor intelligence, 5 seats.',
+      },
+      Enterprise: {
+        cents: Number(process.env.STRIPE_PRICE_ENTERPRISE_CENTS) || 99900,
+        envKey: 'STRIPE_PRICE_ENTERPRISE_CENTS',
+        description: 'Everything in Professional, Bid/No-Bid assistant, team collaboration, pipeline CRM, API access & integrations, unlimited seats, white-label options.',
+      },
+    };
 
-    if (tier === 'Starter') {
-      unitAmount = 14900; // €149.00
-      description = 'Up to 50 matches/month, basic search algorithms, daily email digest, 1 seat, PT & ES markets.';
-    } else if (tier === 'Professional') {
-      unitAmount = 39900; // €399.00
-      description = 'Unlimited matches, full V3 AI algorithm, real-time updates, win probability, price recommendations, competitor intelligence, 5 seats.';
-    } else if (tier === 'Enterprise') {
-      unitAmount = 99900; // €999.00
-      description = 'Everything in Professional, Bid/No-Bid assistant, team collaboration, pipeline CRM, API access & integrations, unlimited seats, white-label options.';
-    } else {
+    const tierConfig = TIER_CONFIG[tier];
+    if (!tierConfig) {
       return new NextResponse('Bad Request: Invalid tier.', { status: 400 });
     }
+
+    const unitAmount = tierConfig.cents;
+    const description = tierConfig.description;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],

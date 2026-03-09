@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
       } | null
 
       const value = t?.estimated_value
-        ? new Intl.NumberFormat('en-EU', {
+        ? new Intl.NumberFormat('en-IE', {
             style: 'currency',
             currency: t.currency ?? 'EUR',
             maximumFractionDigits: 0,
@@ -104,8 +104,7 @@ export async function GET(request: NextRequest) {
 
     try {
       await resend.emails.send({
-        // TODO: switch to 'Winly <notifications@winly.ai>' once DNS is verified
-        from: 'Winly <onboarding@resend.dev>',
+        from: process.env.NOTIFY_FROM_EMAIL || 'Winly <onboarding@resend.dev>',
         to: client.email,
         subject: `${formattedMatches.length} new procurement ${formattedMatches.length === 1 ? 'match' : 'matches'} found`,
         html: renderMatchDigestEmail({

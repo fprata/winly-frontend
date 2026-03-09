@@ -4,15 +4,28 @@ import { getServerUser, getDataClient } from '@/utils/dev-auth';
 import { createAdminClient } from '@/utils/supabase/admin';
 import { getCloudRunAuthHeader } from '@/lib/gcp-auth';
 import { isSafeUrl } from '@/lib/security';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 const MAX_DOC_BYTES = 50 * 1024 * 1024; // 50 MB
 const ALLOWED_CONTENT_TYPES = new Set(['application/pdf', 'application/zip', 'application/octet-stream', 'text/plain', 'application/x-zip-compressed']);
+
+// 10 document analyses per user per hour (AI processing is expensive)
+const ANALYZE_LIMIT = 10;
+const ANALYZE_WINDOW_MS = 60 * 60_000;
 
 export async function POST(request: Request) {
   try {
     const sessionClient = await createClient();
     const { user } = await getServerUser(sessionClient);
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const rl = checkRateLimit(`analyze:${user.id}`, ANALYZE_LIMIT, ANALYZE_WINDOW_MS);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Rate limit reached. You can analyse up to 10 documents per hour.' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+      );
+    }
 
     const payload = await request.json().catch(() => ({}));
     const { tenderId, documentUrl } = payload;
@@ -59,7 +72,7 @@ export async function POST(request: Request) {
 
     for (const url of urlsToTry) {
       try {
-        console.log(`[AnalyzeAPI] Fetching: ${url}`);
+        console.debug(`[AnalyzeAPI] Fetching: ${url}`);
         const res = await fetch(url, {
           headers: { 'User-Agent': 'Winly/1.0' },
           cache: 'no-store',

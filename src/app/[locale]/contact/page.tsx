@@ -2,6 +2,7 @@ import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
+import { ContactForm } from '@/components/ContactForm'
 
 export default async function ContactPage() {
   const t = await getTranslations('contact');
@@ -65,23 +66,7 @@ export default async function ContactPage() {
            {/* Contact Form */}
            <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-sm">
               <h2 className="text-2xl font-bold mb-6">{t('formTitle')}</h2>
-              <form className="space-y-6">
-                 <div>
-                    <label className="block text-sm font-bold text-zinc-700 mb-2">{t('nameLabel')}</label>
-                    <input type="text" className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder={t('namePlaceholder')} />
-                 </div>
-                 <div>
-                    <label className="block text-sm font-bold text-zinc-700 mb-2">Email</label>
-                    <input type="email" className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder={t('emailPlaceholder')} />
-                 </div>
-                 <div>
-                    <label className="block text-sm font-bold text-zinc-700 mb-2">{t('messageLabel')}</label>
-                    <textarea rows={4} className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder={t('messagePlaceholder')} />
-                 </div>
-                 <button type="submit" className="w-full py-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
-                    {t('sendButton')}
-                 </button>
-              </form>
+              <ContactForm />
            </div>
         </div>
       </main>

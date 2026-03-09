@@ -823,7 +823,9 @@
     "saving": "A guardar…",
     "saveNotifications": "Guardar notificações",
     "notificationsSaved": "Preferências de notificação guardadas",
-    "notificationsSaveFailed": "Falha ao guardar preferências de notificação"
+    "notificationsSaveFailed": "Falha ao guardar preferências de notificação",
+    "manageSubscription": "Gerir Subscrição",
+    "portalError": "Não foi possível abrir o portal de faturação. Tente novamente."
   },
   "about": {
     "heroTitle": "Democratizando o Acesso à",
@@ -917,7 +919,10 @@
     "emailPlaceholder": "voce@empresa.com",
     "messageLabel": "Mensagem",
     "messagePlaceholder": "Como podemos ajudar?",
-    "sendButton": "Enviar Mensagem"
+    "sendButton": "Enviar Mensagem",
+    "sending": "A enviar...",
+    "sent": "Mensagem enviada! Entraremos em contacto em breve.",
+    "sendError": "Falha ao enviar a mensagem. Tente novamente ou envie-nos um email diretamente."
   },
   "landing": {
     "heroBadge": "Motor de Correspondência V3 Ativo",

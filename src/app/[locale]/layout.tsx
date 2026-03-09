@@ -21,7 +21,7 @@ export function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://winly.vercel.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://winly.vercel.app'),
   title: {
     default: "Winly AI | EU Procurement Intelligence Platform",
     template: "%s | Winly AI"

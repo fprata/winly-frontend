@@ -28,13 +28,13 @@ export async function POST(req: Request) {
   }
 
   const session = event.data.object as any;
-  console.log(`Received event: ${event.type}`);
+  console.debug(`[Stripe] Received event: ${event.type}`);
 
   if (event.type === 'checkout.session.completed') {
     const tier = session.metadata?.tier;
     const email = session.customer_email;
 
-    console.log(`Processing checkout for: ${email}, tier: ${tier}`);
+    console.debug(`[Stripe] Processing checkout for tier: ${tier}`);
 
     if (tier && email) {
         if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
             return new NextResponse('Database Update Failed', { status: 500 });
         }
             
-        console.log(`SUCCESS: User ${email} upgraded to ${tier}`);
+        console.debug(`[Stripe] User upgraded to ${tier}`);
     } else {
         console.warn('Missing metadata (tier) or email in session object.');
     }

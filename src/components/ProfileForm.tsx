@@ -106,6 +106,19 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
     }
   }, [state, t, router]);
 
+  const handleManageSubscription = async () => {
+    try {
+      const res = await fetch('/api/billing/portal', { method: 'POST' });
+      if (!res.ok) throw new Error('failed');
+      const { url } = await res.json();
+      if (url && typeof url === 'string' && url.startsWith('https://billing.stripe.com/')) {
+        window.location.href = url;
+      }
+    } catch {
+      toast('error', t('portalError'));
+    }
+  };
+
   const handleUpgrade = async (tier: string) => {
     if (tier === 'Enterprise') {
       toast("info", t('enterpriseContactAlert'));
@@ -124,8 +137,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
       if (url && /^https:\/\/(checkout\.)?stripe\.com\//.test(url)) {
         window.location.href = url;
       }
-    } catch (error) {
-      console.error("Upgrade failed:", error);
+    } catch {
       toast("error", t('upgradeError'));
     }
   };
@@ -164,6 +176,11 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
             {profile?.tier !== 'Enterprise' && (
               <Button variant="accent" type="button" onClick={() => handleUpgrade('Enterprise')}>
                 {t('upgradeToEnterprise')}
+              </Button>
+            )}
+            {profile?.tier && profile.tier !== 'Explorer' && (
+              <Button variant="ghost" type="button" onClick={handleManageSubscription}>
+                {t('manageSubscription')}
               </Button>
             )}
           </div>
