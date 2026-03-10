@@ -22,14 +22,15 @@ export default async function CompetitorProfilePage({
   let initialWonTenders: any[] = [];
 
   if (decodedId) {
-    const { data: profile, error } = await db
+    const { data: rows, error } = await db
       .from('intel_competitors')
       .select('*')
       .eq('competitor_id', decodedId)
       .order('total_wins', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(5);
     if (error) console.error('[CompetitorProfile] Lookup failed:', decodedId, error.message);
+    // Prefer the row with populated top_clients (handles stale duplicates)
+    const profile = rows?.find((r: any) => Array.isArray(r.top_clients) && r.top_clients.length > 0) || rows?.[0] || null;
     initialProfile = profile;
 
     if (profile) {

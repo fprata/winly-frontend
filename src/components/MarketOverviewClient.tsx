@@ -162,7 +162,7 @@ export function MarketOverviewClient({
                 <BarChart3 size={18} className="text-amber-600" />
                 {t('marketVolumeTrend')}
               </h3>
-              <div className="flex-1 w-full min-h-0">
+              <div className="flex-1 w-full min-h-[350px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={rawTrends || []}>
                     <XAxis

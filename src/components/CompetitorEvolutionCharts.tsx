@@ -85,34 +85,34 @@ export function CompetitorEvolutionCharts({ yearlyStats }: CompetitorEvolutionCh
             <h3 className="text-sm font-black text-zinc-900 uppercase tracking-widest mb-6 ml-2">
                 {t('salesAndMarketShare')}
             </h3>
-            <div className="flex-1 w-full min-h-0">
+            <div className="flex-1 w-full min-h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis 
-                    dataKey="year" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{fill: '#94a3b8', fontSize: 10, fontWeight: 700}} 
+                  <XAxis
+                    dataKey="year"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{fill: '#94a3b8', fontSize: 10, fontWeight: 700}}
                     dy={10}
                   />
-                  <YAxis 
-                    yAxisId="left" 
-                    orientation="left" 
-                    tickFormatter={formatCurrency} 
-                    axisLine={false} 
-                    tickLine={false} 
+                  <YAxis
+                    yAxisId="left"
+                    orientation="left"
+                    tickFormatter={formatCurrency}
+                    axisLine={false}
+                    tickLine={false}
                     tick={{fill: '#94a3b8', fontSize: 10, fontWeight: 700}}
                   />
-                  <YAxis 
-                    yAxisId="right" 
-                    orientation="right" 
-                    tickFormatter={formatPct} 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{fill: '#f97316', fontSize: 10, fontWeight: 700}} 
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    tickFormatter={formatPct}
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{fill: '#f97316', fontSize: 10, fontWeight: 700}}
                   />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
                     labelStyle={{fontWeight: 900, color: '#1e293b', marginBottom: '4px'}}
                     formatter={(value: any, name: any) => [
@@ -133,7 +133,7 @@ export function CompetitorEvolutionCharts({ yearlyStats }: CompetitorEvolutionCh
             <h3 className="text-sm font-black text-zinc-900 uppercase tracking-widest mb-6 ml-2">
                 {t('winEfficiency')}
             </h3>
-            <div className="flex-1 w-full min-h-0">
+            <div className="flex-1 w-full min-h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />

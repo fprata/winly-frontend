@@ -21,15 +21,15 @@ export default async function BuyerProfilePage({
   let initialProfile = null;
 
   if (decodedId) {
-    const { data, error } = await db
+    const { data: rows, error } = await db
       .from('intel_buyers')
       .select('*')
       .eq('buyer_company_id', decodedId)
       .order('total_contracts', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(5);
     if (error) console.error('[BuyerProfile] Lookup failed:', decodedId, error.message);
-    initialProfile = data;
+    // Prefer the row with populated top_winners (handles stale duplicates)
+    initialProfile = rows?.find((r: any) => Array.isArray(r.top_winners) && r.top_winners.length > 0) || rows?.[0] || null;
   }
 
   return (
