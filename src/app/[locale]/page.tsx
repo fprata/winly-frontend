@@ -63,9 +63,9 @@ function ScoreBar({ label, value, color }: { label: string; value: number; color
 
 function MatchesMockup() {
   const matches = [
-    { score: 94, title: 'IT Services & Digital Transformation Platform', buyer: 'Câmara Municipal de Lisboa', value: '€450,000', days: 8, cpv: '72000000' },
-    { score: 82, title: 'Software Maintenance & Support Services', buyer: 'INEM – Instituto Nacional Emergência', value: '€230,000', days: 15, cpv: '72267000' },
-    { score: 71, title: 'Cloud Infrastructure Migration Services', buyer: 'Autoridade Tributária e Aduaneira', value: '€890,000', days: 22, cpv: '72610000' },
+    { score: 94, title: 'IT Services & Digital Transformation Platform', buyer: 'Câmara Municipal de Portoverde', value: '€450,000', days: 8, cpv: '72000000' },
+    { score: 82, title: 'Software Maintenance & Support Services', buyer: 'Instituto Nacional de Saúde Pública', value: '€230,000', days: 15, cpv: '72267000' },
+    { score: 71, title: 'Cloud Infrastructure Migration Services', buyer: 'Agência Nacional de Gestão Fiscal', value: '€890,000', days: 22, cpv: '72610000' },
   ];
   return (
     <BrowserFrame url="app.winly.ai/matches">
@@ -148,7 +148,7 @@ function TenderIntelMockup() {
             <span className="text-[10px] text-zinc-500 bg-zinc-100 rounded px-2 py-0.5">Portal BASE</span>
           </div>
           <h2 className="text-sm font-black text-zinc-900 leading-snug">IT Services &amp; Digital Transformation Platform</h2>
-          <p className="text-[10px] text-zinc-400 mt-0.5">Câmara Municipal de Lisboa · €450,000 · Deadline: 18 Mar 2026</p>
+          <p className="text-[10px] text-zinc-400 mt-0.5">Câmara Municipal de Portoverde · €450,000 · Deadline: 18 Mar 2026</p>
         </div>
 
         <div className="grid grid-cols-2 gap-2">
@@ -314,9 +314,9 @@ function BuyerIntelMockup() {
     <BrowserFrame url="app.winly.ai/intelligence/buyers">
       <div className="bg-zinc-50 p-4">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-black text-sm">CML</div>
+          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-black text-sm">CMP</div>
           <div>
-            <p className="text-sm font-black text-zinc-900">Câmara Municipal de Lisboa</p>
+            <p className="text-sm font-black text-zinc-900">Câmara Municipal de Portoverde</p>
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-zinc-500 flex items-center gap-1"><MapPin size={8} /> Portugal</span>
               <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 rounded px-1.5">Verified Authority</span>
@@ -339,9 +339,9 @@ function BuyerIntelMockup() {
         <div className="bg-white border border-zinc-200 rounded-xl p-3 mb-2">
           <p className="text-[10px] font-bold text-zinc-900 mb-2">Top Winning Suppliers (Last 24 Months)</p>
           {[
-            ['Accenture Portugal', '34 wins', '€12.4M'],
-            ['Novabase', '28 wins', '€8.9M'],
-            ['Indra Sistemas', '19 wins', '€6.2M'],
+            ['Tecnolink, Lda.', '34 wins', '€12.4M'],
+            ['DataBridge, S.A.', '28 wins', '€8.9M'],
+            ['Soluções Ibéricas', '19 wins', '€6.2M'],
           ].map(([name, wins, rev]) => (
             <div key={name} className="flex items-center justify-between py-1.5 border-b border-zinc-50 last:border-0">
               <span className="text-[10px] font-semibold text-zinc-700">{name}</span>
@@ -368,9 +368,9 @@ function CompetitorMockup() {
     <BrowserFrame url="app.winly.ai/intelligence/competitors">
       <div className="bg-zinc-50 p-4">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center text-white font-black text-xs">NB</div>
+          <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center text-white font-black text-xs">DB</div>
           <div>
-            <p className="text-sm font-black text-zinc-900">Novabase, S.A.</p>
+            <p className="text-sm font-black text-zinc-900">DataBridge, S.A.</p>
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-zinc-500 flex items-center gap-1"><MapPin size={8} /> Portugal</span>
               <span className="text-[10px] text-blue-600 font-bold bg-blue-50 rounded px-1.5">Active Competitor</span>
