@@ -22,11 +22,12 @@ export default async function CompetitorProfilePage({
   let initialWonTenders: any[] = [];
 
   if (decodedId) {
-    const { data: profile } = await db
+    const { data: profile, error } = await db
       .from('intel_competitors')
       .select('*')
       .eq('competitor_id', decodedId)
       .single();
+    if (error) console.error('[CompetitorProfile] Lookup failed:', decodedId, error.message);
     initialProfile = profile;
 
     if (profile) {

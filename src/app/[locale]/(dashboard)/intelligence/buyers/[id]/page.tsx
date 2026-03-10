@@ -21,11 +21,12 @@ export default async function BuyerProfilePage({
   let initialProfile = null;
 
   if (decodedId) {
-    const { data } = await db
+    const { data, error } = await db
       .from('intel_buyers')
       .select('*')
       .eq('buyer_company_id', decodedId)
       .single();
+    if (error) console.error('[BuyerProfile] Lookup failed:', decodedId, error.message);
     initialProfile = data;
   }
 
