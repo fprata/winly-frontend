@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search as SearchIcon, TrendingUp, Users, ArrowUpRight, ArrowRight, ShieldCheck, Trophy, ArrowLeft, Building2, Check, SearchX, MapPin, X } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
-import { Link } from '@/navigation';
+import { Link, usePathname } from '@/navigation';
 import { getCpvDescription } from '@/utils/cpv-data';
 import { PersonaBadge } from './PersonaBadge';
 import { CompetitorEvolutionCharts } from './CompetitorEvolutionCharts';
@@ -13,7 +13,8 @@ import { Card } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { EmptyState } from './ui/EmptyState';
 
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from '@/navigation';
 
 interface CompetitorIntelligenceClientProps {
   initialProfile: any;

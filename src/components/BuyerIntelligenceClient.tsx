@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Search as SearchIcon, Building2, TrendingUp, Users, ArrowUpRight, ArrowLeft, ArrowRight, ShieldCheck, Filter, Check, ChevronDown, Activity, HeartHandshake, Lock, PieChart, SearchX, MapPin, X } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
-import { Link } from '@/navigation';
+import { Link, usePathname } from '@/navigation';
 import { getCpvDescription } from '@/utils/cpv-data';
 import { BuyerCompetitorAnalysis } from './BuyerCompetitorAnalysis';
 import { PersonaBadge } from './PersonaBadge';
@@ -14,7 +14,8 @@ import { Card } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { EmptyState } from './ui/EmptyState';
 
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from '@/navigation';
 
 interface BuyerIntelligenceClientProps {
   initialProfile: any;
