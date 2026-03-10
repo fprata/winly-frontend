@@ -596,9 +596,15 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                     return (
                     <div key={i} className="p-4 bg-zinc-50 rounded-xl border border-transparent hover:border-emerald-100 hover:bg-white transition-all">
                       <div className="flex justify-between items-start mb-1">
-                        <Link href={`/intelligence/competitors/${encodeURIComponent(winner.competitor_id)}?${params.toString()}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[200px]" title={winner.winner_name}>
-                          {winner.winner_name}
-                        </Link>
+                        {winner.competitor_id ? (
+                          <Link href={`/intelligence/competitors/${encodeURIComponent(winner.competitor_id)}?${params.toString()}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[200px]" title={winner.winner_name}>
+                            {winner.winner_name}
+                          </Link>
+                        ) : (
+                          <span className="text-xs font-black text-zinc-900 uppercase truncate pr-4 block max-w-[200px]" title={winner.winner_name}>
+                            {winner.winner_name}
+                          </span>
+                        )}
                         <p className="text-xs font-bold text-emerald-600 whitespace-nowrap">{winner.wins} {t('wins')}</p>
                       </div>
                       

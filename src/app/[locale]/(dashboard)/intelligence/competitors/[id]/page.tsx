@@ -26,7 +26,9 @@ export default async function CompetitorProfilePage({
       .from('intel_competitors')
       .select('*')
       .eq('competitor_id', decodedId)
-      .single();
+      .order('total_wins', { ascending: false })
+      .limit(1)
+      .maybeSingle();
     if (error) console.error('[CompetitorProfile] Lookup failed:', decodedId, error.message);
     initialProfile = profile;
 

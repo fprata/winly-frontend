@@ -25,7 +25,9 @@ export default async function BuyerProfilePage({
       .from('intel_buyers')
       .select('*')
       .eq('buyer_company_id', decodedId)
-      .single();
+      .order('total_contracts', { ascending: false })
+      .limit(1)
+      .maybeSingle();
     if (error) console.error('[BuyerProfile] Lookup failed:', decodedId, error.message);
     initialProfile = data;
   }

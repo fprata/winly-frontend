@@ -362,9 +362,15 @@ export function CompetitorIntelligenceClient({
                     return (
                     <div key={i} className="p-4 bg-zinc-50 rounded-xl border border-transparent hover:border-emerald-100 hover:bg-white transition-all">
                       <div className="flex justify-between items-start mb-1">
-                        <Link href={`/intelligence/buyers/${encodeURIComponent(client.buyer_id)}?${params.toString()}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[200px]" title={client.buyer_name}>
-                          {client.buyer_name}
-                        </Link>
+                        {client.buyer_id ? (
+                          <Link href={`/intelligence/buyers/${encodeURIComponent(client.buyer_id)}?${params.toString()}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[200px]" title={client.buyer_name}>
+                            {client.buyer_name}
+                          </Link>
+                        ) : (
+                          <span className="text-xs font-black text-zinc-900 uppercase truncate pr-4 block max-w-[200px]" title={client.buyer_name}>
+                            {client.buyer_name}
+                          </span>
+                        )}
                         <p className="text-xs font-bold text-emerald-600 whitespace-nowrap">{client.contracts} {t('wins')}</p>
                       </div>
                       <div className="flex justify-between items-end">
