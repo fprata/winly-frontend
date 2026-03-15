@@ -8,32 +8,28 @@ import { MarketOverviewClient } from '@/components/MarketOverviewClient';
 export default async function MarketIntelligencePage({
   searchParams,
 }: {
-  searchParams: Promise<{ country?: string; sector?: string }>;
+  searchParams: Promise<{ sector?: string }>;
 }) {
   const t = await getTranslations('intelligence');
-  const { country = 'ALL', sector = 'ALL' } = await searchParams;
+  const { sector = 'ALL' } = await searchParams;
 
   const supabase = await createClient();
   const db = await getDataClient(supabase);
 
-  // Fetch filter options
+  // Fetch unique sectors for filter
   const { data: filterRows } = await db
     .from('market_overview')
-    .select('country, cpv_division')
+    .select('cpv_division')
     .limit(1000);
 
-  const uniqueCountries: string[] = filterRows
-    ? Array.from(new Set(filterRows.map((r: any) => r.country))).sort() as string[]
-    : [];
   const uniqueSectors: string[] = filterRows
-    ? Array.from(new Set(filterRows.map((r: any) => r.cpv_division))).sort() as string[]
+    ? Array.from(new Set(filterRows.map((r: any) => r.cpv_division))).filter((s): s is string => s !== 'ALL').sort() as string[]
     : [];
 
   // Fetch selected data row
   const { data: statsData } = await db
     .from('market_overview')
     .select('*')
-    .eq('country', country)
     .eq('cpv_division', sector)
     .limit(1)
     .maybeSingle();
@@ -50,9 +46,7 @@ export default async function MarketIntelligencePage({
 
       <MarketOverviewClient
         initialData={statsData}
-        initialCountries={uniqueCountries}
         initialSectors={uniqueSectors}
-        selectedCountry={country}
         selectedSector={sector}
       />
     </div>

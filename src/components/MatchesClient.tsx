@@ -68,16 +68,17 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
           match_score,
           match_reasons,
           score_cpv,
-          score_strategic,
-          score_semantic,
-          score_keyword,
           score_location,
+          score_capacity,
+          score_keyword,
+          score_market_opp,
           win_probability,
           tender_id,
           tender_uuid,
           tenders!inner (*)
         `)
         .eq('client_id', clientId)
+        .eq('tenders.is_active', true)
         .gte('match_score', minScoreFilter)
         .order('match_score', { ascending: false })
         .limit(200);
@@ -299,11 +300,11 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
             const priorityColor: 'rose' | 'amber' | 'zinc' = match.priority === 'High' ? 'rose' : match.priority === 'Medium' ? 'amber' : 'zinc';
 
             const miniBarData = [
-              { label: 'CPV', value: match.score_cpv || 0, color: '#8b5cf6' },
-              { label: 'Loc', value: match.score_location || 0, color: '#f59e0b' },
-              { label: 'Cap', value: match.score_capacity || 0, color: '#0ea5e9' },
-              { label: 'Key', value: match.score_keyword || 0, color: '#10b981' },
-              { label: 'Mkt', value: match.score_market_opp || 0, color: '#a1a1aa' },
+              { label: 'CPV', value: match.score_cpv || 0, max: 50, color: '#8b5cf6' },
+              { label: 'Loc', value: match.score_location || 0, max: 20, color: '#f59e0b' },
+              { label: 'Cap', value: match.score_capacity || 0, max: 20, color: '#0ea5e9' },
+              { label: 'Key', value: match.score_keyword || 0, max: 10, color: '#10b981' },
+              { label: 'Mkt', value: match.score_market_opp || 0, max: 10, color: '#a1a1aa' },
             ];
 
             return (
@@ -342,7 +343,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                           <div className="flex-1 h-[3px] bg-zinc-200 rounded-full overflow-hidden">
                             <div
                               className="h-full rounded-full"
-                              style={{ width: `${Math.min(bar.value, 100)}%`, backgroundColor: bar.color }}
+                              style={{ width: `${Math.min((bar.value / bar.max) * 100, 100)}%`, backgroundColor: bar.color }}
                             />
                           </div>
                         </div>

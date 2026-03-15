@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { Activity, DollarSign, Building2, Globe, BarChart3, PieChart, ArrowUpRight, Filter } from 'lucide-react';
+import { Activity, DollarSign, Building2, BarChart3, PieChart, ArrowUpRight, Filter, Layers } from 'lucide-react';
 import { SectorMixChart } from './SectorMixChart';
 import { Link, useRouter, usePathname } from '@/navigation';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
@@ -12,23 +12,20 @@ import { StatCard } from './ui/StatCard';
 import { Card } from './ui/Card';
 import { EmptyState } from './ui/EmptyState';
 
+type TimespanOption = '3' | '6' | '12';
+
 interface MarketOverviewClientProps {
   initialData: any;
-  initialCountries: string[];
   initialSectors: string[];
-  selectedCountry: string;
   selectedSector: string;
 }
 
 export function MarketOverviewClient({
   initialData,
-  initialCountries,
   initialSectors,
-  selectedCountry,
   selectedSector,
 }: MarketOverviewClientProps) {
   const data = initialData;
-  const countries = initialCountries;
   const sectors = initialSectors;
 
   const t = useTranslations('dashboard');
@@ -37,9 +34,10 @@ export function MarketOverviewClient({
   const router = useRouter();
   const pathname = usePathname();
 
-  const updateFilter = (newCountry: string, newSector: string) => {
+  const [timespan, setTimespan] = useState<TimespanOption>('6');
+
+  const updateFilter = (newSector: string) => {
     const params = new URLSearchParams();
-    if (newCountry !== 'ALL') params.set('country', newCountry);
     if (newSector !== 'ALL') params.set('sector', newSector);
     const qs = params.toString();
     router.push(qs ? `${pathname}?${qs}` : pathname);
@@ -76,6 +74,12 @@ export function MarketOverviewClient({
       : data.monthly_trends_json;
   }, [data]);
 
+  const filteredTrends = useMemo(() => {
+    if (!rawTrends || rawTrends.length === 0) return [];
+    const months = parseInt(timespan);
+    return rawTrends.slice(-months);
+  }, [rawTrends, timespan]);
+
   const rawBuyers = useMemo(() => {
     if (!data) return [];
     return typeof data.top_buyers_json === 'string'
@@ -83,32 +87,51 @@ export function MarketOverviewClient({
       : data.top_buyers_json;
   }, [data]);
 
-  const countryOptions = [
-    { value: 'ALL', label: t('allRegions') },
-    ...countries.filter(c => c !== 'ALL').map(c => ({ value: c, label: c })),
-  ];
+  const activeSectorCount = useMemo(() => {
+    return sectorStats.length;
+  }, [sectorStats]);
 
   const sectorOptions = [
     { value: 'ALL', label: t('allSectors') },
     ...sectors.filter(s => s !== 'ALL').map(s => ({ value: s, label: `${s} - ${getCpvDescription(s + '000000', locale)}` })),
   ];
 
+  const timespanOptions: { value: TimespanOption; label: string }[] = [
+    { value: '3', label: t('months3') },
+    { value: '6', label: t('months6') },
+    { value: '12', label: t('months12') },
+  ];
+
+  const timespanLabel = timespanOptions.find(o => o.value === timespan)?.label || '';
+
   return (
     <div className="space-y-6">
 
       {/* Filters Bar */}
       <div className="flex flex-col md:flex-row gap-3 mb-6">
-        <Select
-          options={countryOptions}
-          value={selectedCountry}
-          onChange={val => updateFilter(val, selectedSector)}
-          icon={<Globe size={16} />}
-          className="flex-1"
-        />
+        {/* Timespan Button Group */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs font-medium text-zinc-500 mr-1">{t('timespan')}</span>
+          <div className="inline-flex rounded-lg border border-zinc-200 bg-white p-0.5">
+            {timespanOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => setTimespan(option.value)}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                  timespan === option.value
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50'
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <Select
           options={sectorOptions}
           value={selectedSector}
-          onChange={val => updateFilter(selectedCountry, val)}
+          onChange={val => updateFilter(val)}
           icon={<Filter size={16} />}
           className="flex-1"
         />
@@ -138,10 +161,10 @@ export function MarketOverviewClient({
               color="indigo"
             />
             <StatCard
-              icon={<Globe size={18} />}
-              label={t('marketReach')}
-              value={selectedCountry === 'ALL' ? t('europe') : selectedCountry}
-              subtitle={selectedCountry === 'ALL' ? t('aggregatedMarket') : t('selectedRegion')}
+              icon={<Layers size={18} />}
+              label={t('activeSectors')}
+              value={formatNumber(activeSectorCount)}
+              subtitle={t('sectorsCovered')}
               color="amber"
             />
           </div>
@@ -160,11 +183,11 @@ export function MarketOverviewClient({
             <Card className="h-[520px] flex flex-col">
               <h3 className="text-base font-bold text-zinc-900 mb-5 flex items-center gap-2">
                 <BarChart3 size={18} className="text-amber-600" />
-                {t('marketVolumeTrend')}
+                {t('marketVolumeTrendDynamic', { period: timespanLabel })}
               </h3>
               <div className="flex-1 w-full min-h-[350px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={rawTrends || []}>
+                  <BarChart data={filteredTrends}>
                     <XAxis
                       dataKey="month"
                       axisLine={false}
@@ -204,9 +227,9 @@ export function MarketOverviewClient({
             <div className="max-h-[300px] overflow-y-auto pr-1 styled-scrollbar">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {(rawBuyers || []).map((buyer: any, i: number) => (
-                  <Link 
-                    key={i} 
-                    href={`/intelligence/buyers?name=${encodeURIComponent(buyer.buyer_name)}&backUrl=${encodeURIComponent('/dashboard')}`} 
+                  <Link
+                    key={i}
+                    href={`/intelligence/buyers?name=${encodeURIComponent(buyer.buyer_name)}&backUrl=${encodeURIComponent('/dashboard')}`}
                     className="p-4 bg-zinc-50 rounded-lg border border-transparent hover:border-zinc-200 hover:bg-white transition-all group"
                   >
                     <div className="flex justify-between items-start mb-2">

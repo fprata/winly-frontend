@@ -92,14 +92,15 @@ function IconBox({ color, children }: { color: 'blue' | 'indigo' | 'emerald' | '
   );
 }
 
-function ScoreBar({ label, value, color }: { label: string; value: number; color: string }) {
+function ScoreBar({ label, value, max, color }: { label: string; value: number; max: number; color: string }) {
+  const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
   return (
     <div className="flex items-center gap-2.5 mb-2.5 last:mb-0">
       <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider w-[90px] shrink-0">{label}</span>
       <div className="flex-1 h-2 bg-zinc-100 rounded-full overflow-hidden">
-        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(value, 100)}%`, backgroundColor: color }} />
+        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, backgroundColor: color }} />
       </div>
-      <span className="text-[13px] font-bold text-zinc-900 w-7 text-right tabular-nums">{Math.round(value)}</span>
+      <span className="text-[13px] font-bold text-zinc-900 w-12 text-right tabular-nums">{Math.round(value)}/{max}</span>
     </div>
   );
 }
@@ -254,11 +255,11 @@ export function OverviewTab({
                 )}
               </div>
               <div>
-                {match.score_cpv > 0 && <ScoreBar label="CPV" value={match.score_cpv} color="#8b5cf6" />}
-                {match.score_location > 0 && <ScoreBar label={t('location')} value={match.score_location} color="#f59e0b" />}
-                {match.score_capacity > 0 && <ScoreBar label={t('capacity')} value={match.score_capacity} color="#0ea5e9" />}
-                {match.score_keyword > 0 && <ScoreBar label={t('keyword')} value={match.score_keyword} color="#10b981" />}
-                {match.score_market_opp > 0 && <ScoreBar label={t('marketOpp')} value={match.score_market_opp} color="#a1a1aa" />}
+                <ScoreBar label="CPV" value={match.score_cpv || 0} max={50} color="#8b5cf6" />
+                <ScoreBar label={t('location')} value={match.score_location || 0} max={20} color="#f59e0b" />
+                <ScoreBar label={t('capacity')} value={match.score_capacity || 0} max={20} color="#0ea5e9" />
+                <ScoreBar label={t('keyword')} value={match.score_keyword || 0} max={10} color="#10b981" />
+                <ScoreBar label={t('marketOpp')} value={match.score_market_opp || 0} max={10} color="#a1a1aa" />
               </div>
             </>
           ) : (
