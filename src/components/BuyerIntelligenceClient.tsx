@@ -378,11 +378,26 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
               );
             })}
             {searching && query.length >= 3 && (
-              <div className="flex items-center justify-center py-12 text-zinc-400">
-                <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border-2 border-zinc-300 border-t-blue-600 rounded-full animate-spin" />
-                  <span className="text-sm font-medium">{t('searching') || 'Searching...'}</span>
-                </div>
+              <div className="flex flex-col gap-3">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="bg-white rounded-xl border border-zinc-200 shadow-sm p-6 animate-pulse">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="h-5 w-2/3 bg-zinc-200 rounded mb-2" />
+                        <div className="h-3 w-32 bg-zinc-100 rounded mb-4" />
+                        <div className="flex gap-6">
+                          <div><div className="h-6 w-16 bg-zinc-200 rounded mb-1" /><div className="h-2 w-12 bg-zinc-100 rounded" /></div>
+                          <div><div className="h-6 w-10 bg-zinc-200 rounded mb-1" /><div className="h-2 w-14 bg-zinc-100 rounded" /></div>
+                          <div><div className="h-6 w-12 bg-zinc-200 rounded mb-1" /><div className="h-2 w-16 bg-zinc-100 rounded" /></div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-2 shrink-0">
+                        <div className="h-5 w-20 bg-zinc-200 rounded-full" />
+                        <div className="h-3 w-16 bg-zinc-100 rounded" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
             {!searching && searchResults.length === 0 && query.length >= 3 && (
