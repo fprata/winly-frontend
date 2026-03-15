@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search as SearchIcon, Building2, TrendingUp, Users, ArrowUpRight, ArrowLeft, ArrowRight, ShieldCheck, Filter, Check, ChevronDown, Activity, HeartHandshake, Lock, PieChart, SearchX, MapPin, X } from 'lucide-react';
+import { Search as SearchIcon, Building2, TrendingUp, Users, ArrowUpRight, ArrowRight, ShieldCheck, Filter, Check, ChevronDown, Activity, HeartHandshake, Lock, PieChart, SearchX, MapPin, X } from 'lucide-react';
+import { BackButton } from './ui/BackButton';
 import { useTranslations, useLocale } from 'next-intl';
-import { Link, usePathname } from '@/navigation';
+import { Link } from '@/navigation';
 import { getCpvDescription } from '@/utils/cpv-data';
 import { BuyerCompetitorAnalysis } from './BuyerCompetitorAnalysis';
 import { PersonaBadge } from './PersonaBadge';
@@ -14,7 +15,6 @@ import { Card } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { EmptyState } from './ui/EmptyState';
 
-import { useSearchParams } from 'next/navigation';
 import { useRouter } from '@/navigation';
 
 interface BuyerIntelligenceClientProps {
@@ -26,16 +26,12 @@ interface BuyerIntelligenceClientProps {
 
 export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, initialName, fromTender }: BuyerIntelligenceClientProps) {
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  
-  const backUrl = searchParams.get('backUrl');
-  
   const [query, setQuery] = useState(initialName || "");
   const [searchResults, setSearchResults] = useState<any[]>(initialSearchResults);
   const [profile, setProfile] = useState<any>(initialProfile);
   const [tenders, setTenders] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [tendersLoading, setTendersLoading] = useState(false);
   
   // Filter State
@@ -89,26 +85,19 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
   const searchBuyers = async (value: string) => {
     if (value.length < 3) return;
 
+    setSearching(true);
     const res = await fetch(`/api/intelligence/search?q=${encodeURIComponent(value)}&type=buyers`);
     const json = await res.json();
     setSearchResults(json.data || []);
+    setSearching(false);
   };
 
   const navigateToProfile = (id: string) => {
     setLoading(true);
     const params = new URLSearchParams();
     if (fromTender) params.set('fromTender', fromTender);
-    if (backUrl) params.set('backUrl', backUrl);
     const qs = params.toString();
     router.push(`/intelligence/buyers/${encodeURIComponent(id)}${qs ? `?${qs}` : ''}`);
-  };
-
-  const clearProfile = () => {
-    if (backUrl) {
-      router.push(backUrl);
-    } else {
-      router.push(`/intelligence/buyers`);
-    }
   };
 
   const formatValue = (val: number) => {
@@ -287,10 +276,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
   return (
     <div className="max-w-6xl mx-auto pb-20">
       {fromTender && (
-        <Link href={`/tenders/${fromTender}`} className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors mb-6 font-medium text-sm group w-fit">
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-          {t('backToTender')}
-        </Link>
+        <BackButton fallbackHref={`/tenders/${fromTender}`} label={t('backToTender')} className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors mb-6 font-medium text-sm group w-fit" />
       )}
 
       {!profile && (
@@ -391,7 +377,15 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                 </div>
               );
             })}
-            {searchResults.length === 0 && query.length >= 3 && (
+            {searching && query.length >= 3 && (
+              <div className="flex items-center justify-center py-12 text-zinc-400">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 border-2 border-zinc-300 border-t-blue-600 rounded-full animate-spin" />
+                  <span className="text-sm font-medium">{t('searching') || 'Searching...'}</span>
+                </div>
+              </div>
+            )}
+            {!searching && searchResults.length === 0 && query.length >= 3 && (
               <EmptyState
                 icon={<SearchX size={32} />}
                 title={t('noResults') || "No buyers found"}
@@ -407,13 +401,11 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
       ) : metrics ? (
         <div className="space-y-8 animate-in fade-in duration-500 text-zinc-800">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-            <button
-              onClick={clearProfile}
-              className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors font-medium text-sm"
-            >
-              <ArrowLeft size={16} />
-              {backUrl ? t('back') : t('backToSearch')}
-            </button>
+            <BackButton
+              fallbackHref="/intelligence/buyers"
+              label={t('backToSearch')}
+              className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors font-medium text-sm group"
+            />
 
             {/* Global Sector Filter */}
             <div className="relative">
@@ -592,7 +584,6 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                   {profile.top_winners?.map((winner: any, i: number) => {
                     const params = new URLSearchParams();
                     if (fromTender) params.set('fromTender', fromTender);
-                    params.set('backUrl', `${pathname}?${searchParams.toString()}`);
                     
                     return (
                     <div key={i} className="p-4 bg-zinc-50 rounded-xl border border-transparent hover:border-emerald-100 hover:bg-white transition-all">
@@ -677,7 +668,6 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
 
           {/* Latest Activity Lists */}
           {(() => {
-            const tenderBackUrl = encodeURIComponent(`${pathname}?${searchParams.toString()}`);
             return (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
              {/* Active Tenders */}
@@ -690,7 +680,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                     {metrics.activeTenders?.length > 0 ? metrics.activeTenders.map((td: any, i: number) => (
                         <div key={i} className="p-4 bg-zinc-50 rounded-xl border border-transparent hover:border-blue-100 hover:bg-white transition-all">
                             <div className="flex justify-between items-start mb-1">
-                                <Link href={`/tenders/${td.tender_uuid}?backUrl=${tenderBackUrl}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={td.title}>
+                                <Link href={`/tenders/${td.tender_uuid}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={td.title}>
                                     {td.title || "No Title"}
                                 </Link>
                                 <span className="text-[10px] font-bold text-zinc-400 whitespace-nowrap">
@@ -718,7 +708,7 @@ export function BuyerIntelligenceClient({ initialProfile, initialSearchResults, 
                     {metrics.awardedTenders?.length > 0 ? metrics.awardedTenders.map((td: any, i: number) => (
                         <div key={i} className="p-4 bg-zinc-50 rounded-xl border border-transparent hover:border-emerald-100 hover:bg-white transition-all">
                             <div className="flex justify-between items-start mb-1">
-                                <Link href={`/tenders/${td.tender_uuid}?backUrl=${tenderBackUrl}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={td.title}>
+                                <Link href={`/tenders/${td.tender_uuid}`} className="text-xs font-black text-zinc-900 uppercase truncate pr-4 hover:text-blue-600 hover:underline block max-w-[300px]" title={td.title}>
                                     {td.title || "No Title"}
                                 </Link>
                                 <span className="text-[10px] font-bold text-zinc-400 whitespace-nowrap">

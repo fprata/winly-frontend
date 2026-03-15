@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Search as SearchIcon, TrendingUp, Users, ArrowUpRight, ArrowRight, ShieldCheck, Trophy, ArrowLeft, Building2, Check, SearchX, MapPin, X } from 'lucide-react';
+import { Search as SearchIcon, TrendingUp, Users, ArrowUpRight, ArrowRight, ShieldCheck, Trophy, Building2, Check, SearchX, MapPin, X } from 'lucide-react';
+import { BackButton } from './ui/BackButton';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname } from '@/navigation';
 import { getCpvDescription } from '@/utils/cpv-data';
@@ -39,11 +40,10 @@ export function CompetitorIntelligenceClient({
   const [searchResults, setSearchResults] = useState<any[]>(initialSearchResults);
   const [profile, setProfile] = useState<any>(initialProfile);
   const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [wonTenders, setWonTenders] = useState<any[]>(initialWonTenders);
   const t = useTranslations('intelligence.competitors');
   const locale = useLocale();
-
-  const backUrl = searchParams.get('backUrl');
 
   // Sync profile when props change (Server navigation)
   useEffect(() => {
@@ -60,26 +60,19 @@ export function CompetitorIntelligenceClient({
   const searchCompetitors = async (value: string) => {
     if (value.length < 3) return;
 
+    setSearching(true);
     const res = await fetch(`/api/intelligence/search?q=${encodeURIComponent(value)}&type=competitors`);
     const json = await res.json();
     setSearchResults(json.data || []);
+    setSearching(false);
   };
 
   const navigateToProfile = (id: string) => {
     setLoading(true);
     const params = new URLSearchParams();
     if (fromTender) params.set('fromTender', fromTender);
-    if (backUrl) params.set('backUrl', backUrl);
     const qs = params.toString();
     router.push(`/intelligence/competitors/${encodeURIComponent(id)}${qs ? `?${qs}` : ''}`);
-  };
-
-  const clearProfile = () => {
-    if (backUrl) {
-      router.push(backUrl);
-    } else {
-      router.push(`/intelligence/competitors`);
-    }
   };
 
   const formatValue = (val: number) => {
@@ -91,10 +84,7 @@ export function CompetitorIntelligenceClient({
   return (
     <div className="max-w-6xl mx-auto pb-20 text-zinc-800">
       {fromTender && (
-        <Link href={`/tenders/${fromTender}`} className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors mb-6 font-medium text-sm group w-fit">
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-          {t('backToTender')}
-        </Link>
+        <BackButton fallbackHref={`/tenders/${fromTender}`} label={t('backToTender')} className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors mb-6 font-medium text-sm group w-fit" />
       )}
 
       {!profile && (
@@ -201,7 +191,15 @@ export function CompetitorIntelligenceClient({
                 </div>
               );
             })}
-            {searchResults.length === 0 && query.length >= 3 && (
+            {searching && query.length >= 3 && (
+              <div className="flex items-center justify-center py-12 text-zinc-400">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 border-2 border-zinc-300 border-t-blue-600 rounded-full animate-spin" />
+                  <span className="text-sm font-medium">{t('searching') || 'Searching...'}</span>
+                </div>
+              </div>
+            )}
+            {!searching && searchResults.length === 0 && query.length >= 3 && (
               <EmptyState
                 icon={<SearchX size={32} />}
                 title={t('noResults') || "No competitors found"}
@@ -217,13 +215,11 @@ export function CompetitorIntelligenceClient({
       ) : profile ? (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="flex items-center justify-between mb-4">
-            <button
-              onClick={clearProfile}
-              className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors font-medium text-sm"
-            >
-              <ArrowLeft size={16} />
-              {backUrl ? t('back') : t('backToSearch')}
-            </button>
+            <BackButton
+              fallbackHref="/intelligence/competitors"
+              label={t('backToSearch')}
+              className="flex items-center gap-2 text-zinc-500 hover:text-blue-600 transition-colors font-medium text-sm group"
+            />
           </div>
           <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-zinc-200/60 shadow-sm p-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
@@ -358,7 +354,6 @@ export function CompetitorIntelligenceClient({
                     // If we want "Back to Tender" to persist even after jumping around, yes.
                     const fromTender = searchParams.get('fromTender');
                     if (fromTender) params.set('fromTender', fromTender);
-                    params.set('backUrl', `${pathname}?${searchParams.toString()}`);
 
                     return (
                     <div key={i} className="p-4 bg-zinc-50 rounded-xl border border-transparent hover:border-emerald-100 hover:bg-white transition-all">
@@ -416,14 +411,13 @@ export function CompetitorIntelligenceClient({
                     <tbody className="divide-y divide-zinc-50">
                       {wonTenders.length > 0 ? (
                         wonTenders.map((tender, i) => {
-                          const tenderBackUrl = `${pathname}?${searchParams.toString()}`;
                           return (
                           <tr
                             key={i}
                             className="hover:bg-blue-50/30 transition-colors group"
                           >
                             <td className="px-6 py-4">
-                              <Link href={`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent(tenderBackUrl)}`} className="font-bold text-zinc-800 text-sm group-hover:text-blue-700 transition-colors line-clamp-2" title={tender.title}>
+                              <Link href={`/tenders/${tender.tender_uuid}`} className="font-bold text-zinc-800 text-sm group-hover:text-blue-700 transition-colors line-clamp-2" title={tender.title}>
                                 {tender.title || "No Title"}
                               </Link>
                             </td>
@@ -448,7 +442,7 @@ export function CompetitorIntelligenceClient({
                             </td>
                             <td className="px-6 py-4 text-right">
                               <div className="flex justify-end">
-                                <Link href={`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent(tenderBackUrl)}`} className="w-8 h-8 rounded-lg bg-zinc-50 flex items-center justify-center text-zinc-300 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                <Link href={`/tenders/${tender.tender_uuid}`} className="w-8 h-8 rounded-lg bg-zinc-50 flex items-center justify-center text-zinc-300 group-hover:bg-blue-600 group-hover:text-white transition-all">
                                   <ArrowUpRight size={16} />
                                 </Link>
                               </div>
