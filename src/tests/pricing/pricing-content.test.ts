@@ -1,6 +1,6 @@
 /**
- * Tests that pricing content in i18n files reflects the new 2-tier structure
- * and that no references to removed tiers (Starter/Enterprise) remain.
+ * Tests that pricing content in i18n files reflects the 3-tier structure:
+ * Explorer (free), Pro (€99/mo), Enterprise (€199/mo).
  */
 
 import { describe, it, expect } from 'vitest';
@@ -19,165 +19,114 @@ function collectKeys(obj: JsonObject, prefix = ''): string[] {
   });
 }
 
-function collectValues(obj: JsonObject, prefix = ''): Array<{ key: string; value: string }> {
-  return Object.entries(obj).flatMap(([key, value]) => {
-    const path = prefix ? `${prefix}.${key}` : key;
-    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
-      return collectValues(value as JsonObject, path);
-    }
-    if (typeof value === 'string') {
-      return [{ key: path, value }];
-    }
-    return [];
-  });
-}
-
-describe('Pricing content — removed tier references', () => {
-  const enValues = collectValues(en as unknown as JsonObject);
-  const ptValues = collectValues(pt as unknown as JsonObject);
-
-  // These are i18n key NAMES that should no longer exist (not values)
-  const removedKeyPatterns = [
-    'landing.starterName',
-    'landing.starterPrice',
-    'landing.starterAnnual',
-    'landing.starterDesc',
-    'landing.entName',
-    'landing.entPrice',
-    'landing.entAnnual',
-    'landing.entDesc',
-    'landing.ef1',
-    'landing.ef2',
-    'landing.ef3',
-    'landing.cr13',   // User seats row (removed from comparison)
-    'landing.cr14',   // API access row
-    'landing.cr15',   // Pipeline CRM row
-    'landing.cr16',   // White-label row
-    'landing.cr1s',   // "50/mo" (old Starter match limit)
-    'landing.pricingCtaSales',
-  ];
-
-  const enKeys = collectKeys(en as unknown as JsonObject);
-
-  for (const pattern of removedKeyPatterns) {
-    it(`en.json should not contain key "${pattern}"`, () => {
-      expect(enKeys).not.toContain(pattern);
-    });
-  }
-});
-
-describe('Pricing content — required new keys exist', () => {
+describe('Pricing content — required keys exist', () => {
   const enKeys = collectKeys(en as unknown as JsonObject);
   const ptKeys = collectKeys(pt as unknown as JsonObject);
 
   const requiredKeys = [
-    // Explorer (free tier) on landing page
+    // Explorer (free) on landing page
     'landing.explorerName',
     'landing.explorerPrice',
     'landing.explorerPriceNote',
     'landing.pricingCtaFree',
-    'landing.xf1',  // Explorer feature 1
-    'landing.xf7',  // Explorer feature 7 (2 AI analyses)
-    'landing.xl1',  // Explorer limitation 1
+    'landing.xf1',
+    'landing.xl1',
 
-    // Pro tier on landing page
+    // Pro on landing page
     'landing.proName',
     'landing.proPrice',
     'landing.proAnnual',
-    'landing.pf1',   // Pro feature 1
+    'landing.pf1',
+    'landing.pf4',   // 5 AI analyses/month
+    'landing.pl1',   // Pro limitation: unlimited AI
+    'landing.pl2',   // Pro limitation: export
+
+    // Enterprise on landing page
+    'landing.entName',
+    'landing.entPrice',
+    'landing.entAnnual',
+    'landing.ef1',
+    'landing.ef2',
 
     // Comparison table
-    'landing.cr1x',  // "Top 5/day" (Explorer match limit)
-    'landing.cr6x',  // "2/month" (Explorer AI limit)
+    'landing.cr1x',   // Top 5/day
+    'landing.cr6p',   // 5/month (Pro)
 
     // Profile page
     'profile.upgradeToPro',
-    'profile.upgradeToProAnnual',
+    'profile.upgradeToEnterprise',
     'profile.proDesc',
+    'profile.enterpriseDesc',
 
-    // Matches page
+    // Matches
     'matches.upgradeToSeeAll',
-    'matches.upgradeMatchesDesc',
     'matches.upgradeToPro',
 
-    // Insights paywall
+    // Paywall
     'tenders.paywall.freeLimit',
+    'tenders.paywall.proLimit',
 
-    // Insights free limit toast
+    // Insights
     'tenders.insights.freeLimitReached',
+    'tenders.insights.proLimitReached',
   ];
 
   for (const key of requiredKeys) {
-    it(`en.json contains "${key}"`, () => {
-      expect(enKeys).toContain(key);
-    });
-
-    it(`pt.json contains "${key}"`, () => {
-      expect(ptKeys).toContain(key);
-    });
+    it(`en.json contains "${key}"`, () => expect(enKeys).toContain(key));
+    it(`pt.json contains "${key}"`, () => expect(ptKeys).toContain(key));
   }
 });
 
 describe('Pricing content — correct values', () => {
   const landing = (en as any).landing;
 
-  it('Explorer price is "Free"', () => {
-    expect(landing.explorerPrice).toBe('Free');
-  });
+  it('Explorer price is "Free"', () => expect(landing.explorerPrice).toBe('Free'));
+  it('Pro price is "€99"', () => expect(landing.proPrice).toBe('€99'));
+  it('Enterprise price is "€199"', () => expect(landing.entPrice).toBe('€199'));
 
-  it('Pro price is "€99"', () => {
-    expect(landing.proPrice).toBe('€99');
-  });
+  it('Pro annual mentions €79/mo', () => expect(landing.proAnnual).toContain('€79'));
+  it('Enterprise annual mentions €159/mo', () => expect(landing.entAnnual).toContain('€159'));
 
-  it('Pro annual mentions €79/mo', () => {
-    expect(landing.proAnnual).toContain('€79');
-  });
+  it('proName is "Pro"', () => expect(landing.proName).toBe('Pro'));
+  it('entName is "Enterprise"', () => expect(landing.entName).toBe('Enterprise'));
+  it('explorerName is "Explorer"', () => expect(landing.explorerName).toBe('Explorer'));
 
-  it('Pro annual mentions €948/yr', () => {
-    expect(landing.proAnnual).toContain('948');
-  });
-
-  it('proName is "Pro" (not "Professional")', () => {
-    expect(landing.proName).toBe('Pro');
-  });
-
-  it('explorerName is "Explorer"', () => {
-    expect(landing.explorerName).toBe('Explorer');
-  });
-
-  it('Explorer features mention 2 AI analyses', () => {
-    expect(landing.xf7).toContain('2');
-  });
-
-  it('Explorer features mention top 5 matches', () => {
-    expect(landing.xf1).toContain('5');
-  });
-
-  it('Comparison table Explorer match limit is "Top 5/day"', () => {
-    expect(landing.cr1x).toContain('5');
-  });
-
-  it('Comparison table Explorer AI limit is "2/month"', () => {
-    expect(landing.cr6x).toContain('2');
-  });
+  it('Pro features mention 5 AI analyses', () => expect(landing.pf4).toContain('5'));
+  it('Explorer features mention top 5 matches', () => expect(landing.xf1).toContain('5'));
+  it('Comparison table Pro AI limit is "5/month"', () => expect(landing.cr6p).toContain('5'));
 });
 
-describe('Pricing content — PT translations match structure', () => {
+describe('Pricing content — PT translations', () => {
   const ptLanding = (pt as any).landing;
 
-  it('PT Explorer price is "Grátis"', () => {
-    expect(ptLanding.explorerPrice).toBe('Grátis');
+  it('PT Explorer price is "Grátis"', () => expect(ptLanding.explorerPrice).toBe('Grátis'));
+  it('PT Pro price is "€99"', () => expect(ptLanding.proPrice).toBe('€99'));
+  it('PT Enterprise price is "€199"', () => expect(ptLanding.entPrice).toBe('€199'));
+  it('PT proName is "Pro"', () => expect(ptLanding.proName).toBe('Pro'));
+  it('PT entName is "Enterprise"', () => expect(ptLanding.entName).toBe('Enterprise'));
+  it('PT Enterprise annual mentions €159', () => expect(ptLanding.entAnnual).toContain('€159'));
+});
+
+describe('Pricing content — tier gating messages', () => {
+  const tenders = (en as any).tenders;
+
+  it('free limit message mentions Pro or Enterprise', () => {
+    expect(tenders.paywall.freeLimit).toContain('Pro');
   });
 
-  it('PT Pro price is "€99"', () => {
-    expect(ptLanding.proPrice).toBe('€99');
+  it('pro limit message mentions Enterprise', () => {
+    expect(tenders.paywall.proLimit).toContain('Enterprise');
   });
 
-  it('PT Pro annual mentions €79', () => {
-    expect(ptLanding.proAnnual).toContain('€79');
+  it('pro limit message mentions 5/month', () => {
+    expect(tenders.paywall.proLimit).toContain('5');
   });
 
-  it('PT proName is "Pro"', () => {
-    expect(ptLanding.proName).toBe('Pro');
+  it('free limit reached toast mentions Pro', () => {
+    expect(tenders.insights.freeLimitReached).toContain('Pro');
+  });
+
+  it('pro limit reached toast mentions Enterprise', () => {
+    expect(tenders.insights.proLimitReached).toContain('Enterprise');
   });
 });

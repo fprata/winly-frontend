@@ -60,4 +60,4 @@ export interface TenderContext {
   benchmarks: any;
 }
 
-export type UserTier = 'free' | 'Pro' | 'Starter' | 'Professional' | 'Enterprise';
+export type UserTier = 'free' | 'Pro' | 'Enterprise' | 'Starter' | 'Professional';

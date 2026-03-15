@@ -33,7 +33,7 @@ export function InsightsTab({ tenderId, initialInsights, derivedDocLink, tier, o
   const riskLevel = insightsData?.risk_assessment?.risk_level;
   const riskFactors = insightsData?.risk_assessment?.key_risk_factors;
 
-  const isPro = tier === 'Pro' || tier === 'Professional' || tier === 'Enterprise';
+  const isEnterprise = tier === 'Enterprise' || tier === 'Professional';
 
   return (
     <div className="space-y-8">
@@ -52,7 +52,7 @@ export function InsightsTab({ tenderId, initialInsights, derivedDocLink, tier, o
       />
 
       {/* Export Actions (below insights content, only for pro users with insights) */}
-      {currentInsights && isPro && (
+      {currentInsights && isEnterprise && (
         <ExportActions tenderId={tenderId} tier={tier} />
       )}
     </div>

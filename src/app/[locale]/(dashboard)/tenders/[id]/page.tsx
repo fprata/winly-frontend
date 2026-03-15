@@ -318,7 +318,7 @@ export default async function TenderDetailsPage({
     },
   ];
 
-  const isPro = userTier === 'Pro' || userTier === 'Professional' || userTier === 'Enterprise';
+  const isPro = userTier === 'Enterprise' || userTier === 'Professional';
 
   const daysLeft = tender.submission_deadline
     ? Math.ceil((new Date(tender.submission_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24))

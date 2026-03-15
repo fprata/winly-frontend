@@ -120,6 +120,8 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
         toast("success", t('insights.analysisComplete'));
       } else if (data.code === 'FREE_LIMIT') {
         toast("error", t('insights.freeLimitReached'));
+      } else if (data.code === 'PRO_LIMIT') {
+        toast("error", t('insights.proLimitReached'));
       } else {
         toast("error", data.error || t('insights.analysisError'));
       }

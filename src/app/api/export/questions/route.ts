@@ -18,8 +18,9 @@ export async function POST(request: Request) {
       .eq('email', user.email)
       .single();
 
-    if (!profile || profile.tier === 'free') {
-      return NextResponse.json({ error: 'Pro plan required' }, { status: 403 });
+    const ENTERPRISE_TIERS = new Set(['Enterprise', 'Professional']);
+    if (!profile || !ENTERPRISE_TIERS.has(profile.tier)) {
+      return NextResponse.json({ error: 'Enterprise plan required for questions export.' }, { status: 403 });
     }
 
     const { tenderId } = await request.json();
