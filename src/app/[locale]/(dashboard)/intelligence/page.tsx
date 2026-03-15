@@ -48,7 +48,7 @@ export default async function MarketIntelligencePage({
     .select('avg_bidder_count, direct_award_pct, avg_discount, total_contracts')
     .eq('country', 'PT')
     .gt('total_contracts', 10)
-    .limit(500);
+    .limit(200);
 
   // Compute market health averages
   const marketHealth = (() => {

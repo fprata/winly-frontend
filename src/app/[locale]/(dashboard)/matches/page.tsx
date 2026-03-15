@@ -49,14 +49,13 @@ export default async function MatchesPage() {
         match_score,
         match_reasons,
         score_cpv,
-        score_location,
+        score_strategic,
+        score_semantic,
         score_capacity,
-        score_keyword,
-        score_market_opp,
         win_probability,
         tender_id,
         tender_uuid,
-        tenders!inner (*)
+        tenders!inner (tender_id, tender_uuid, title, buyer_name, estimated_value, currency, country, cpv_code, submission_deadline, is_active)
       `)
       .eq('client_id', profile.id)
       .eq('tenders.is_active', true)

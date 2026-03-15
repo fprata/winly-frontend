@@ -24,33 +24,45 @@ export default async function Dashboard() {
     .eq('email', user.email)
     .single();
 
-  // Fetch stats server-side, scoped to this user's matches
-  const { data: matches, error } = await db
-    .from('tender_matches')
-    .select(`
-      match_score,
-      tenders!inner (estimated_value, is_active)
-    `)
-    .eq('client_id', profile?.id ?? '')
-    .eq('tenders.is_active', true);
+  // Fetch stats server-side using count queries (no row data needed)
+  const clientId = profile?.id ?? '';
+
+  const [totalResult, highResult, valueResult] = await Promise.all([
+    db
+      .from('tender_matches')
+      .select('*, tenders!inner(is_active)', { count: 'exact', head: true })
+      .eq('client_id', clientId)
+      .eq('tenders.is_active', true),
+    db
+      .from('tender_matches')
+      .select('*, tenders!inner(is_active)', { count: 'exact', head: true })
+      .eq('client_id', clientId)
+      .eq('tenders.is_active', true)
+      .gte('match_score', 75),
+    db
+      .from('tender_matches')
+      .select('match_score, tenders!inner(estimated_value, is_active)')
+      .eq('client_id', clientId)
+      .eq('tenders.is_active', true)
+      .not('tenders.estimated_value', 'is', null)
+      .limit(500),
+  ]);
 
   let stats = { total: 0, high: 0, value: 0 };
   let status = 'online';
 
-  if (error) {
-    console.error("Dashboard stats error:", error);
+  if (totalResult.error) {
+    console.error("Dashboard stats error:", totalResult.error);
     status = 'error';
-  } else if (matches) {
-    const high = matches.filter((m: any) => m.match_score >= 75).length;
-
-    const totalValue = matches.reduce((acc: number, m: any) => {
+  } else {
+    const totalValue = (valueResult.data || []).reduce((acc: number, m: any) => {
       const val = Array.isArray(m.tenders) ? m.tenders[0]?.estimated_value : m.tenders?.estimated_value;
       return acc + (val || 0);
     }, 0);
 
     stats = {
-      total: matches.length,
-      high,
+      total: totalResult.count || 0,
+      high: highResult.count || 0,
       value: totalValue
     };
   }

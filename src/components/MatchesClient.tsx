@@ -80,7 +80,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount, tier = 'fr
           win_probability,
           tender_id,
           tender_uuid,
-          tenders!inner (*)
+          tenders!inner (tender_id, tender_uuid, title, buyer_name, estimated_value, currency, country, cpv_code, submission_deadline, is_active)
         `)
         .eq('client_id', clientId)
         .eq('tenders.is_active', true)
