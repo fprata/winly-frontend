@@ -2,13 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/utils/supabase/server'
-import { onboardingSchema } from '@/lib/validations'
 import { z } from 'zod'
-
-const profileUpdateSchema = onboardingSchema.extend({
-  email: z.string().email('Invalid email address'),
-  id: z.string().uuid(),
-})
 
 export type ProfileState = {
   error?: string | null
@@ -30,7 +24,6 @@ export async function updateProfile(prevState: ProfileState, formData: FormData)
     id: formData.get('id'),
     name: formData.get('name'),
     email: formData.get('email'),
-    services: formData.get('services'),
     tech_stack: formData.get('tech_stack'),
     minBudget: formData.get('minBudget') || null,
     maxBudget: formData.get('maxBudget') || null,
@@ -43,7 +36,6 @@ export async function updateProfile(prevState: ProfileState, formData: FormData)
       id: z.string().uuid(),
       name: z.string().min(2),
       email: z.string().email(),
-      services: z.string().min(10),
       tech_stack: z.string().optional().nullable(),
       minBudget: z.coerce.number().nullable().optional(),
       maxBudget: z.coerce.number().nullable().optional(),
@@ -60,7 +52,7 @@ export async function updateProfile(prevState: ProfileState, formData: FormData)
     }
   }
 
-  const { id, name, email, services, tech_stack, minBudget, maxBudget, cpv_codes, major_competitors: majorCompetitorsRaw, vat_id } = validatedFields.data
+  const { id, name, email, tech_stack, minBudget, maxBudget, cpv_codes, major_competitors: majorCompetitorsRaw, vat_id } = validatedFields.data
   const majorCompetitors = majorCompetitorsRaw ? JSON.parse(majorCompetitorsRaw) : []
 
   const { error } = await supabase
@@ -68,7 +60,6 @@ export async function updateProfile(prevState: ProfileState, formData: FormData)
     .update({ 
         name,
         email,
-        services,
         tech_stack: tech_stack,
         min_budget: minBudget,
         max_budget: maxBudget,

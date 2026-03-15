@@ -290,24 +290,11 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
         </div>
       </Card>
 
-      {/* AI Keywords */}
+      {/* Matching Profile */}
       <Card>
-        <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-4">{t('aiKeywords')}</p>
+        <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-4">{t('matchingProfile')}</p>
 
         <div className="space-y-4">
-          <div>
-            <Textarea
-              label={t('yourServices')}
-              name="services"
-              rows={3}
-              value={profile?.services || ""}
-              onChange={e => setProfile({ ...profile, services: e.target.value })}
-              placeholder={t('keywordsPlaceholder')}
-              disabled={isPending}
-            />
-            {state.errors?.services && <p className="text-xs text-red-500 mt-1">{state.errors.services[0]}</p>}
-          </div>
-
           <CPVSelector
             value={Array.isArray(profile.cpv_codes) ? profile.cpv_codes : (profile.cpv_codes ? profile.cpv_codes.split(',').map((s: string) => s.trim()) : [])}
             onChange={(val) => setProfile({ ...profile, cpv_codes: val })}
