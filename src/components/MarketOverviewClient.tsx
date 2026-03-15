@@ -189,12 +189,14 @@ export function MarketOverviewClient({
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* Sector Chart */}
-            <Card className="h-[520px]">
-              <h3 className="text-base font-bold text-zinc-900 mb-5 flex items-center gap-2">
+            <Card className="h-[520px] flex flex-col">
+              <h3 className="text-base font-bold text-zinc-900 mb-5 flex items-center gap-2 shrink-0">
                 <PieChart size={18} className="text-blue-600" />
                 {t('activeMarketBySector')}
               </h3>
-              <SectorMixChart sectorStats={sectorStats} />
+              <div className="flex-1 min-h-0">
+                <SectorMixChart sectorStats={sectorStats} />
+              </div>
             </Card>
 
             {/* Monthly Volume */}
