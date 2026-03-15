@@ -68,10 +68,9 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
           match_score,
           match_reasons,
           score_cpv,
-          score_location,
+          score_strategic,
+          score_semantic,
           score_capacity,
-          score_keyword,
-          score_market_opp,
           win_probability,
           tender_id,
           tender_uuid,
@@ -300,11 +299,10 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
             const priorityColor: 'rose' | 'amber' | 'zinc' = match.priority === 'High' ? 'rose' : match.priority === 'Medium' ? 'amber' : 'zinc';
 
             const miniBarData = [
-              { label: 'CPV', value: match.score_cpv || 0, max: 50, color: '#8b5cf6' },
-              { label: 'Loc', value: match.score_location || 0, max: 20, color: '#f59e0b' },
-              { label: 'Cap', value: match.score_capacity || 0, max: 20, color: '#0ea5e9' },
-              { label: 'Key', value: match.score_keyword || 0, max: 10, color: '#10b981' },
-              { label: 'Mkt', value: match.score_market_opp || 0, max: 10, color: '#a1a1aa' },
+              { label: 'CPV', value: match.score_cpv || 0, max: 35, color: '#8b5cf6' },
+              { label: 'Hist', value: match.score_strategic || 0, max: 30, color: '#f59e0b' },
+              { label: 'Comp', value: match.score_semantic || 0, max: 20, color: '#10b981' },
+              { label: 'Cap', value: match.score_capacity || 0, max: 15, color: '#0ea5e9' },
             ];
 
             return (
@@ -405,7 +403,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                   <div className="flex flex-wrap gap-1.5 mt-1">
                     {match.priority === 'High' && <Badge color="blue">{t('sectorMatch')}</Badge>}
                     {match.win_probability >= 60 && <Badge color="blue">{t('budgetFit')}</Badge>}
-                    {match.score_strategic >= 70 && <Badge color="blue">{t('strategicFit')}</Badge>}
+                    {match.score_strategic >= 20 && <Badge color="blue">{t('strategicFit')}</Badge>}
                     {match.country && <Badge color="zinc">{match.country}</Badge>}
                   </div>
                 </div>

@@ -206,7 +206,7 @@ export function OverviewTab({
           <CardHeader icon={<IconBox color="blue"><FileText size={16} /></IconBox>} title={t('keyDetails')} />
           <DataGroup label={t('authority')}>
             <Link
-              href={`/intelligence/buyers?name=${encodeURIComponent(tender.buyer_name)}&fromTender=${tenderId}&backUrl=${encodeURIComponent('/tenders/' + tenderId)}`}
+              href={`/intelligence/buyers?name=${encodeURIComponent(tender.buyer_name)}&fromTender=${tenderId}`}
               className="text-blue-600 hover:underline font-semibold"
             >
               {tender.buyer_name}
@@ -255,11 +255,10 @@ export function OverviewTab({
                 )}
               </div>
               <div>
-                <ScoreBar label="CPV" value={match.score_cpv || 0} max={50} color="#8b5cf6" />
-                <ScoreBar label={t('location')} value={match.score_location || 0} max={20} color="#f59e0b" />
-                <ScoreBar label={t('capacity')} value={match.score_capacity || 0} max={20} color="#0ea5e9" />
-                <ScoreBar label={t('keyword')} value={match.score_keyword || 0} max={10} color="#10b981" />
-                <ScoreBar label={t('marketOpp')} value={match.score_market_opp || 0} max={10} color="#a1a1aa" />
+                <ScoreBar label={t('sectorMatch')} value={match.score_cpv || 0} max={35} color="#8b5cf6" />
+                <ScoreBar label={t('historicalAffinity')} value={match.score_strategic || 0} max={30} color="#f59e0b" />
+                <ScoreBar label={t('competitiveSignal')} value={match.score_semantic || 0} max={20} color="#10b981" />
+                <ScoreBar label={t('capacityFit')} value={match.score_capacity || 0} max={15} color="#0ea5e9" />
               </div>
             </>
           ) : (
@@ -318,7 +317,7 @@ export function OverviewTab({
               <span className="block text-[11px] font-semibold uppercase tracking-wider text-zinc-400 mb-2">{t('expectedCompetitors')}</span>
               <div className="space-y-2">
                 {relevantCompetitors.slice(0, 3).map((c: any, i: number) => (
-                  <Link key={i} href={`/intelligence/competitors?name=${encodeURIComponent(c.winner_name)}&backUrl=${encodeURIComponent('/tenders/' + tenderId)}`}
+                  <Link key={i} href={`/intelligence/competitors?name=${encodeURIComponent(c.winner_name)}`}
                     className="flex items-center justify-between p-2.5 bg-zinc-50 rounded-lg border border-zinc-200 hover:border-blue-300 hover:bg-white transition-all group text-sm"
                   >
                     <span className="font-medium text-zinc-700 group-hover:text-blue-600 transition-colors truncate">{c.winner_name}</span>
@@ -330,7 +329,7 @@ export function OverviewTab({
           )}
           <div className="mt-4">
             <Link
-              href={`/intelligence/buyers?name=${encodeURIComponent(tender.buyer_name)}&fromTender=${tenderId}&backUrl=${encodeURIComponent('/tenders/' + tenderId)}`}
+              href={`/intelligence/buyers?name=${encodeURIComponent(tender.buyer_name)}&fromTender=${tenderId}`}
               className="text-[13px] text-blue-600 font-semibold hover:underline flex items-center gap-1"
             >
               {t('viewFullBuyerProfile')} <ArrowRight size={14} />
@@ -469,7 +468,7 @@ export function OverviewTab({
             {relatedTenders.map((rt: any) => (
               <Link
                 key={rt.tender_id}
-                href={`/tenders/${rt.tender_uuid}?backUrl=${encodeURIComponent('/tenders/' + tenderId)}`}
+                href={`/tenders/${rt.tender_uuid}`}
                 className="flex items-center justify-between p-3 px-4 bg-zinc-50 rounded-lg border border-zinc-200 hover:border-blue-300 hover:bg-white transition-all group"
               >
                 <div>
