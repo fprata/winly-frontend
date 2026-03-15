@@ -5,52 +5,42 @@ import { createClient } from '@/utils/supabase/server';
 import { getDataClient } from '@/utils/dev-auth';
 import { MarketOverviewClient } from '@/components/MarketOverviewClient';
 
+export const revalidate = 60;
+
 export default async function MarketIntelligencePage({
   searchParams,
 }: {
   searchParams: Promise<{ sector?: string }>;
 }) {
-  const t = await getTranslations('intelligence');
-  const { sector = 'ALL' } = await searchParams;
+  const [t, { sector = 'ALL' }] = await Promise.all([
+    getTranslations('intelligence'),
+    searchParams,
+  ]);
 
   const supabase = await createClient();
   const db = await getDataClient(supabase);
 
-  // Fetch unique sectors for filter
-  const { data: filterRows } = await db
-    .from('market_overview')
-    .select('cpv_division')
-    .limit(1000);
+  // Parallelize all 4 queries
+  const [filterResult, statsResult, competitorsResult, buyerMetricsResult] = await Promise.all([
+    db.from('market_overview').select('cpv_division').limit(1000),
+    db.from('market_overview').select('*').eq('cpv_division', sector).limit(1).maybeSingle(),
+    db.from('intel_competitors')
+      .select('name, competitor_id, total_wins, total_revenue, win_rate_pct, sector_diversity, direct_award_pct')
+      .eq('country', 'PT')
+      .order('total_revenue', { ascending: false })
+      .limit(20),
+    db.from('intel_buyers')
+      .select('avg_bidder_count, direct_award_pct, avg_discount, total_contracts')
+      .eq('country', 'PT')
+      .gt('total_contracts', 10)
+      .limit(200),
+  ]);
 
-  const uniqueSectors: string[] = filterRows
-    ? Array.from(new Set(filterRows.map((r: any) => r.cpv_division))).filter((s): s is string => s !== 'ALL').sort() as string[]
+  const uniqueSectors: string[] = filterResult.data
+    ? Array.from(new Set(filterResult.data.map((r: any) => r.cpv_division))).filter((s): s is string => s !== 'ALL').sort() as string[]
     : [];
 
-  // Fetch selected data row
-  const { data: statsData } = await db
-    .from('market_overview')
-    .select('*')
-    .eq('cpv_division', sector)
-    .limit(1)
-    .maybeSingle();
-
-  // Fetch top competitors by revenue (pre-aggregated)
-  const { data: topCompetitors } = await db
-    .from('intel_competitors')
-    .select('name, competitor_id, total_wins, total_revenue, win_rate_pct, sector_diversity, direct_award_pct')
-    .eq('country', 'PT')
-    .order('total_revenue', { ascending: false })
-    .limit(20);
-
-  // Fetch market health metrics from buyer intelligence (aggregated averages)
-  const { data: buyerMetrics } = await db
-    .from('intel_buyers')
-    .select('avg_bidder_count, direct_award_pct, avg_discount, total_contracts')
-    .eq('country', 'PT')
-    .gt('total_contracts', 10)
-    .limit(200);
-
-  // Compute market health averages
+  const buyerMetrics = buyerMetricsResult.data;
   const marketHealth = (() => {
     if (!buyerMetrics || buyerMetrics.length === 0) return null;
     const valid = buyerMetrics.filter((b: any) => b.avg_bidder_count > 0);
@@ -81,10 +71,10 @@ export default async function MarketIntelligencePage({
       </div>
 
       <MarketOverviewClient
-        initialData={statsData}
+        initialData={statsResult.data}
         initialSectors={uniqueSectors}
         selectedSector={sector}
-        topCompetitors={topCompetitors || []}
+        topCompetitors={competitorsResult.data || []}
         marketHealth={marketHealth}
       />
     </div>

@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { createClient } from '@/utils/supabase/server';
 import { getServerUser, getDataClient } from '@/utils/dev-auth';
-import { ExplorerClient } from '@/components/ExplorerClient';
+import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 
-export const revalidate = 0;
+const ExplorerClient = dynamic(
+  () => import('@/components/ExplorerClient').then(mod => ({ default: mod.ExplorerClient })),
+  { ssr: true }
+);
+
+export const revalidate = 30;
 
 export default async function ExplorerPage({
   searchParams,
@@ -33,18 +38,15 @@ export default async function ExplorerPage({
 
   const supabase = await createClient();
 
-  const { user } = await getServerUser(supabase);
+  // Parallelize auth + profile lookup
+  const [{ user }, db] = await Promise.all([
+    getServerUser(supabase),
+    getDataClient(supabase),
+  ]);
   if (!user) redirect('/login');
 
-  const db = await getDataClient(supabase);
-
-  const { data: profile } = await db
-    .from('clients')
-    .select('id')
-    .eq('email', user.email)
-    .single();
-
-  const COLUMNS = 'tender_id, tender_uuid, title, buyer_name, estimated_value, final_contract_value, currency, publication_date, submission_deadline, country, cpv_code, is_active, tender_matches(match_score)';
+  // Fetch profile and tenders in parallel
+  const COLUMNS = 'tender_id, tender_uuid, title, buyer_name, estimated_value, final_contract_value, currency, publication_date, submission_deadline, country, cpv_code, is_active';
 
   let supabaseQuery = db
     .from('tenders')
@@ -84,22 +86,23 @@ export default async function ExplorerPage({
   } else if (sort === "valueAsc") {
     supabaseQuery = supabaseQuery.order('estimated_value', { ascending: true, nullsFirst: false });
   } else {
-    // Default: newest first
     supabaseQuery = supabaseQuery.order('publication_date', { ascending: false });
   }
 
-  const { data, count, error } = await supabaseQuery
-    .range(page * pageSize, (page + 1) * pageSize - 1);
+  const [profileResult, tendersResult] = await Promise.all([
+    db.from('clients').select('id').eq('email', user.email).single(),
+    supabaseQuery.range(page * pageSize, (page + 1) * pageSize - 1),
+  ]);
 
-  if (error) {
-    console.error("Initial Explorer fetch failed:", error);
+  if (tendersResult.error) {
+    console.error("Initial Explorer fetch failed:", tendersResult.error);
   }
 
   return (
     <ExplorerClient
-      initialTenders={data || []}
-      initialTotal={count || 0}
-      clientId={profile?.id || null}
+      initialTenders={tendersResult.data || []}
+      initialTotal={tendersResult.count || 0}
+      clientId={profileResult.data?.id || null}
     />
   );
 }

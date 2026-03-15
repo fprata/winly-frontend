@@ -44,9 +44,7 @@ interface Tender {
   source_system?: string;
   procedure_documents_url?: string;
   document_urls?: string;
-  tender_matches?: {
-    match_score: number;
-  }[];
+  match_score?: number;
 }
 
 interface ExplorerClientProps {
@@ -577,7 +575,7 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
       ) : (
         <div className="space-y-3">
           {tenders.map((tender) => {
-            const match = Array.isArray(tender.tender_matches) ? tender.tender_matches[0] : null;
+            const matchScore = tender.match_score ?? null;
             const tenderStatus = getTenderStatus(tender);
             const daysAgo = tender.publication_date ? getDaysAgo(tender.publication_date) : null;
             const daysUntilDeadline = tender.submission_deadline ? getDaysUntil(tender.submission_deadline) : null;
@@ -624,9 +622,9 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
                       </Badge>
 
                       {/* Match Score */}
-                      {match && (
-                        <Badge color={getScoreColor(match.match_score)}>
-                          {Math.round(match.match_score)}% {t('matchScore').toLowerCase()}
+                      {matchScore != null && (
+                        <Badge color={getScoreColor(matchScore)}>
+                          {Math.round(matchScore)}% {t('matchScore').toLowerCase()}
                         </Badge>
                       )}
 
