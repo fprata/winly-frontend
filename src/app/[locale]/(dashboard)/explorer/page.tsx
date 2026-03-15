@@ -89,9 +89,17 @@ export default async function ExplorerPage({
     supabaseQuery = supabaseQuery.order('publication_date', { ascending: false });
   }
 
-  const [profileResult, tendersResult] = await Promise.all([
+  const nextWeek = new Date();
+  nextWeek.setDate(nextWeek.getDate() + 7);
+
+  const [profileResult, tendersResult, closingResult] = await Promise.all([
     db.from('clients').select('id').eq('email', user.email).single(),
     supabaseQuery.range(page * pageSize, (page + 1) * pageSize - 1),
+    db.from('tenders')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_active', true)
+      .gte('submission_deadline', new Date().toISOString())
+      .lte('submission_deadline', nextWeek.toISOString()),
   ]);
 
   if (tendersResult.error) {
@@ -102,6 +110,7 @@ export default async function ExplorerPage({
     <ExplorerClient
       initialTenders={tendersResult.data || []}
       initialTotal={tendersResult.count || 0}
+      closingThisWeek={closingResult.count || 0}
       clientId={profileResult.data?.id || null}
     />
   );

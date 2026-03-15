@@ -50,6 +50,7 @@ interface Tender {
 interface ExplorerClientProps {
   initialTenders: Tender[];
   initialTotal: number;
+  closingThisWeek?: number;
   clientId: string | null;
 }
 
@@ -92,7 +93,7 @@ function getDaysUntil(dateStr: string): number {
   return Math.floor((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-export function ExplorerClient({ initialTenders, initialTotal, clientId }: ExplorerClientProps) {
+export function ExplorerClient({ initialTenders, initialTotal, closingThisWeek: initialClosingThisWeek, clientId }: ExplorerClientProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -257,11 +258,11 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
   }, [country, cpv, cpvOptions, minValue, maxValue, status, locale, t]);
 
   // Stat calculations
-  const closingThisWeek = useMemo(() => tenders.filter(tender => {
+  const closingThisWeek = initialClosingThisWeek ?? tenders.filter(tender => {
     if (!tender.submission_deadline) return false;
     const days = getDaysUntil(tender.submission_deadline);
     return days >= 0 && days <= 7;
-  }).length, [tenders]);
+  }).length;
 
   const totalValue = useMemo(() => tenders.reduce((sum, t) => sum + (t.estimated_value || 0), 0), [tenders]);
 

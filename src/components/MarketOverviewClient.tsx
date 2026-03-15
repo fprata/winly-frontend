@@ -60,6 +60,14 @@ export function MarketOverviewClient({
     }).format(val || 0);
   };
 
+  const formatCompactValue = (val: number) => {
+    if (!val) return '€0';
+    if (val >= 1_000_000_000) return `€${(val / 1_000_000_000).toFixed(1)}B`;
+    if (val >= 1_000_000) return `€${(val / 1_000_000).toFixed(1)}M`;
+    if (val >= 1_000) return `€${(val / 1_000).toFixed(0)}K`;
+    return `€${val.toFixed(0)}`;
+  };
+
   const formatNumber = (val: number) => {
     return new Intl.NumberFormat(locale === 'pt' ? 'pt-PT' : 'en-GB').format(val || 0);
   };
@@ -167,14 +175,14 @@ export function MarketOverviewClient({
             <StatCard
               icon={<DollarSign size={18} />}
               label={t('stats.pipelineValue')}
-              value={formatValue(data.total_value)}
+              value={formatCompactValue(data.total_value)}
               subtitle={t('totalMarketOpportunity')}
               color="indigo"
             />
             <StatCard
               icon={<Target size={18} />}
               label={t('avgContractValue')}
-              value={data.total_active > 0 ? formatValue(data.total_value / data.total_active) : '—'}
+              value={data.total_active > 0 ? formatCompactValue(data.total_value / data.total_active) : '—'}
               subtitle={t('avgTicketSize')}
               color="green"
             />
@@ -259,7 +267,7 @@ export function MarketOverviewClient({
                     <div className="flex justify-between items-end">
                       <div>
                         <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">{t('volume')}</p>
-                        <p className="text-sm font-bold text-zinc-900">{formatValue(buyer.value)}</p>
+                        <p className="text-sm font-bold text-zinc-900">{formatCompactValue(buyer.value)}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">{tCommon('active')}</p>
@@ -331,7 +339,7 @@ export function MarketOverviewClient({
                       <div className="flex justify-between items-end">
                         <div>
                           <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">{t('revenue')}</p>
-                          <p className="text-sm font-bold text-zinc-900">{formatValue(comp.total_revenue)}</p>
+                          <p className="text-sm font-bold text-zinc-900">{formatCompactValue(comp.total_revenue)}</p>
                         </div>
                         <div className="text-right">
                           <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">{t('winRate')}</p>
