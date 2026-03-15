@@ -80,10 +80,12 @@ export function SectorMixChart({ sectorStats }: SectorMixChartProps) {
                             <div key={String(name)} className="flex flex-col gap-1">
                                 <span>{formatValue(Number(value) || 0)}</span>
                                 <span className="text-[10px] text-zinc-500">
-                                    {props.payload.count} {props.payload.isBuyer ? t('contracts') : t('wins')} • {
-                                        props.payload.isBuyer 
-                                            ? `${props.payload.secondaryMetric.toFixed(1)} ${t('bidders')}` 
-                                            : `${props.payload.secondaryMetric.toFixed(1)}% ${t('winRate')}`
+                                    {props.payload.count} {props.payload.isBuyer ? t('contracts') : t('wins')}{
+                                        props.payload.secondaryMetric > 0
+                                            ? ` • ${props.payload.isBuyer
+                                                ? `${props.payload.secondaryMetric.toFixed(1)} ${t('bidders')}`
+                                                : `${props.payload.secondaryMetric.toFixed(1)}% ${t('winRate')}`}`
+                                            : ''
                                     }
                                 </span>
                             </div>, 
@@ -107,14 +109,16 @@ export function SectorMixChart({ sectorStats }: SectorMixChartProps) {
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
                             <span className="text-[10px] font-bold text-zinc-400">{entry.count} {entry.isBuyer ? t('awards') : t('wins')}</span>
-                            {entry.isBuyer ? (
-                                <span className="text-[10px] font-black w-12 text-right text-blue-600">
-                                    {entry.secondaryMetric.toFixed(1)} avg
-                                </span>
-                            ) : (
-                                <span className={`text-[10px] font-black w-12 text-right ${entry.secondaryMetric > 50 ? 'text-emerald-600' : 'text-blue-600'}`}>
-                                    {entry.secondaryMetric.toFixed(1)}%
-                                </span>
+                            {entry.secondaryMetric > 0 && (
+                                entry.isBuyer ? (
+                                    <span className="text-[10px] font-black w-12 text-right text-blue-600">
+                                        {entry.secondaryMetric.toFixed(1)} avg
+                                    </span>
+                                ) : (
+                                    <span className={`text-[10px] font-black w-12 text-right ${entry.secondaryMetric > 50 ? 'text-emerald-600' : 'text-blue-600'}`}>
+                                        {entry.secondaryMetric.toFixed(1)}%
+                                    </span>
+                                )
                             )}
                         </div>
                     </div>
