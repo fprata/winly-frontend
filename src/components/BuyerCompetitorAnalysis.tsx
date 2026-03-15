@@ -192,7 +192,6 @@ export function BuyerCompetitorAnalysis({ buyerName, selectedCpvs, initialTender
                         const fromTender = searchParams.get('fromTender');
                         const params = new URLSearchParams();
                         if (fromTender) params.set('fromTender', fromTender);
-                        params.set('backUrl', `${pathname}?${searchParams.toString()}`);
 
                         return (
                         <tr key={i} className="hover:bg-zinc-50 transition-colors">

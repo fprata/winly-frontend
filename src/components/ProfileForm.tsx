@@ -119,17 +119,12 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
     }
   };
 
-  const handleUpgrade = async (tier: string) => {
-    if (tier === 'Enterprise') {
-      toast("info", t('enterpriseContactAlert'));
-      return;
-    }
-
+  const handleUpgrade = async (billingInterval: 'month' | 'year' = 'month') => {
     try {
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier, priceId: 'price_12345' }),
+        body: JSON.stringify({ tier: 'Pro', billingInterval }),
       });
 
       if (!response.ok) throw new Error('Network response was not ok');
@@ -153,32 +148,28 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <p className="text-xs text-zinc-400 uppercase tracking-wider font-medium mb-1">{t('currentPlan')}</p>
-            <h3 className="text-3xl font-extrabold text-zinc-900">{profile?.tier || 'Explorer'}</h3>
+            <h3 className="text-3xl font-extrabold text-zinc-900">
+              {profile?.tier === 'Pro' || profile?.tier === 'Professional' || profile?.tier === 'Enterprise' ? 'Pro' : 'Explorer'}
+            </h3>
             <p className="text-sm text-zinc-500 mt-1">
-              {profile?.tier === 'Enterprise' ? t('enterpriseDesc') :
-                profile?.tier === 'Professional' ? t('professionalDesc') :
-                profile?.tier === 'Starter' ? t('starterDesc') :
-                t('explorerDesc')}
+              {profile?.tier === 'Pro' || profile?.tier === 'Professional' || profile?.tier === 'Enterprise'
+                ? t('proDesc')
+                : t('explorerDesc')}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {(!profile?.tier || profile?.tier === 'Explorer') && (
-              <Button variant="secondary" type="button" onClick={() => handleUpgrade('Starter')}>
-                {t('upgradeToStarter')}
-              </Button>
+            {(!profile?.tier || profile.tier === 'free' || profile.tier === 'Explorer' || profile.tier === 'Starter') && (
+              <>
+                <Button variant="accent" type="button" onClick={() => handleUpgrade('month')}>
+                  {t('upgradeToPro')}
+                </Button>
+                <Button variant="secondary" type="button" onClick={() => handleUpgrade('year')}>
+                  {t('upgradeToProAnnual')}
+                </Button>
+              </>
             )}
-            {(!profile?.tier || profile?.tier === 'Explorer' || profile?.tier === 'Starter') && (
-              <Button variant="secondary" type="button" onClick={() => handleUpgrade('Professional')}>
-                {t('upgradeToProfessional')}
-              </Button>
-            )}
-            {profile?.tier !== 'Enterprise' && (
-              <Button variant="accent" type="button" onClick={() => handleUpgrade('Enterprise')}>
-                {t('upgradeToEnterprise')}
-              </Button>
-            )}
-            {profile?.tier && profile.tier !== 'Explorer' && (
+            {profile?.tier && profile.tier !== 'free' && profile.tier !== 'Explorer' && (
               <Button variant="ghost" type="button" onClick={handleManageSubscription}>
                 {t('manageSubscription')}
               </Button>

@@ -48,7 +48,7 @@ export function AwardTab({ tenderId, tender }: AwardTabProps) {
             <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-3">{t('winningEntity')}</p>
             {tender.winners_list && tender.winners_list.length > 0 ? (
               tender.winners_list.map((winner: any, i: number) => (
-                <Link key={i} href={`/intelligence/competitors?name=${encodeURIComponent(winner.winner_name)}&backUrl=${encodeURIComponent('/tenders/' + tenderId)}`} className="flex items-center gap-3 p-4 bg-zinc-50 rounded-xl border border-zinc-100 hover:border-amber-200 transition-all group mb-2">
+                <Link key={i} href={`/intelligence/competitors?name=${encodeURIComponent(winner.winner_name)}`} className="flex items-center gap-3 p-4 bg-zinc-50 rounded-xl border border-zinc-100 hover:border-amber-200 transition-all group mb-2">
                   <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-amber-600 shadow-sm font-bold">
                     W
                   </div>

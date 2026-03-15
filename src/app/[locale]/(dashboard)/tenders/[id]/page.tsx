@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ArrowLeft,
   ExternalLink,
   DollarSign,
   FileText,
@@ -20,6 +19,7 @@ import { OverviewTab } from '@/components/tender/OverviewTab';
 import { AwardTab } from '@/components/tender/AwardTab';
 import { InsightsTab } from '@/components/tender/InsightsTab';
 import { TenderChatbot } from '@/components/tender/TenderChatbot';
+import { BackButton } from '@/components/ui/BackButton';
 import type { UserTier } from '@/components/tender/types';
 
 interface TenderDetails {
@@ -68,10 +68,10 @@ export default async function TenderDetailsPage({
   searchParams
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ backUrl?: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const { id } = await params;
-  const { backUrl } = await searchParams;
+  await searchParams;
 
   const supabase = await createClient();
   const t = await getTranslations('tenders');
@@ -318,7 +318,7 @@ export default async function TenderDetailsPage({
     },
   ];
 
-  const isPro = userTier === 'Professional' || userTier === 'Enterprise';
+  const isPro = userTier === 'Pro' || userTier === 'Professional' || userTier === 'Enterprise';
 
   const daysLeft = tender.submission_deadline
     ? Math.ceil((new Date(tender.submission_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
@@ -327,10 +327,7 @@ export default async function TenderDetailsPage({
   return (
     <div className="max-w-[1100px] mx-auto pb-20">
       {/* Back link */}
-      <Link href={backUrl || '/matches'} className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-400 hover:text-blue-600 transition-colors mb-4 group">
-        <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
-        {backUrl ? t('back') : t('backToMatches')}
-      </Link>
+      <BackButton fallbackHref="/matches" label={t('back')} />
 
       {/* Detail Header */}
       <div className="mb-6">

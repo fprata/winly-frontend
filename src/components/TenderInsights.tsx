@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import {
   FileText, Loader2, Sparkles, Clock, ShieldCheck, Scale,
-  RefreshCw, Zap, CheckCircle2,
+  RefreshCw, Zap, CheckCircle2, Layers, UserCheck, FileCheck, AlertTriangle,
 } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Button } from './ui/Button';
@@ -118,6 +118,8 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
         setRawInsights(data.insights);
         onInsightsGenerated?.(data.insights);
         toast("success", t('insights.analysisComplete'));
+      } else if (data.code === 'FREE_LIMIT') {
+        toast("error", t('insights.freeLimitReached'));
       } else {
         toast("error", data.error || t('insights.analysisError'));
       }
@@ -264,7 +266,137 @@ export function TenderInsights({ tenderId, initialInsights, derivedDocLink, onIn
               • {renderInsightValue(insights.mandatory_certifications_and_licenses, t('insights.notSpecified'), t('insights.noneSpecified'), t('insights.yes'), t('insights.no'))}
             </p>
           </InsightCard>
+
+          {/* Eligibility & Qualification */}
+          {insights.eligibility_requirements && (
+            (() => {
+              const elig = insights.eligibility_requirements;
+              const hasData = elig.minimum_annual_turnover || (elig.years_of_experience && elig.years_of_experience > 0) || (elig.minimum_similar_projects && elig.minimum_similar_projects > 0) || (elig.minimum_team_size && elig.minimum_team_size > 0) || elig.financial_standing || (elig.other_requirements && elig.other_requirements.length > 0);
+              if (!hasData) return null;
+              return (
+                <InsightCard>
+                  <CardHeader
+                    icon={<div className="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center"><UserCheck size={16} /></div>}
+                    title={t('insights.eligibility')}
+                  />
+                  {elig.minimum_annual_turnover && (
+                    <DataGroup label={t('insights.minTurnover')} value={elig.minimum_annual_turnover} />
+                  )}
+                  {elig.years_of_experience > 0 && (
+                    <DataGroup label={t('insights.yearsExperience')} value={`${elig.years_of_experience} ${t('insights.years')}`} />
+                  )}
+                  {elig.minimum_similar_projects > 0 && (
+                    <DataGroup label={t('insights.similarProjects')} value={elig.minimum_similar_projects} />
+                  )}
+                  {elig.minimum_team_size > 0 && (
+                    <DataGroup label={t('insights.minTeamSize')} value={elig.minimum_team_size} />
+                  )}
+                  {elig.financial_standing && (
+                    <DataGroup label={t('insights.financialStanding')} value={elig.financial_standing} />
+                  )}
+                  {elig.other_requirements?.length > 0 && (
+                    <DataGroup label={t('insights.otherRequirements')} value={elig.other_requirements.join(', ')} />
+                  )}
+                </InsightCard>
+              );
+            })()
+          )}
+
+          {/* Subcontracting & Submission */}
+          {(() => {
+            const sub = insights.subcontracting_rules || {};
+            const hasSub = (sub.max_subcontracting_percent && sub.max_subcontracting_percent > 0) || sub.subcontracting_restrictions || insights.submission_platform || insights.abnormally_low_price_threshold;
+            if (!hasSub) return null;
+            return (
+              <InsightCard>
+                <CardHeader
+                  icon={<div className="w-8 h-8 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center"><FileCheck size={16} /></div>}
+                  title={t('insights.subcontractingSubmission')}
+                />
+                {sub.max_subcontracting_percent > 0 && (
+                  <DataGroup label={t('insights.maxSubcontracting')} value={`${sub.max_subcontracting_percent}%`} />
+                )}
+                {sub.subcontracting_restrictions && (
+                  <DataGroup label={t('insights.subcontractingRestrictions')} value={sub.subcontracting_restrictions} />
+                )}
+                {insights.submission_platform && (
+                  <DataGroup label={t('insights.submissionPlatform')} value={insights.submission_platform} />
+                )}
+                {insights.abnormally_low_price_threshold && (
+                  <DataGroup label={t('insights.abnormallyLowThreshold')} value={insights.abnormally_low_price_threshold} />
+                )}
+              </InsightCard>
+            );
+          })()}
+
+          {/* Contract Penalties */}
+          {insights.contract_penalties?.length > 0 && (
+            <InsightCard>
+              <CardHeader
+                icon={<div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center"><AlertTriangle size={16} /></div>}
+                title={t('insights.contractPenalties')}
+              />
+              <ul className="space-y-2">
+                {insights.contract_penalties.map((penalty: string, i: number) => (
+                  <li key={i} className="flex items-start gap-2 text-[14px] text-zinc-600">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-400 flex-shrink-0" />
+                    {penalty}
+                  </li>
+                ))}
+              </ul>
+            </InsightCard>
+          )}
         </div>
+
+        {/* Lots — full width, outside the 2-col grid */}
+        {insights.lots?.length > 0 && (
+          <InsightCard>
+            <CardHeader
+              icon={<div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center"><Layers size={16} /></div>}
+              title={`${t('insights.lots')} (${insights.lots.length})`}
+            />
+            <div className="space-y-4">
+              {insights.lots.map((lot: any, i: number) => (
+                <div key={i} className="rounded-lg border border-zinc-200 p-4">
+                  <h4 className="text-[14px] font-bold text-blue-600 mb-2">
+                    {lot.lot_number}{lot.lot_title ? ` — ${lot.lot_title}` : ''}
+                  </h4>
+                  {lot.lot_description && (
+                    <p className="text-[13px] text-zinc-600 mb-3 leading-relaxed">{lot.lot_description}</p>
+                  )}
+                  <div className="flex flex-wrap gap-x-6 gap-y-2 text-[12px]">
+                    {lot.lot_budget_value > 0 && (
+                      <span className="text-zinc-500">
+                        <span className="font-semibold text-zinc-700">{t('insights.budget')}:</span>{' '}
+                        {fmtCurrency(lot.lot_budget_value, lot.lot_budget_currency)}
+                      </span>
+                    )}
+                    {lot.lot_cpv_code && (
+                      <span className="text-zinc-500">
+                        <span className="font-semibold text-zinc-700">CPV:</span> {lot.lot_cpv_code}
+                      </span>
+                    )}
+                    {lot.lot_evaluation_criteria?.price_weight_percent > 0 && (
+                      <span className="text-zinc-500">
+                        <span className="font-semibold text-zinc-700">{t('insights.priceWeight')}:</span> {lot.lot_evaluation_criteria.price_weight_percent}%
+                      </span>
+                    )}
+                    {lot.lot_evaluation_criteria?.quality_weight_percent > 0 && (
+                      <span className="text-zinc-500">
+                        <span className="font-semibold text-zinc-700">{t('insights.qualityWeight')}:</span> {lot.lot_evaluation_criteria.quality_weight_percent}%
+                      </span>
+                    )}
+                    {lot.lot_submission_deadline_iso && (
+                      <span className="text-zinc-500">
+                        <span className="font-semibold text-zinc-700">{t('submissionDeadline')}:</span> {fmtDate(lot.lot_submission_deadline_iso)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </InsightCard>
+        )}
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-2">

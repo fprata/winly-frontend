@@ -30,7 +30,7 @@ export default async function MatchesPage() {
 
   const { data: profile } = await db
     .from('clients')
-    .select('id')
+    .select('id, tier')
     .eq('email', user.email)
     .single();
 
@@ -40,8 +40,9 @@ export default async function MatchesPage() {
   const [{ count: totalCount }, { data: matches, error }] = await Promise.all([
     db
       .from('tender_matches')
-      .select('*', { count: 'exact', head: true })
-      .eq('client_id', profile.id),
+      .select('*, tenders!inner(is_active)', { count: 'exact', head: true })
+      .eq('client_id', profile.id)
+      .eq('tenders.is_active', true),
     db
       .from('tender_matches')
       .select(`
@@ -55,9 +56,10 @@ export default async function MatchesPage() {
         win_probability,
         tender_id,
         tender_uuid,
-        tenders (*)
+        tenders!inner (*)
       `)
       .eq('client_id', profile.id)
+      .eq('tenders.is_active', true)
       .order('match_score', { ascending: false })
       .limit(200),
   ]);
@@ -71,6 +73,7 @@ export default async function MatchesPage() {
       initialMatches={matches || []}
       clientId={profile.id}
       totalCount={totalCount || undefined}
+      tier={profile?.tier || 'free'}
     />
   );
 }

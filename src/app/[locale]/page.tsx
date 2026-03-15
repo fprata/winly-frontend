@@ -424,9 +424,8 @@ const jsonLd = {
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
   offers: [
-    { '@type': 'Offer', price: '149', priceCurrency: 'EUR', name: 'Starter Plan' },
-    { '@type': 'Offer', price: '399', priceCurrency: 'EUR', name: 'Professional Plan' },
-    { '@type': 'Offer', price: '999', priceCurrency: 'EUR', name: 'Enterprise Plan' },
+    { '@type': 'Offer', price: '0', priceCurrency: 'EUR', name: 'Explorer Plan' },
+    { '@type': 'Offer', price: '99', priceCurrency: 'EUR', name: 'Pro Plan' },
   ],
   aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', ratingCount: '127' },
   description: 'AI-powered procurement intelligence platform for EU public tenders.',
@@ -801,38 +800,38 @@ export default async function LandingPage() {
             <p className="text-zinc-500 max-w-2xl mx-auto text-lg">{t('pricingSubtitle')}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
 
-            {/* Starter */}
+            {/* Explorer (Free) */}
             <div className="p-8 rounded-xl bg-zinc-50 border border-zinc-200 flex flex-col">
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-zinc-900 mb-1">{t('starterName')}</h3>
-                <p className="text-zinc-500 text-sm">{t('starterDesc')}</p>
+                <h3 className="text-xl font-bold text-zinc-900 mb-1">{t('explorerName')}</h3>
+                <p className="text-zinc-500 text-sm">{t('explorerPricingDesc')}</p>
               </div>
-              <div className="text-4xl font-black text-zinc-900 mb-2">{t('starterPrice')}<span className="text-base font-medium text-zinc-400">/mo</span></div>
-              <p className="text-sm text-zinc-400 mb-8">{t('starterAnnual')}</p>
+              <div className="text-4xl font-black text-zinc-900 mb-2">{t('explorerPrice')}</div>
+              <p className="text-sm text-zinc-400 mb-8">{t('explorerPriceNote')}</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  t('sf1'),
-                  t('sf2'),
-                  t('sf3'),
-                  t('sf4'),
-                  t('sf5'),
-                  t('sf6'),
+                  t('xf1'),
+                  t('xf2'),
+                  t('xf3'),
+                  t('xf4'),
+                  t('xf5'),
+                  t('xf6'),
+                  t('xf7'),
                 ].map(f => <li key={f} className="flex items-start gap-3 text-zinc-700 text-sm"><Check size={16} className="text-blue-600 mt-0.5 shrink-0" /> {f}</li>)}
                 {[
-                  t('sl1'),
-                  t('sl2'),
-                  t('sl3'),
-                  t('sl4'),
+                  t('xl1'),
+                  t('xl2'),
+                  t('xl3'),
                 ].map(f => <li key={f} className="flex items-start gap-3 text-zinc-400 text-sm"><Lock size={14} className="mt-0.5 shrink-0" /> {f}</li>)}
               </ul>
               <Link href="/login" className="block w-full py-3.5 px-4 bg-zinc-100 text-zinc-700 font-bold text-center rounded-xl hover:bg-zinc-200 transition-all text-sm">
-                {t('pricingCtaTrial')}
+                {t('pricingCtaFree')}
               </Link>
             </div>
 
-            {/* Professional */}
+            {/* Pro */}
             <div className="p-8 rounded-xl bg-zinc-900 border border-zinc-800 relative transform md:-translate-y-4 shadow-2xl flex flex-col">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                 <span className="bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg">{t('pricingMostPopular')}</span>
@@ -856,78 +855,42 @@ export default async function LandingPage() {
                   t('pf9'),
                   t('pf10'),
                   t('pf11'),
-                  t('pf12'),
-                  t('pf13'),
                 ].map(f => <li key={f} className="flex items-start gap-3 text-white text-sm"><Check size={16} className="text-blue-400 mt-0.5 shrink-0" /> {f}</li>)}
               </ul>
               <Link href="/login" className="block w-full py-3.5 px-4 bg-blue-600 text-white font-bold text-center rounded-xl hover:bg-blue-500 transition-all text-sm shadow-lg shadow-blue-900/30">
                 {t('pricingCtaTrial')}
               </Link>
             </div>
-
-            {/* Enterprise */}
-            <div className="p-8 rounded-xl bg-zinc-50 border border-zinc-200 flex flex-col">
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-zinc-900 mb-1">{t('entName')}</h3>
-                <p className="text-zinc-500 text-sm">{t('entDesc')}</p>
-              </div>
-              <div className="text-4xl font-black text-zinc-900 mb-2">{t('entPrice')}<span className="text-base font-medium text-zinc-400">/mo</span></div>
-              <p className="text-sm text-zinc-400 mb-8">{t('entAnnual')}</p>
-              <ul className="space-y-3 mb-8 flex-1">
-                {[
-                  t('ef1'),
-                  t('ef2'),
-                  t('ef3'),
-                  t('ef4'),
-                  t('ef5'),
-                  t('ef6'),
-                  t('ef7'),
-                  t('ef8'),
-                  t('ef9'),
-                  t('ef10'),
-                  t('ef11'),
-                ].map(f => <li key={f} className="flex items-start gap-3 text-zinc-700 text-sm"><Check size={16} className="text-blue-600 mt-0.5 shrink-0" /> {f}</li>)}
-              </ul>
-              <Link href="/contact" className="block w-full py-3.5 px-4 bg-zinc-100 text-zinc-700 font-bold text-center rounded-xl hover:bg-zinc-200 transition-all text-sm">
-                {t('pricingCtaSales')}
-              </Link>
-            </div>
           </div>
 
           {/* Feature comparison table */}
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             <h3 className="text-xl font-black text-zinc-900 text-center mb-8">{t('compareTitle')}</h3>
             <div className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
               {/* Header */}
-              <div className="grid grid-cols-4 bg-zinc-50 border-b border-zinc-200">
+              <div className="grid grid-cols-3 bg-zinc-50 border-b border-zinc-200">
                 <div className="p-4 text-sm font-bold text-zinc-500">{t('compareFeatureCol')}</div>
-                {[t('starterName'), t('proName'), t('entName')].map(p => (
-                  <div key={p} className={`p-4 text-center text-sm font-bold ${p === t('proName') ? 'text-blue-600' : 'text-zinc-900'}`}>{p}</div>
-                ))}
+                <div className="p-4 text-center text-sm font-bold text-zinc-900">{t('explorerName')}</div>
+                <div className="p-4 text-center text-sm font-bold text-blue-600">{t('proName')}</div>
               </div>
               {/* Rows */}
               {[
-                [t('cr1'), t('cr1s'), t('crUnlimited'), t('crUnlimited')],
-                [t('cr2'), t('crYes'), t('crYes'), t('crYes')],
-                [t('cr3'), t('crNo'), t('crYes'), t('crYes')],
-                [t('cr4'), t('crNo'), t('crYes'), t('crYes')],
-                [t('cr5'), t('crNo'), t('crYes'), t('crYes')],
-                [t('cr6'), t('crNo'), t('crYes'), t('crYes')],
-                [t('cr7'), t('crNo'), t('crYes'), t('crYes')],
-                [t('cr8'), t('crNo'), t('crYes'), t('crYes')],
-                [t('cr9'), t('crNo'), t('crYes'), t('crYes')],
-                [t('cr10'), t('crNo'), t('crYes'), t('crYes')],
-                [t('cr11'), t('crNo'), t('crYes'), t('crYes')],
-                [t('cr12'), t('crNo'), t('crYes'), t('crYes')],
-                [t('cr13'), t('cr13s'), t('cr13p'), t('cr13e')],
-                [t('cr14'), t('crNo'), t('crNo'), t('crYes')],
-                [t('cr15'), t('crNo'), t('crNo'), t('crYes')],
-                [t('cr16'), t('crNo'), t('crNo'), t('crYes')],
-              ].map(([feat, starter, pro, ent], i) => (
-                <div key={feat} className={`grid grid-cols-4 border-b border-zinc-100 last:border-0 ${i % 2 === 0 ? 'bg-white' : 'bg-zinc-50/50'}`}>
+                [t('cr1'), t('cr1x'), t('crUnlimited')],
+                [t('cr2'), t('crYes'), t('crYes')],
+                [t('cr3'), t('crYes'), t('crYes')],
+                [t('cr4'), t('crYes'), t('crYes')],
+                [t('cr10'), t('crYes'), t('crYes')],
+                [t('cr11'), t('crYes'), t('crYes')],
+                [t('cr12'), t('crYes'), t('crYes')],
+                [t('cr6'), t('cr6x'), t('crUnlimited')],
+                [t('cr8'), t('crNo'), t('crYes')],
+                [t('cr7'), t('crNo'), t('crYes')],
+                [t('cr9'), t('crNo'), t('crYes')],
+              ].map(([feat, explorer, pro], i) => (
+                <div key={feat} className={`grid grid-cols-3 border-b border-zinc-100 last:border-0 ${i % 2 === 0 ? 'bg-white' : 'bg-zinc-50/50'}`}>
                   <div className="p-4 text-sm text-zinc-700 font-medium">{feat}</div>
-                  {[starter, pro, ent].map((v, j) => (
-                    <div key={j} className={`p-4 text-center text-sm font-semibold ${v === t('crYes') ? 'text-emerald-600' : v === t('crNo') ? 'text-zinc-300' : j === 1 ? 'text-blue-600' : 'text-zinc-700'}`}>{v}</div>
+                  {[explorer, pro].map((v, j) => (
+                    <div key={j} className={`p-4 text-center text-sm font-semibold ${v === t('crYes') || v === t('crUnlimited') ? 'text-emerald-600' : v === t('crNo') ? 'text-zinc-300' : 'text-zinc-700'}`}>{v}</div>
                   ))}
                 </div>
               ))}

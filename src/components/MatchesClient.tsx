@@ -18,6 +18,7 @@ import {
   Bell,
   X,
   Globe,
+  Sparkles,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import Fuse from 'fuse.js';
@@ -26,15 +27,20 @@ import { getCpvDescription } from '@/utils/cpv-data';
 import { Badge } from './ui/Badge';
 import { EmptyState } from './ui/EmptyState';
 
+const PAID_TIERS = new Set(['Pro', 'Starter', 'Professional', 'Enterprise']);
+const FREE_VISIBLE_MATCHES = 5;
+
 interface MatchesClientProps {
   initialMatches: any[];
   clientId: string;
   totalCount?: number;
+  tier?: string;
 }
 
 const PAGE_SIZE = 20;
 
-export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesClientProps) {
+export function MatchesClient({ initialMatches, clientId, totalCount, tier = 'free' }: MatchesClientProps) {
+  const isPro = PAID_TIERS.has(tier);
   const [allMatches, setAllMatches] = useState<any[]>(() =>
     initialMatches.map((m: any) => ({
       ...m,
@@ -290,7 +296,36 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
         />
       ) : (
         <div className="flex flex-col gap-3 w-full min-w-0">
-          {paginatedMatches.map((match: any) => {
+          {/* Upgrade banner for free users */}
+          {!isPro && paginatedMatches.length > FREE_VISIBLE_MATCHES && page === 0 && (
+            <div className="order-none" style={{ order: FREE_VISIBLE_MATCHES }}>
+              <div className="flex items-center gap-4 px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 mb-3">
+                <Sparkles size={20} className="text-blue-600 shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-zinc-900">{t('upgradeToSeeAll', { count: displayedMatches.length - FREE_VISIBLE_MATCHES })}</p>
+                  <p className="text-xs text-zinc-500">{t('upgradeMatchesDesc')}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    try {
+                      const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tier: 'Pro' }) });
+                      const data = await res.json();
+                      if (data.url && /^https:\/\/(checkout\.)?stripe\.com\//.test(data.url)) window.location.href = data.url;
+                    } catch {}
+                  }}
+                  className="shrink-0 px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  {t('upgradeToPro')}
+                </button>
+              </div>
+            </div>
+          )}
+          {paginatedMatches.map((match: any, matchIndex: number) => {
+            const globalIndex = page * PAGE_SIZE + matchIndex;
+            const isBlurred = !isPro && globalIndex >= FREE_VISIBLE_MATCHES;
+
             const daysLeft = getDaysRemaining(match.submission_deadline);
             const score = Math.round(match.match_score);
             const circumference = 213.6;
@@ -306,8 +341,8 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
             ];
 
             return (
+              <div key={match.tender_id} className={isBlurred ? 'blur-[5px] select-none pointer-events-none opacity-60' : ''}>
               <Link
-                key={match.tender_id}
                 href={`/tenders/${match.tender_uuid}`}
                 className="w-full min-w-0 bg-white rounded-xl border border-zinc-200 shadow-sm flex flex-col sm:flex-row overflow-hidden cursor-pointer transition-all duration-200 hover:border-blue-500 hover:shadow-md hover:-translate-y-px group"
               >
@@ -413,6 +448,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount }: MatchesC
                   <ChevronRight size={18} />
                 </div>
               </Link>
+              </div>
             );
           })}
         </div>

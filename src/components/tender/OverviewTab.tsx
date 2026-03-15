@@ -135,7 +135,7 @@ export function OverviewTab({
   const [exportingPdf, setExportingPdf] = useState(false);
   const [exportingQuestions, setExportingQuestions] = useState(false);
 
-  const isPro = userTier === 'Professional' || userTier === 'Enterprise';
+  const isPro = userTier === 'Pro' || userTier === 'Professional' || userTier === 'Enterprise';
 
   const formatValue = (val: number, curr: string = 'EUR') => {
     if (!val) return t('valueNotSpecified');

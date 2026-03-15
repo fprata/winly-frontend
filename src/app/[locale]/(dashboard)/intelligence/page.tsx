@@ -34,6 +34,42 @@ export default async function MarketIntelligencePage({
     .limit(1)
     .maybeSingle();
 
+  // Fetch top competitors by revenue (pre-aggregated)
+  const { data: topCompetitors } = await db
+    .from('intel_competitors')
+    .select('name, competitor_id, total_wins, total_revenue, win_rate_pct, sector_diversity, direct_award_pct')
+    .eq('country', 'PT')
+    .order('total_revenue', { ascending: false })
+    .limit(20);
+
+  // Fetch market health metrics from buyer intelligence (aggregated averages)
+  const { data: buyerMetrics } = await db
+    .from('intel_buyers')
+    .select('avg_bidder_count, direct_award_pct, avg_discount, total_contracts')
+    .eq('country', 'PT')
+    .gt('total_contracts', 10)
+    .limit(500);
+
+  // Compute market health averages
+  const marketHealth = (() => {
+    if (!buyerMetrics || buyerMetrics.length === 0) return null;
+    const valid = buyerMetrics.filter((b: any) => b.avg_bidder_count > 0);
+    const totalContracts = buyerMetrics.reduce((s: number, b: any) => s + (b.total_contracts || 0), 0);
+    const weightedBidders = valid.reduce((s: number, b: any) => s + (b.avg_bidder_count * b.total_contracts), 0);
+    const weightedDirectAward = buyerMetrics.reduce((s: number, b: any) => s + (b.direct_award_pct * b.total_contracts), 0);
+    const weightedDiscount = buyerMetrics.filter((b: any) => b.avg_discount > 0)
+      .reduce((s: number, b: any) => s + (b.avg_discount * b.total_contracts), 0);
+    const discountContracts = buyerMetrics.filter((b: any) => b.avg_discount > 0)
+      .reduce((s: number, b: any) => s + (b.total_contracts || 0), 0);
+
+    return {
+      avgBidders: valid.length > 0 ? weightedBidders / valid.reduce((s: number, b: any) => s + b.total_contracts, 0) : 0,
+      directAwardPct: totalContracts > 0 ? weightedDirectAward / totalContracts : 0,
+      avgDiscount: discountContracts > 0 ? weightedDiscount / discountContracts : 0,
+      totalBuyers: buyerMetrics.length,
+    };
+  })();
+
   return (
     <div className="max-w-6xl mx-auto pb-20">
       <div className="mb-10">
@@ -48,6 +84,8 @@ export default async function MarketIntelligencePage({
         initialData={statsData}
         initialSectors={uniqueSectors}
         selectedSector={sector}
+        topCompetitors={topCompetitors || []}
+        marketHealth={marketHealth}
       />
     </div>
   );

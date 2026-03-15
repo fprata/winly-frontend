@@ -9,9 +9,13 @@ import { checkRateLimit } from '@/lib/rate-limit';
 const MAX_DOC_BYTES = 50 * 1024 * 1024; // 50 MB
 const ALLOWED_CONTENT_TYPES = new Set(['application/pdf', 'application/zip', 'application/octet-stream', 'text/plain', 'application/x-zip-compressed']);
 
-// 10 document analyses per user per hour (AI processing is expensive)
-const ANALYZE_LIMIT = 10;
-const ANALYZE_WINDOW_MS = 60 * 60_000;
+// Pro: 10 analyses per hour. Free: 2 per month (~30 days).
+const PRO_ANALYZE_LIMIT = 10;
+const PRO_ANALYZE_WINDOW_MS = 60 * 60_000;
+const FREE_ANALYZE_LIMIT = 2;
+const FREE_ANALYZE_WINDOW_MS = 30 * 24 * 60 * 60_000;
+
+const PAID_TIERS = new Set(['Pro', 'Starter', 'Professional', 'Enterprise']);
 
 export async function POST(request: Request) {
   try {
@@ -19,12 +23,30 @@ export async function POST(request: Request) {
     const { user } = await getServerUser(sessionClient);
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const rl = checkRateLimit(`analyze:${user.id}`, ANALYZE_LIMIT, ANALYZE_WINDOW_MS);
-    if (!rl.allowed) {
-      return NextResponse.json(
-        { error: 'Rate limit reached. You can analyse up to 10 documents per hour.' },
-        { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
-      );
+    // Determine user tier
+    const db = await getDataClient(sessionClient);
+    const { data: profile } = await db.from('clients').select('tier').eq('email', user.email).single();
+    const tier = profile?.tier || 'free';
+    const isPro = PAID_TIERS.has(tier);
+
+    if (isPro) {
+      // Pro users: 10 per hour
+      const rl = checkRateLimit(`analyze:${user.id}`, PRO_ANALYZE_LIMIT, PRO_ANALYZE_WINDOW_MS);
+      if (!rl.allowed) {
+        return NextResponse.json(
+          { error: 'Rate limit reached. You can analyse up to 10 documents per hour.' },
+          { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+        );
+      }
+    } else {
+      // Free users: 2 per month
+      const rl = checkRateLimit(`analyze-free:${user.id}`, FREE_ANALYZE_LIMIT, FREE_ANALYZE_WINDOW_MS);
+      if (!rl.allowed) {
+        return NextResponse.json(
+          { error: 'Free plan limit reached. Upgrade to Pro for unlimited AI document analysis.', code: 'FREE_LIMIT', remaining: rl.remaining, resetAt: rl.resetAt },
+          { status: 403 }
+        );
+      }
     }
 
     const payload = await request.json().catch(() => ({}));

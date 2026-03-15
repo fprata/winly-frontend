@@ -5,7 +5,7 @@ import { getServerUser } from '@/utils/dev-auth';
 
 export async function POST(req: Request) {
   try {
-    const { tier } = await req.json();
+    const { tier, billingInterval = 'month' } = await req.json();
     const supabase = await createClient();
 
     const { user } = await getServerUser(supabase);
@@ -14,32 +14,23 @@ export async function POST(req: Request) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    // Prices in euro cents — configure via environment variables to avoid code deploys for pricing changes
-    const TIER_CONFIG: Record<string, { cents: number; description: string; envKey: string }> = {
-      Starter: {
-        cents: Number(process.env.STRIPE_PRICE_STARTER_CENTS) || 14900,
-        envKey: 'STRIPE_PRICE_STARTER_CENTS',
-        description: 'Up to 50 matches/month, basic search algorithms, daily email digest, 1 seat, PT & ES markets.',
-      },
-      Professional: {
-        cents: Number(process.env.STRIPE_PRICE_PRO_CENTS) || 39900,
-        envKey: 'STRIPE_PRICE_PRO_CENTS',
-        description: 'Unlimited matches, full V3 AI algorithm, real-time updates, win probability, price recommendations, competitor intelligence, 5 seats.',
-      },
-      Enterprise: {
-        cents: Number(process.env.STRIPE_PRICE_ENTERPRISE_CENTS) || 99900,
-        envKey: 'STRIPE_PRICE_ENTERPRISE_CENTS',
-        description: 'Everything in Professional, Bid/No-Bid assistant, team collaboration, pipeline CRM, API access & integrations, unlimited seats, white-label options.',
-      },
-    };
-
-    const tierConfig = TIER_CONFIG[tier];
-    if (!tierConfig) {
+    if (tier !== 'Pro') {
       return new NextResponse('Bad Request: Invalid tier.', { status: 400 });
     }
 
-    const unitAmount = tierConfig.cents;
-    const description = tierConfig.description;
+    if (billingInterval !== 'month' && billingInterval !== 'year') {
+      return new NextResponse('Bad Request: Invalid billing interval.', { status: 400 });
+    }
+
+    // Prices in euro cents — configure via environment variables
+    const isAnnual = billingInterval === 'year';
+    const unitAmount = isAnnual
+      ? Number(process.env.STRIPE_PRICE_PRO_ANNUAL_CENTS) || 94800   // €948/year (€79/mo)
+      : Number(process.env.STRIPE_PRICE_PRO_MONTHLY_CENTS) || 9900;  // €99/month
+
+    const description = isAnnual
+      ? 'Winly Pro — Annual. Unlimited matches, AI document analysis, tender chat, PDF/Excel export, full intelligence.'
+      : 'Winly Pro — Monthly. Unlimited matches, AI document analysis, tender chat, PDF/Excel export, full intelligence.';
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -48,12 +39,12 @@ export async function POST(req: Request) {
           price_data: {
             currency: 'eur',
             product_data: {
-              name: `Winly AI - ${tier} Plan`,
-              description: description,
+              name: `Winly Pro${isAnnual ? ' (Annual)' : ''}`,
+              description,
             },
             unit_amount: unitAmount,
             recurring: {
-              interval: 'month',
+              interval: billingInterval,
             },
           },
           quantity: 1,
@@ -65,7 +56,8 @@ export async function POST(req: Request) {
       customer_email: user.email,
       metadata: {
         userId: user.id,
-        tier: tier,
+        tier: 'Pro',
+        billingInterval,
       },
     });
 

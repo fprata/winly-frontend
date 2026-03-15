@@ -16,7 +16,7 @@ export function ExportActions({ tenderId, tier }: ExportActionsProps) {
   const [exportingPdf, setExportingPdf] = useState(false);
   const [exportingQuestions, setExportingQuestions] = useState(false);
 
-  const isPro = tier === 'Professional' || tier === 'Enterprise';
+  const isPro = tier === 'Pro' || tier === 'Professional' || tier === 'Enterprise';
 
   const handleExportPdf = async () => {
     if (!isPro) return;

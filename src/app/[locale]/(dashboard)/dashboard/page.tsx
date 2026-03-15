@@ -29,9 +29,10 @@ export default async function Dashboard() {
     .from('tender_matches')
     .select(`
       match_score,
-      tenders (estimated_value)
+      tenders!inner (estimated_value, is_active)
     `)
-    .eq('client_id', profile?.id ?? '');
+    .eq('client_id', profile?.id ?? '')
+    .eq('tenders.is_active', true);
 
   let stats = { total: 0, high: 0, value: 0 };
   let status = 'online';

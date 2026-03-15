@@ -587,13 +587,13 @@ export function ExplorerClient({ initialTenders, initialTotal, clientId }: Explo
               <div
                 key={tender.tender_id}
                 className="bg-white rounded-xl border border-zinc-200 shadow-sm p-5 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer group"
-                onClick={() => router.push(`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent(pathname)}`)}
+                onClick={() => router.push(`/tenders/${tender.tender_uuid}`)}
               >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                   {/* Left: Tender Info */}
                   <div className="flex-1 min-w-0">
                     <Link
-                      href={`/tenders/${tender.tender_uuid}?backUrl=${encodeURIComponent(pathname)}`}
+                      href={`/tenders/${tender.tender_uuid}`}
                       className="text-[17px] font-bold text-zinc-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug"
                       onClick={(e) => e.stopPropagation()}
                     >

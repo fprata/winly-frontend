@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { Activity, DollarSign, Building2, BarChart3, PieChart, ArrowUpRight, Filter, Layers } from 'lucide-react';
+import { Activity, DollarSign, Building2, BarChart3, PieChart, ArrowUpRight, Filter, Layers, Trophy, TrendingUp, Users, Target } from 'lucide-react';
 import { SectorMixChart } from './SectorMixChart';
 import { Link, useRouter, usePathname } from '@/navigation';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
@@ -14,16 +14,27 @@ import { EmptyState } from './ui/EmptyState';
 
 type TimespanOption = '3' | '6' | '12';
 
+interface MarketHealthData {
+  avgBidders: number;
+  directAwardPct: number;
+  avgDiscount: number;
+  totalBuyers: number;
+}
+
 interface MarketOverviewClientProps {
   initialData: any;
   initialSectors: string[];
   selectedSector: string;
+  topCompetitors: any[];
+  marketHealth: MarketHealthData | null;
 }
 
 export function MarketOverviewClient({
   initialData,
   initialSectors,
   selectedSector,
+  topCompetitors,
+  marketHealth,
 }: MarketOverviewClientProps) {
   const data = initialData;
   const sectors = initialSectors;
@@ -145,7 +156,7 @@ export function MarketOverviewClient({
       ) : (
         <>
           {/* KPIs */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             <StatCard
               icon={<Activity size={18} />}
               label={t('stats.activeMatches')}
@@ -159,6 +170,13 @@ export function MarketOverviewClient({
               value={formatValue(data.total_value)}
               subtitle={t('totalMarketOpportunity')}
               color="indigo"
+            />
+            <StatCard
+              icon={<Target size={18} />}
+              label={t('avgContractValue')}
+              value={data.total_active > 0 ? formatValue(data.total_value / data.total_active) : '—'}
+              subtitle={t('avgTicketSize')}
+              color="green"
             />
             <StatCard
               icon={<Layers size={18} />}
@@ -229,7 +247,7 @@ export function MarketOverviewClient({
                 {(rawBuyers || []).map((buyer: any, i: number) => (
                   <Link
                     key={i}
-                    href={`/intelligence/buyers?name=${encodeURIComponent(buyer.buyer_name)}&backUrl=${encodeURIComponent('/dashboard')}`}
+                    href={`/intelligence/buyers?name=${encodeURIComponent(buyer.buyer_name)}`}
                     className="p-4 bg-zinc-50 rounded-lg border border-transparent hover:border-zinc-200 hover:bg-white transition-all group"
                   >
                     <div className="flex justify-between items-start mb-2">
@@ -251,6 +269,79 @@ export function MarketOverviewClient({
               </div>
             </div>
           </Card>
+          {/* Market Health */}
+          {marketHealth && (
+            <Card>
+              <h3 className="text-base font-bold text-zinc-900 mb-5 flex items-center gap-2">
+                <TrendingUp size={18} className="text-emerald-600" />
+                {t('marketHealth')}
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+                <div className="text-center p-4 bg-zinc-50 rounded-xl">
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">{t('avgBidders')}</p>
+                  <p className="text-2xl font-extrabold text-zinc-900">{marketHealth.avgBidders.toFixed(1)}</p>
+                  <p className="text-[11px] text-zinc-500 mt-0.5">{t('perTender')}</p>
+                </div>
+                <div className="text-center p-4 bg-zinc-50 rounded-xl">
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">{t('directAwardRate')}</p>
+                  <p className="text-2xl font-extrabold text-amber-600">{marketHealth.directAwardPct.toFixed(1)}%</p>
+                  <p className="text-[11px] text-zinc-500 mt-0.5">{t('noCompetition')}</p>
+                </div>
+                <div className="text-center p-4 bg-zinc-50 rounded-xl">
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">{t('avgDiscount')}</p>
+                  <p className="text-2xl font-extrabold text-emerald-600">{marketHealth.avgDiscount.toFixed(1)}%</p>
+                  <p className="text-[11px] text-zinc-500 mt-0.5">{t('belowEstimate')}</p>
+                </div>
+                <div className="text-center p-4 bg-zinc-50 rounded-xl">
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">{t('activeBuyers')}</p>
+                  <p className="text-2xl font-extrabold text-blue-600">{formatNumber(marketHealth.totalBuyers)}</p>
+                  <p className="text-[11px] text-zinc-500 mt-0.5">{t('uniqueEntities')}</p>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Top Competitors */}
+          {topCompetitors && topCompetitors.length > 0 && (
+            <Card>
+              <div className="flex justify-between items-center mb-5">
+                <h3 className="text-base font-bold text-zinc-900 flex items-center gap-2">
+                  <Trophy size={18} className="text-amber-500" />
+                  {t('topCompetitors')}
+                </h3>
+                <Link href="/intelligence/competitors" className="text-xs font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                  {tCommon('viewAll')} <ArrowUpRight size={13} />
+                </Link>
+              </div>
+
+              <div className="max-h-[300px] overflow-y-auto pr-1 styled-scrollbar">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {topCompetitors.map((comp: any, i: number) => (
+                    <Link
+                      key={i}
+                      href={`/intelligence/competitors?name=${encodeURIComponent(comp.name)}`}
+                      className="p-4 bg-zinc-50 rounded-lg border border-transparent hover:border-zinc-200 hover:bg-white transition-all group"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="font-medium text-zinc-800 text-sm line-clamp-1 pr-3 group-hover:text-blue-700 transition-colors">{comp.name}</div>
+                        <ArrowUpRight size={14} className="text-zinc-300 group-hover:text-blue-600 opacity-0 group-hover:opacity-100 transition-all shrink-0" />
+                      </div>
+                      <div className="flex justify-between items-end">
+                        <div>
+                          <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">{t('revenue')}</p>
+                          <p className="text-sm font-bold text-zinc-900">{formatValue(comp.total_revenue)}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">{t('winRate')}</p>
+                          <p className="text-sm font-bold text-zinc-900">{comp.win_rate_pct}%</p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </Card>
+          )}
         </>
       )}
     </div>
