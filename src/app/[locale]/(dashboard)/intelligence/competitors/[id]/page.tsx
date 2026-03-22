@@ -1,7 +1,9 @@
 import React from 'react';
 import { createClient } from '@/utils/supabase/server';
-import { getDataClient } from '@/utils/dev-auth';
+import { getServerUser, getDataClient } from '@/utils/dev-auth';
 import { CompetitorIntelligenceClient } from '@/components/CompetitorIntelligenceClient';
+import { FeatureGate } from '@/components/FeatureGate';
+import { hasAccess } from '@/lib/tier-config';
 
 export const revalidate = 300;
 
@@ -16,7 +18,24 @@ export default async function CompetitorProfilePage({
   const { fromTender } = await searchParams;
   const decodedId = decodeURIComponent(id);
   const supabase = await createClient();
+  const { user } = await getServerUser(supabase);
   const db = await getDataClient(supabase);
+
+  const { data: clientProfile } = await db
+    .from('clients')
+    .select('tier')
+    .eq('email', user?.email)
+    .single();
+
+  const tier = clientProfile?.tier || 'free';
+
+  if (!hasAccess(tier, 'competitorIntel')) {
+    return (
+      <FeatureGate tier={tier} feature="competitorIntel">
+        <div />
+      </FeatureGate>
+    );
+  }
 
   let initialProfile = null;
   let initialWonTenders: any[] = [];

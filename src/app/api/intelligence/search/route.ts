@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient, createClient } from '@/utils/supabase/server';
-import { getServerUser } from '@/utils/dev-auth';
+import { getServerUser, getDataClient } from '@/utils/dev-auth';
+import { hasAccess } from '@/lib/tier-config';
 
 const ALLOWED_TYPES = new Set(['buyers', 'competitors']);
 
@@ -8,6 +9,22 @@ export async function GET(request: NextRequest) {
   const sessionClient = await createClient();
   const { user } = await getServerUser(sessionClient);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  // Tier check — intelligence requires Pro+
+  const db = await getDataClient(sessionClient);
+  const { data: profile } = await db
+    .from('clients')
+    .select('tier')
+    .eq('email', user.email)
+    .single();
+
+  const feature = request.nextUrl.searchParams.get('type') === 'competitors' ? 'competitorIntel' : 'buyerIntel';
+  if (!hasAccess(profile?.tier, feature as any)) {
+    return NextResponse.json(
+      { error: 'Pro plan required for intelligence features.' },
+      { status: 403 },
+    );
+  }
 
   const { searchParams } = request.nextUrl;
   const q = searchParams.get('q') || '';

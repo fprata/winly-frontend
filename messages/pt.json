@@ -1132,5 +1132,10 @@
     "ctaSubtitle": "Junte-se a equipas de propostas em toda a Europa que usam o Winly para encontrar melhores oportunidades, compreender a sua concorrência e licitar com confiança. Primeiros 14 dias grátis — sem cartão de crédito necessário.",
     "ctaPrimary": "Começar Teste Grátis",
     "ctaSecondaryBtn": "Falar com Vendas"
+  },
+  "featureGate": {
+    "title": "Funcionalidade Premium",
+    "description": "Esta funcionalidade requer um plano {tier} ou superior. Faça upgrade para desbloquear inteligência de compradores, análise de concorrentes e insights de mercado.",
+    "cta": "Upgrade para {tier}"
   }
 }

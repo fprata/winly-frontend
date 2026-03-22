@@ -2,8 +2,10 @@ import React from 'react';
 import { TrendingUp } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/utils/supabase/server';
-import { getDataClient } from '@/utils/dev-auth';
+import { getServerUser, getDataClient } from '@/utils/dev-auth';
 import { MarketOverviewClient } from '@/components/MarketOverviewClient';
+import { FeatureGate } from '@/components/FeatureGate';
+import { hasAccess } from '@/lib/tier-config';
 
 export const revalidate = 60;
 
@@ -18,7 +20,24 @@ export default async function MarketIntelligencePage({
   ]);
 
   const supabase = await createClient();
+  const { user } = await getServerUser(supabase);
   const db = await getDataClient(supabase);
+
+  const { data: profile } = await db
+    .from('clients')
+    .select('tier')
+    .eq('email', user?.email)
+    .single();
+
+  const tier = profile?.tier || 'free';
+
+  if (!hasAccess(tier, 'marketOverview')) {
+    return (
+      <FeatureGate tier={tier} feature="marketOverview">
+        <div />
+      </FeatureGate>
+    );
+  }
 
   // Parallelize all 4 queries
   const [filterResult, statsResult, competitorsResult, buyerMetricsResult] = await Promise.all([

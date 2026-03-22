@@ -1132,5 +1132,10 @@
     "ctaSubtitle": "Join bid teams across Europe who use Winly to find better opportunities, understand their competition, and bid with confidence. First 14 days free — no credit card required.",
     "ctaPrimary": "Start Free Trial",
     "ctaSecondaryBtn": "Talk to Sales"
+  },
+  "featureGate": {
+    "title": "Premium Feature",
+    "description": "This feature requires a {tier} plan or higher. Upgrade to unlock buyer intelligence, competitor analysis, and market insights.",
+    "cta": "Upgrade to {tier}"
   }
 }

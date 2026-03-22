@@ -1,24 +1,32 @@
 /**
  * Tests for the 3-tier pricing structure: Explorer (free), Pro (€99/mo), Enterprise (€199/mo).
  * Validates tier classification, feature gating, and rate limit configuration.
+ *
+ * Feature access is defined in src/lib/tier-config.ts — these tests verify it.
  */
 
 import { describe, it, expect } from 'vitest';
 import { checkRateLimit } from '@/lib/rate-limit';
+import {
+  normaliseTier,
+  isPaid,
+  isPro,
+  isEnterprise,
+  hasAccess,
+  featureAccess,
+  requiredTier,
+} from '@/lib/tier-config';
 
-// --- Tier classification ---
-
-const ENTERPRISE_TIERS = new Set(['Enterprise', 'Professional']); // Professional is legacy Enterprise
-const PRO_TIERS = new Set(['Pro', 'Starter']);                     // Starter is legacy Pro
-const ALL_PAID_TIERS = new Set([...ENTERPRISE_TIERS, ...PRO_TIERS]);
-
-function isPro(tier: string | null | undefined): boolean {
-  return ALL_PAID_TIERS.has(tier || '');
-}
-
-function isEnterprise(tier: string | null | undefined): boolean {
-  return ENTERPRISE_TIERS.has(tier || '');
-}
+describe('normaliseTier()', () => {
+  it('normalises null to free', () => expect(normaliseTier(null)).toBe('free'));
+  it('normalises undefined to free', () => expect(normaliseTier(undefined)).toBe('free'));
+  it('normalises empty string to free', () => expect(normaliseTier('')).toBe('free'));
+  it('normalises "free" to free', () => expect(normaliseTier('free')).toBe('free'));
+  it('normalises "Pro" to Pro', () => expect(normaliseTier('Pro')).toBe('Pro'));
+  it('normalises legacy "Starter" to Pro', () => expect(normaliseTier('Starter')).toBe('Pro'));
+  it('normalises "Enterprise" to Enterprise', () => expect(normaliseTier('Enterprise')).toBe('Enterprise'));
+  it('normalises legacy "Professional" to Enterprise', () => expect(normaliseTier('Professional')).toBe('Enterprise'));
+});
 
 describe('Tier classification — isPro() (matches visibility)', () => {
   it('Pro is paid', () => expect(isPro('Pro')).toBe(true));
@@ -131,51 +139,71 @@ describe('Rate limiting — Enterprise tier (10 analyses/hour)', () => {
   });
 });
 
-// --- Feature gating per tier ---
+// --- Feature gating per tier (from centralised tier-config.ts) ---
 
-describe('Feature gating matrix', () => {
-  const features = (tier: string) => {
-    const ent = ENTERPRISE_TIERS.has(tier);
-    const pro = PRO_TIERS.has(tier);
-    const paid = ent || pro;
-    return {
-      unlimitedMatches: paid,
-      aiAnalysis: ent || pro, // Pro gets 5/mo, Enterprise unlimited
-      aiChat: ent,
-      pdfExport: ent,
-      excelExport: ent,
-      buyerIntel: true,       // all tiers
-      competitorIntel: true,  // all tiers
-      marketOverview: true,   // all tiers
-    };
-  };
-
-  it('free users get intel but no AI features', () => {
-    const f = features('free');
-    expect(f.unlimitedMatches).toBe(false);
-    expect(f.aiAnalysis).toBe(false);
-    expect(f.aiChat).toBe(false);
-    expect(f.pdfExport).toBe(false);
-    expect(f.buyerIntel).toBe(true);
-    expect(f.competitorIntel).toBe(true);
+describe('Feature gating matrix — hasAccess()', () => {
+  it('free users: no paid features', () => {
+    expect(hasAccess('free', 'unlimitedMatches')).toBe(false);
+    expect(hasAccess('free', 'aiAnalysis')).toBe(false);
+    expect(hasAccess('free', 'aiChat')).toBe(false);
+    expect(hasAccess('free', 'pdfExport')).toBe(false);
+    expect(hasAccess('free', 'excelExport')).toBe(false);
+    expect(hasAccess('free', 'buyerIntel')).toBe(false);
+    expect(hasAccess('free', 'competitorIntel')).toBe(false);
+    expect(hasAccess('free', 'marketOverview')).toBe(false);
   });
 
-  it('Pro users get matches + limited AI, no chat/export', () => {
-    const f = features('Pro');
-    expect(f.unlimitedMatches).toBe(true);
-    expect(f.aiAnalysis).toBe(true);
-    expect(f.aiChat).toBe(false);
-    expect(f.pdfExport).toBe(false);
+  it('Pro users get matches + intelligence + limited AI, no chat/export', () => {
+    expect(hasAccess('Pro', 'unlimitedMatches')).toBe(true);
+    expect(hasAccess('Pro', 'aiAnalysis')).toBe(true);
+    expect(hasAccess('Pro', 'buyerIntel')).toBe(true);
+    expect(hasAccess('Pro', 'competitorIntel')).toBe(true);
+    expect(hasAccess('Pro', 'marketOverview')).toBe(true);
+    expect(hasAccess('Pro', 'aiChat')).toBe(false);
+    expect(hasAccess('Pro', 'pdfExport')).toBe(false);
+    expect(hasAccess('Pro', 'excelExport')).toBe(false);
   });
 
   it('Enterprise users get everything', () => {
-    const f = features('Enterprise');
-    expect(f.unlimitedMatches).toBe(true);
-    expect(f.aiAnalysis).toBe(true);
-    expect(f.aiChat).toBe(true);
-    expect(f.pdfExport).toBe(true);
-    expect(f.excelExport).toBe(true);
+    expect(hasAccess('Enterprise', 'unlimitedMatches')).toBe(true);
+    expect(hasAccess('Enterprise', 'aiAnalysis')).toBe(true);
+    expect(hasAccess('Enterprise', 'aiChat')).toBe(true);
+    expect(hasAccess('Enterprise', 'pdfExport')).toBe(true);
+    expect(hasAccess('Enterprise', 'excelExport')).toBe(true);
+    expect(hasAccess('Enterprise', 'buyerIntel')).toBe(true);
+    expect(hasAccess('Enterprise', 'competitorIntel')).toBe(true);
+    expect(hasAccess('Enterprise', 'marketOverview')).toBe(true);
   });
+
+  it('legacy Starter has same access as Pro', () => {
+    expect(hasAccess('Starter', 'buyerIntel')).toBe(true);
+    expect(hasAccess('Starter', 'aiChat')).toBe(false);
+  });
+
+  it('legacy Professional has same access as Enterprise', () => {
+    expect(hasAccess('Professional', 'aiChat')).toBe(true);
+    expect(hasAccess('Professional', 'pdfExport')).toBe(true);
+  });
+
+  it('null/undefined tier defaults to free', () => {
+    expect(hasAccess(null, 'buyerIntel')).toBe(false);
+    expect(hasAccess(undefined, 'marketOverview')).toBe(false);
+  });
+});
+
+describe('featureAccess() — full map', () => {
+  it('returns all features for a given tier', () => {
+    const f = featureAccess('Pro');
+    expect(f.unlimitedMatches).toBe(true);
+    expect(f.buyerIntel).toBe(true);
+    expect(f.aiChat).toBe(false);
+  });
+});
+
+describe('requiredTier()', () => {
+  it('buyerIntel requires Pro', () => expect(requiredTier('buyerIntel')).toBe('Pro'));
+  it('aiChat requires Enterprise', () => expect(requiredTier('aiChat')).toBe('Enterprise'));
+  it('unlimitedMatches requires Pro', () => expect(requiredTier('unlimitedMatches')).toBe('Pro'));
 });
 
 // --- Match blurring ---
