@@ -5,7 +5,7 @@
 
 ## Tech Stack
 - Next.js 16 (App Router), React 19, TypeScript
-- Tailwind CSS 4, Supabase (auth + data), Stripe (payments)
+- Tailwind CSS 4, Supabase (auth + data), Lemon Squeezy (payments)
 - next-intl for i18n, React Query for server state
 - Vitest + Testing Library (unit), Playwright (e2e)
 
@@ -43,7 +43,7 @@ api/
 ## Environment Variables
 - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY` (server-side only)
-- `STRIPE_SECRET_KEY` / `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- `LEMONSQUEEZY_API_KEY` / `LEMONSQUEEZY_STORE_ID` / `LEMONSQUEEZY_WEBHOOK_SECRET`
 
 ## Testing (TDD)
 

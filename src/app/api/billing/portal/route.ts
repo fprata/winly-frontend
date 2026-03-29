@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+import { initLemonSqueezy, listCustomers } from '@/lib/lemonsqueezy';
 import { createClient } from '@/utils/supabase/server';
 import { getServerUser } from '@/utils/dev-auth';
 
@@ -9,20 +9,29 @@ export async function POST() {
     const { user } = await getServerUser(supabase);
     if (!user?.email) return new NextResponse('Unauthorized', { status: 401 });
 
-    // Find the Stripe customer by email
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    if (customers.data.length === 0) {
+    initLemonSqueezy();
+
+    const storeId = process.env.LEMONSQUEEZY_STORE_ID!;
+
+    // Find the Lemon Squeezy customer by email
+    const { data, error } = await listCustomers({
+      filter: { storeId, email: user.email },
+    });
+
+    if (error || !data?.data.length) {
       return NextResponse.json({ error: 'No billing account found' }, { status: 404 });
     }
 
-    const session = await stripe.billingPortal.sessions.create({
-      customer: customers.data[0].id,
-      return_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/profile`,
-    });
+    const customerPortalUrl =
+      data.data[0].attributes.urls.customer_portal;
 
-    return NextResponse.json({ url: session.url });
+    if (!customerPortalUrl) {
+      return NextResponse.json({ error: 'Customer portal not available' }, { status: 404 });
+    }
+
+    return NextResponse.json({ url: customerPortalUrl });
   } catch (err) {
-    console.error('[BillingPortal] Failed to create portal session:', err);
+    console.error('[BillingPortal] Failed to get portal URL:', err);
     return NextResponse.json({ error: 'Failed to open billing portal' }, { status: 500 });
   }
 }

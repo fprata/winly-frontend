@@ -17,6 +17,7 @@
     "load:prod": "K6_BASE_URL=https://winly-frontend.vercel.app k6 run load-tests/load.js"
   },
   "dependencies": {
+    "@lemonsqueezy/lemonsqueezy.js": "^4.0.0",
     "@napi-rs/canvas": "^0.1.95",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.89.0",
@@ -34,7 +35,6 @@
     "react-dom": "19.2.3",
     "recharts": "^3.7.0",
     "resend": "^4.0.0",
-    "stripe": "^20.1.0",
     "tailwind-merge": "^3.4.0",
     "zod": "^4.3.6"
   },

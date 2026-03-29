@@ -8,12 +8,12 @@ const isDev = process.env.NODE_ENV === 'development';
 const csp = [
   "default-src 'self'",
   // unsafe-eval only in dev (Next.js HMR + source maps need it)
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://*.stripe.com https://va.vercel-scripts.com`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://*.lemonsqueezy.com https://va.vercel-scripts.com`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' blob: data: https://*.supabase.co",
   "font-src 'self' https://fonts.gstatic.com",
-  "connect-src 'self' https://*.supabase.co https://*.stripe.com https://vitals.vercel-insights.com",
-  "frame-src 'self' https://*.stripe.com",
+  "connect-src 'self' https://*.supabase.co https://*.lemonsqueezy.com https://vitals.vercel-insights.com",
+  "frame-src 'self' https://*.lemonsqueezy.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

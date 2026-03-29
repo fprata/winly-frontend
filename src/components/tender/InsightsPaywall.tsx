@@ -88,7 +88,7 @@ function UpgradeCTA({ targetTier = 'Pro' }: { targetTier?: 'Pro' | 'Enterprise' 
         body: JSON.stringify({ tier: targetTier }),
       });
       const data = await res.json();
-      if (data.url && /^https:\/\/(checkout\.)?stripe\.com\//.test(data.url)) {
+      if (data.url) {
         window.location.href = data.url;
       }
     } catch {

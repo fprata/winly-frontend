@@ -1,18 +1,16 @@
 import { NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+import { initLemonSqueezy, createCheckout } from '@/lib/lemonsqueezy';
 import { createClient } from '@/utils/supabase/server';
 import { getServerUser } from '@/utils/dev-auth';
 
-const TIER_CONFIG: Record<string, { monthly: number; annual: number; description: string }> = {
+const VARIANT_IDS: Record<string, { monthly: string; annual: string }> = {
   Pro: {
-    monthly: Number(process.env.STRIPE_PRICE_PRO_MONTHLY_CENTS) || 9900,     // €99/month
-    annual: Number(process.env.STRIPE_PRICE_PRO_ANNUAL_CENTS) || 94800,      // €948/year (€79/mo)
-    description: 'Unlimited matches, 5 AI document analyses/month, full buyer & competitor intelligence.',
+    monthly: process.env.LEMONSQUEEZY_VARIANT_PRO_MONTHLY!,
+    annual: process.env.LEMONSQUEEZY_VARIANT_PRO_ANNUAL!,
   },
   Enterprise: {
-    monthly: Number(process.env.STRIPE_PRICE_ENT_MONTHLY_CENTS) || 19900,    // €199/month
-    annual: Number(process.env.STRIPE_PRICE_ENT_ANNUAL_CENTS) || 190800,     // €1,908/year (€159/mo)
-    description: 'Unlimited matches, unlimited AI document analysis, tender chatbot, PDF/Excel export, full intelligence.',
+    monthly: process.env.LEMONSQUEEZY_VARIANT_ENT_MONTHLY!,
+    annual: process.env.LEMONSQUEEZY_VARIANT_ENT_ANNUAL!,
   },
 };
 
@@ -20,15 +18,14 @@ export async function POST(req: Request) {
   try {
     const { tier, billingInterval = 'month' } = await req.json();
     const supabase = await createClient();
-
     const { user } = await getServerUser(supabase);
 
     if (!user) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const config = TIER_CONFIG[tier];
-    if (!config) {
+    const variants = VARIANT_IDS[tier];
+    if (!variants) {
       return new NextResponse('Bad Request: Invalid tier.', { status: 400 });
     }
 
@@ -36,45 +33,39 @@ export async function POST(req: Request) {
       return new NextResponse('Bad Request: Invalid billing interval.', { status: 400 });
     }
 
-    const isAnnual = billingInterval === 'year';
-    const unitAmount = isAnnual ? config.annual : config.monthly;
+    const variantId = billingInterval === 'year' ? variants.annual : variants.monthly;
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: `Winly ${tier}${isAnnual ? ' (Annual)' : ''}`,
-              description: config.description,
-            },
-            unit_amount: unitAmount,
-            recurring: {
-              interval: billingInterval,
-            },
-          },
-          quantity: 1,
+    if (!variantId) {
+      console.error(`Missing variant ID for ${tier} ${billingInterval}`);
+      return NextResponse.json({ error: 'Checkout configuration error' }, { status: 500 });
+    }
+
+    initLemonSqueezy();
+
+    const storeId = process.env.LEMONSQUEEZY_STORE_ID!;
+
+    const { data, error } = await createCheckout(storeId, variantId, {
+      checkoutData: {
+        email: user.email ?? undefined,
+        custom: {
+          user_id: user.id,
+          tier,
+          billing_interval: billingInterval,
         },
-      ],
-      mode: 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/dashboard?payment=success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/profile?payment=cancelled`,
-      customer_email: user.email,
-      metadata: {
-        userId: user.id,
-        tier,
-        billingInterval,
+      },
+      productOptions: {
+        redirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/dashboard?payment=success`,
       },
     });
 
-    return NextResponse.json({ url: session.url });
+    if (error) {
+      console.error('Lemon Squeezy Checkout Error:', error);
+      return NextResponse.json({ error: 'Checkout session creation failed' }, { status: 500 });
+    }
+
+    return NextResponse.json({ url: data?.data.attributes.url });
   } catch (err: any) {
-    console.error('Stripe Checkout Error:', {
-      message: err.message,
-      type: err.type,
-      code: err.code,
-    });
+    console.error('Checkout Error:', { message: err.message });
     return NextResponse.json({ error: 'Checkout session creation failed' }, { status: 500 });
   }
 }

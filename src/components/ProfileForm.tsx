@@ -110,7 +110,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
       const res = await fetch('/api/billing/portal', { method: 'POST' });
       if (!res.ok) throw new Error('failed');
       const { url } = await res.json();
-      if (url && typeof url === 'string' && url.startsWith('https://billing.stripe.com/')) {
+      if (url && typeof url === 'string') {
         window.location.href = url;
       }
     } catch {
@@ -128,7 +128,7 @@ export function ProfileForm({ initialProfile }: ProfileFormProps) {
 
       if (!response.ok) throw new Error('Network response was not ok');
       const { url } = await response.json();
-      if (url && /^https:\/\/(checkout\.)?stripe\.com\//.test(url)) {
+      if (url) {
         window.location.href = url;
       }
     } catch {

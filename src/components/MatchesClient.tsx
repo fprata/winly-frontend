@@ -312,7 +312,7 @@ export function MatchesClient({ initialMatches, clientId, totalCount, tier = 'fr
                     try {
                       const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tier: 'Pro' }) });
                       const data = await res.json();
-                      if (data.url && /^https:\/\/(checkout\.)?stripe\.com\//.test(data.url)) window.location.href = data.url;
+                      if (data.url) window.location.href = data.url;
                     } catch {}
                   }}
                   className="shrink-0 px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors"

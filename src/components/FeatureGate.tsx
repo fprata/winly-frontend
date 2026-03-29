@@ -34,7 +34,7 @@ export function FeatureGate({ tier, feature, children }: FeatureGateProps) {
         body: JSON.stringify({ tier: target }),
       });
       const data = await res.json();
-      if (data.url && /^https:\/\/(checkout\.)?stripe\.com\//.test(data.url)) {
+      if (data.url) {
         window.location.href = data.url;
       }
     } catch {
