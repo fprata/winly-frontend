@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   )
   const resend = new Resend(process.env.RESEND_API_KEY)
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://winly-six.vercel.app'
+  const appUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://winly.me'
 
   // Fetch users due for notification:
   // - digest enabled
