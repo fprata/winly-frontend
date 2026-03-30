@@ -14,12 +14,12 @@ export default function TermsPage() {
           <div className="prose prose-slate max-w-none">
             <h3>1. Introduction</h3>
             <p>
-              Welcome to Winly AI. By accessing our website and using our services, you agree to be bound by these Terms and Conditions.
+              Welcome to Winly. By accessing our website and using our services, you agree to be bound by these Terms and Conditions.
             </p>
 
             <h3>2. Service Description</h3>
             <p>
-              Winly AI provides a public procurement intelligence platform that aggregates data from public sources (such as TED and BASE) and uses artificial intelligence to provide analysis, matching, and insights.
+              Winly provides a public procurement intelligence platform that aggregates data from public sources (such as TED and BASE) and uses artificial intelligence to provide analysis, matching, and insights.
             </p>
 
             <h3>3. User Accounts</h3>
@@ -39,12 +39,12 @@ export default function TermsPage() {
 
             <h3>6. Intellectual Property</h3>
             <p>
-              The Winly AI platform, including its algorithms, design, and content, is the exclusive property of Winly AI. You retain ownership of your profile data.
+              The Winly platform, including its algorithms, design, and content, is the exclusive property of Winly. You retain ownership of your profile data.
             </p>
 
             <h3>7. Limitation of Liability</h3>
             <p>
-              Winly AI shall not be liable for any indirect, incidental, or consequential damages arising from the use of our service, including lost profits or missed business opportunities.
+              Winly shall not be liable for any indirect, incidental, or consequential damages arising from the use of our service, including lost profits or missed business opportunities.
             </p>
 
             <h3>8. Changes to Terms</h3>
@@ -59,7 +59,7 @@ export default function TermsPage() {
             
             <div className="mt-8 pt-8 border-t border-zinc-100">
                 <p className="text-sm text-zinc-500">
-                    If you have any questions about these Terms, please contact us at <a href="mailto:contact@winly.ai" className="text-blue-600 hover:underline">contact@winly.ai</a>.
+                    If you have any questions about these Terms, please contact us at <a href="mailto:contact@winly.me" className="text-blue-600 hover:underline">contact@winly.me</a>.
                 </p>
             </div>
           </div>

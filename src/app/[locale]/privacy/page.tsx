@@ -50,7 +50,7 @@ export default function PrivacyPage() {
 
             <h3>7. Contact Us</h3>
             <p>
-              If you have questions about this Privacy Policy, please contact us at <a href="mailto:privacy@winly.ai" className="text-blue-600 hover:underline">privacy@winly.ai</a>.
+              If you have questions about this Privacy Policy, please contact us at <a href="mailto:privacy@winly.me" className="text-blue-600 hover:underline">privacy@winly.me</a>.
             </p>
           </div>
         </div>

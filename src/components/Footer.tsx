@@ -12,7 +12,7 @@ export function Footer() {
         <div className="flex flex-col gap-3">
            <Link href="/" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs font-black">W</div>
-              <span className="text-xl font-bold text-zinc-900 tracking-tight">WINLY<span className="text-zinc-400 font-medium">AI</span></span>
+              <span className="text-xl font-bold text-zinc-900 tracking-tight">WINLY</span>
            </Link>
            <p className="max-w-xs text-sm text-zinc-500">
              {t('tagline')}

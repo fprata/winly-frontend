@@ -23,8 +23,8 @@ export function generateStaticParams() {
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://winly.vercel.app'),
   title: {
-    default: "Winly AI | EU Procurement Intelligence Platform",
-    template: "%s | Winly AI"
+    default: "Winly | EU Procurement Intelligence Platform",
+    template: "%s | Winly"
   },
   description: "Dominate the €2T+ public procurement market with AI-powered tender matching. 150-point scoring algorithm, win probability calculator, and competitive intelligence for TED & BASE tenders.",
     keywords: [
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
       "BASE Portugal", 
       "tender intelligence"
     ],
-  authors: [{ name: "Winly AI" }],
-  creator: "Winly AI",
-  publisher: "Winly AI",
+  authors: [{ name: "Winly" }],
+  creator: "Winly",
+  publisher: "Winly",
   robots: {
     index: true,
     follow: true,
@@ -53,24 +53,24 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://winly.vercel.app',
-    siteName: 'Winly AI',
-    title: 'Winly AI | EU Procurement Intelligence Platform',
+    siteName: 'Winly',
+    title: 'Winly | EU Procurement Intelligence Platform',
     description: 'AI-powered procurement intelligence platform. Match TED & BASE tenders with 150-point scoring algorithm. Win probability calculator, competitor analysis, and price recommendations.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Winly AI - Procurement Intelligence Platform',
+        alt: 'Winly - Procurement Intelligence Platform',
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Winly AI | EU Procurement Intelligence Platform',
+    title: 'Winly | EU Procurement Intelligence Platform',
     description: 'AI-powered tender matching for the €2T+ EU public procurement market. 150-point scoring, win probability, and competitive intelligence.',
     images: ['/og-image.png'],
-    creator: '@winlyai',
+    creator: '@winlyme',
   },
   alternates: {
     canonical: 'https://winly.vercel.app',

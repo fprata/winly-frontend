@@ -18,7 +18,7 @@ export default function ForgotPasswordForm() {
       <div className="mb-8 text-center">
         <div className="flex items-center justify-center gap-2 mb-6">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs font-black">W</div>
-          <span className="text-xl font-bold tracking-tight text-zinc-900">WINLY<span className="text-zinc-400 font-medium">AI</span></span>
+          <span className="text-xl font-bold tracking-tight text-zinc-900">WINLY</span>
         </div>
         <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Forgot password</h1>
         <p className="text-sm text-zinc-500">Enter your email to reset your password</p>

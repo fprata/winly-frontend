@@ -142,7 +142,7 @@ export function TenderChatbot({ tenderId }: TenderChatbotProps) {
               </div>
               <div>
                 <h3 className="text-xs font-black uppercase tracking-widest">{t('chatbot.title')}</h3>
-                <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">Powered by Winly AI</p>
+                <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">Powered by Winly</p>
               </div>
             </div>
             <button onClick={() => setIsOpen(false)} className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-all">

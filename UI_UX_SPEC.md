@@ -111,7 +111,7 @@ Score mini-bars (CPV=violet, Strategic=sky, Semantic=teal, Keyword=emerald, Loca
 
 What to do:
 - Full-width centered layout, white card `rounded-xl border-zinc-200 shadow-sm p-8 max-w-md`
-- Logo at top (blue W box + "WinlyAI" text)
+- Logo at top (blue W box + "Winly" text)
 - Form fields use the `<Input>` component (enterprise-input style)
 - Submit button uses `<Button variant="primary" size="lg" className="w-full">`
 - Error messages in `bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-600`
@@ -181,7 +181,7 @@ What to do:
 
 What to do:
 - `bg-white border-b border-zinc-200 sticky top-0 z-40`
-- Logo: blue W box + WinlyAI text
+- Logo: blue W box + Winly text
 - Nav links: `text-zinc-600 hover:text-zinc-900 font-medium text-sm`
 - CTA button: `<Button variant="primary" size="sm">Get Started</Button>`
 - Mobile hamburger: zinc-600 icon

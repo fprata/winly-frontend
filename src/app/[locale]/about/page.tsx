@@ -5,8 +5,8 @@ import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
 export const metadata: Metadata = {
-  title: "About Winly AI | Democratizing EU Public Procurement Access",
-  description: "Learn how Winly AI is leveling the playing field for SMEs in the €2T+ EU public procurement market. AI-powered intelligence platform combining TED & BASE data.",
+  title: "About Winly | Democratizing EU Public Procurement Access",
+  description: "Learn how Winly is leveling the playing field for SMEs in the €2T+ EU public procurement market. AI-powered intelligence platform combining TED & BASE data.",
 }
 
 export default async function AboutPage() {

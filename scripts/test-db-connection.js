@@ -13,8 +13,8 @@ async function testConnection() {
 
   const supabase = createClient(url, key);
 
-  // 1. Try to fetch a user (Winly AI seed user)
-  const email = 'contact@winly.ai';
+  // 1. Try to fetch a user (Winly seed user)
+  const email = 'contact@winly.me';
   console.log(`Fetching user: ${email}`);
   const { data: user, error: fetchError } = await supabase
     .from('clients')

@@ -2,8 +2,8 @@ import UpdatePasswordForm from './UpdatePasswordForm'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Update Password | Winly AI",
-  description: "Update your Winly AI account password.",
+  title: "Update Password | Winly",
+  description: "Update your Winly account password.",
   robots: {
     index: false,
     follow: false,

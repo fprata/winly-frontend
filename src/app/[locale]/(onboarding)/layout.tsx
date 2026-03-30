@@ -9,7 +9,7 @@ export default function OnboardingLayout({
         <div className="mb-8 text-center">
              <h1 className="text-xl font-bold text-zinc-800 tracking-tight flex items-center justify-center gap-2">
                 <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs font-black">W</div>
-                WINLY<span className="text-zinc-400 font-medium">AI</span>
+                WINLY
               </h1>
         </div>
         {children}

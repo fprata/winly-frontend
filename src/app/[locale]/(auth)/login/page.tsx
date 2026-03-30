@@ -2,8 +2,8 @@ import LoginForm from './LoginForm'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Sign In | Winly AI Procurement Platform",
-  description: "Sign in to access your Winly AI procurement intelligence dashboard. Monitor TED & BASE tenders, view AI-matched opportunities, and track your bidding pipeline.",
+  title: "Sign In | Winly Procurement Platform",
+  description: "Sign in to access your Winly procurement intelligence dashboard. Monitor TED & BASE tenders, view AI-matched opportunities, and track your bidding pipeline.",
   robots: {
     index: false,
     follow: true,

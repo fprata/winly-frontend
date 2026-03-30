@@ -26,7 +26,7 @@
     "about": "About Us",
     "support": "Support",
     "tagline": "Empowering EU businesses to win more public contracts with data-driven intelligence.",
-    "copyright": "© 2026 Winly AI. All rights reserved.",
+    "copyright": "© 2026 Winly. All rights reserved.",
     "landingPage": "Landing Page"
   },
   "sidebar": {
@@ -71,7 +71,7 @@
   "features": {
     "badge": "Why Choose Winly",
     "title": "Competitive Advantages",
-    "subtitle": "Most platforms just send keyword alerts. Winly AI provides deep strategic intelligence to help you win.",
+    "subtitle": "Most platforms just send keyword alerts. Winly provides deep strategic intelligence to help you win.",
     "aiMatching": {
       "title": "V3 AI Matching Engine",
       "description": "Our 150-point scoring algorithm evaluates geographic feasibility, buyer openness, and historical alignment—not just keywords."
@@ -100,7 +100,7 @@
       "badge": "Market Personas Live",
       "title": "Know Your Market",
       "highlight": "Before You Bid",
-      "description": "Winly AI doesn't just match keywords. We fingerprint the behavioral DNA of every buyer and competitor in the market to predict their next move.",
+      "description": "Winly doesn't just match keywords. We fingerprint the behavioral DNA of every buyer and competitor in the market to predict their next move.",
       "cta": "Explore Market Personas",
       "fingerprinting": {
         "title": "Behavioral Fingerprinting",
@@ -267,7 +267,7 @@
   "intelligence": {
     "market": {
       "title": "Market Intelligence",
-      "subtitle": "Macro-level trends and sector performance synced from the Winly AI analytical core.",
+      "subtitle": "Macro-level trends and sector performance synced from the Winly analytical core.",
       "loading": "Aggregating global market data...",
       "sectorDistribution": "Active Sector Distribution",
       "tendersLabel": "Tenders",
@@ -467,7 +467,7 @@
     },
     "personas": {
       "title": "Market Personas",
-      "subtitle": "Winly AI uses behavioral clustering to classify every buyer and competitor into specific \"Personas.\" Understanding who you are dealing with is the first step to winning.",
+      "subtitle": "Winly uses behavioral clustering to classify every buyer and competitor into specific \"Personas.\" Understanding who you are dealing with is the first step to winning.",
       "buyersTitle": "Buyer Archetypes",
       "buyersSubtitle": "Classified by spending habits, openness, and price sensitivity.",
       "competitorsTitle": "Competitor Archetypes",
@@ -710,7 +710,7 @@
     },
     "riskMiniCard": "Risk Score",
     "sectorClassification": "Sector Classification (CPV)",
-    "syncedVia": "Synced via Winly AI Core",
+    "syncedVia": "Synced via Winly Core",
     "relatedOpportunities": "Related Opportunities (AI Semantic)",
     "avgDiscountLabel": "Avg. Discount",
     "publicationDate": "Publication Date",
@@ -875,10 +875,10 @@
   "about": {
     "heroTitle": "Democratizing Access to",
     "heroHighlight": "Public Procurement",
-    "heroSubtitle": "We believe that every business, regardless of size, deserves a fair shot at government contracts. Winly AI levels the playing field with enterprise-grade intelligence.",
+    "heroSubtitle": "We believe that every business, regardless of size, deserves a fair shot at government contracts. Winly levels the playing field with enterprise-grade intelligence.",
     "missionTitle": "Our Mission",
     "missionDesc1": "The EU public procurement market is worth over €2 trillion annually, yet it remains opaque and difficult to navigate for many SMEs. Complex documentation, fragmented data sources, and lack of competitive visibility create high barriers to entry.",
-    "missionDesc2": "Winly AI was founded to solve this information asymmetry. By combining data from TED (Tenders Electronic Daily) and national portals like BASE (Portugal) with advanced AI, we provide the clarity businesses need to bid with confidence.",
+    "missionDesc2": "Winly was founded to solve this information asymmetry. By combining data from TED (Tenders Electronic Daily) and national portals like BASE (Portugal) with advanced AI, we provide the clarity businesses need to bid with confidence.",
     "precisionTitle": "Precision",
     "precisionDesc": "Matching opportunities with 98% relevance accuracy.",
     "transparencyTitle": "Transparency",
@@ -891,11 +891,11 @@
     "teamDesc": "Our team combines deep expertise in public administration, data science, and enterprise software development.",
     "heroTitle2": "Democratizing access to",
     "heroHighlight2": "public procurement",
-    "heroSubtitle2": "We believe every business — regardless of size — deserves a fair shot at government contracts. Winly AI levels the playing field with enterprise-grade procurement intelligence, built from the ground up for European SMEs.",
+    "heroSubtitle2": "We believe every business — regardless of size — deserves a fair shot at government contracts. Winly levels the playing field with enterprise-grade procurement intelligence, built from the ground up for European SMEs.",
     "problemBadge": "The Problem",
     "problemTitle": "Public procurement is opaque — and unfair",
     "problemDesc1": "The EU public procurement market is worth over €2 trillion annually. Yet for most SMEs, it remains impossibly hard to navigate: complex documentation, fragmented data spread across dozens of national portals, and no visibility into what competitors are doing or what buyers actually want.",
-    "problemDesc2": "Large firms have dedicated bid management teams, market analysts, and institutional relationships. A 10-person consultancy has a spreadsheet and a prayer. Winly AI was built to close that gap — giving SMEs the same strategic intelligence that was previously only available to enterprise bid teams.",
+    "problemDesc2": "Large firms have dedicated bid management teams, market analysts, and institutional relationships. A 10-person consultancy has a spreadsheet and a prayer. Winly was built to close that gap — giving SMEs the same strategic intelligence that was previously only available to enterprise bid teams.",
     "ps1Val": "€2T+",
     "ps1Label": "EU public procurement market annually",
     "ps2Val": "200k+",
@@ -957,7 +957,7 @@
     "salesLabel": "Sales",
     "salesDesc": "Speak with our enterprise team.",
     "addressLabel": "Headquarters",
-    "addressDesc": "Winly AI Labs\nAvenida da Liberdade, 110\n1250-146 Lisbon, Portugal",
+    "addressDesc": "Winly Labs\nAvenida da Liberdade, 110\n1250-146 Lisbon, Portugal",
     "formTitle": "Send us a message",
     "nameLabel": "Name",
     "namePlaceholder": "Your name",
@@ -1044,7 +1044,7 @@
     "personasBadge": "Market Personas Live",
     "personasTitle": "Know your market",
     "personasHighlight": "before you bid",
-    "personasDesc1": "Winly AI fingerprints the behavioral DNA of every buyer and competitor in the EU procurement market — classifying them into strategic personas so you can predict their next move.",
+    "personasDesc1": "Winly fingerprints the behavioral DNA of every buyer and competitor in the EU procurement market — classifying them into strategic personas so you can predict their next move.",
     "personasDesc2": "Is this buyer a Loyalist (top supplier wins 60%+ of contracts)? Or an Open Innovator (actively diversifying)? Is that competitor a National Dominator or a vulnerable Local King? Knowing this changes your strategy entirely.",
     "personasCta": "Explore Market Personas",
     "personasCard1Title": "Buyer Archetypes",

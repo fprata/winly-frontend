@@ -11,10 +11,10 @@ import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
 export const metadata: Metadata = {
-  title: "Winly AI | Win EU Public Procurement Contracts with AI Intelligence",
+  title: "Winly | Win EU Public Procurement Contracts with AI Intelligence",
   description: "The only platform combining TED & BASE data with a 150-point AI scoring system. Win probability, competitor intelligence, price recommendations, and AI document analysis for EU public tenders.",
   openGraph: {
-    title: "Winly AI | Win More EU Public Procurement Contracts",
+    title: "Winly | Win More EU Public Procurement Contracts",
     description: "AI-powered tender matching with 150-point scoring. Win probability, competitor intelligence, and AI document analysis for TED & BASE tenders.",
   },
 }
@@ -68,7 +68,7 @@ function MatchesMockup() {
     { score: 71, title: 'Cloud Infrastructure Migration Services', buyer: 'Agência Nacional de Gestão Fiscal', value: '€890,000', days: 22, cpv: '72610000' },
   ];
   return (
-    <BrowserFrame url="app.winly.ai/matches">
+    <BrowserFrame url="app.winly.me/matches">
       <div className="bg-zinc-50 p-4">
         {/* Header stats */}
         <div className="flex items-center justify-between mb-3">
@@ -136,7 +136,7 @@ function MatchesMockup() {
 
 function TenderIntelMockup() {
   return (
-    <BrowserFrame url="app.winly.ai/tenders/6648-2025">
+    <BrowserFrame url="app.winly.me/tenders/6648-2025">
       <div className="bg-zinc-50 p-4">
         {/* Tender header */}
         <div className="mb-3">
@@ -226,7 +226,7 @@ function TenderIntelMockup() {
 
 function AIInsightsMockup() {
   return (
-    <BrowserFrame url="app.winly.ai/tenders/6648-2025?tab=insights">
+    <BrowserFrame url="app.winly.me/tenders/6648-2025?tab=insights">
       <div className="bg-zinc-50 p-4">
         {/* Header */}
         <div className="flex items-center gap-2 mb-3 p-2 bg-blue-50 border border-blue-100 rounded-lg">
@@ -311,7 +311,7 @@ function AIInsightsMockup() {
 
 function BuyerIntelMockup() {
   return (
-    <BrowserFrame url="app.winly.ai/intelligence/buyers">
+    <BrowserFrame url="app.winly.me/intelligence/buyers">
       <div className="bg-zinc-50 p-4">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-black text-sm">CMP</div>
@@ -365,7 +365,7 @@ function BuyerIntelMockup() {
 
 function CompetitorMockup() {
   return (
-    <BrowserFrame url="app.winly.ai/intelligence/competitors">
+    <BrowserFrame url="app.winly.me/intelligence/competitors">
       <div className="bg-zinc-50 p-4">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center text-white font-black text-xs">DB</div>
@@ -420,7 +420,7 @@ function CompetitorMockup() {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'Winly AI',
+  name: 'Winly',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
   offers: [
