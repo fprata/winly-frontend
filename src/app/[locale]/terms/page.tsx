@@ -65,7 +65,7 @@ export default function TermsPage() {
             
             <div className="mt-8 pt-8 border-t border-zinc-100">
                 <p className="text-sm text-zinc-500">
-                    If you have any questions about these Terms, please contact us at <a href="mailto:contact@winly.me" className="text-blue-600 hover:underline">contact@winly.me</a>.
+                    If you have any questions about these Terms, please contact us at <a href="mailto:support.winly@winly.me" className="text-blue-600 hover:underline">support.winly@winly.me</a>.
                 </p>
             </div>
           </div>

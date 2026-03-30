@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid message' }, { status: 400 });
     }
 
-    const internalTo = process.env.CONTACT_FORM_TO_EMAIL || 'contact@winly.me';
+    const internalTo = process.env.CONTACT_FORM_TO_EMAIL || 'support.winly@winly.me';
     const fromAddress = process.env.NOTIFY_FROM_EMAIL || 'Winly <onboarding@resend.dev>';
     const resend = new Resend(process.env.RESEND_API_KEY);
 

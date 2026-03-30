@@ -40,7 +40,7 @@ export default async function ContactPage() {
                     <div>
                        <h3 className="font-bold text-lg text-zinc-900">{t('emailLabel')}</h3>
                        <p className="text-zinc-500 mb-1">{t('emailDesc')}</p>
-                       <a href="mailto:contact@winly.me" className="text-blue-600 font-medium hover:underline">contact@winly.me</a>
+                       <a href="mailto:support.winly@winly.me" className="text-blue-600 font-medium hover:underline">support.winly@winly.me</a>
                     </div>
                  </div>
 

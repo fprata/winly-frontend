@@ -125,7 +125,7 @@ export default async function LocaleLayout({
                   },
                   contactPoint: {
                     '@type': 'ContactPoint',
-                    email: 'contact@winly.me',
+                    email: 'support.winly@winly.me',
                     contactType: 'customer service',
                   },
                 },
