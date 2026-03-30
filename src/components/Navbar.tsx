@@ -16,6 +16,7 @@ export function Navbar() {
         </Link>
         <div className="flex items-center gap-4">
           <Link href="/about" className="hidden md:block text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">{t('about')}</Link>
+          <Link href="/blog" className="hidden md:block text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">{t('blog')}</Link>
           <Link href="/contact" className="hidden md:block text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">{t('contact')}</Link>
           <LanguageSwitcher />
           <Link href="/login" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">{t('login')}</Link>

@@ -12,6 +12,7 @@
   },
   "nav": {
     "about": "Sobre",
+    "blog": "Blog",
     "contact": "Contacto",
     "features": "Funcionalidades",
     "pricing": "Preços",
@@ -24,6 +25,7 @@
     "terms": "Termos",
     "contact": "Contacto",
     "about": "Sobre Nós",
+    "blog": "Blog",
     "support": "Suporte",
     "tagline": "Capacitar empresas da UE a ganhar mais contratos públicos com inteligência baseada em dados.",
     "copyright": "© 2026 Winly. Todos os direitos reservados.",
@@ -1137,5 +1139,11 @@
     "title": "Funcionalidade Premium",
     "description": "Esta funcionalidade requer um plano {tier} ou superior. Faça upgrade para desbloquear inteligência de compradores, análise de concorrentes e insights de mercado.",
     "cta": "Upgrade para {tier}"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Insights sobre contratação pública europeia, estratégias para concursos e como a IA está a transformar o acesso a contratos públicos.",
+    "noPosts": "Ainda sem artigos. Volte em breve!",
+    "readMore": "Ler mais"
   }
 }

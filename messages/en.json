@@ -12,6 +12,7 @@
   },
   "nav": {
     "about": "About",
+    "blog": "Blog",
     "contact": "Contact",
     "features": "Features",
     "pricing": "Pricing",
@@ -24,6 +25,7 @@
     "terms": "Terms",
     "contact": "Contact",
     "about": "About Us",
+    "blog": "Blog",
     "support": "Support",
     "tagline": "Empowering EU businesses to win more public contracts with data-driven intelligence.",
     "copyright": "© 2026 Winly. All rights reserved.",
@@ -1137,5 +1139,11 @@
     "title": "Premium Feature",
     "description": "This feature requires a {tier} plan or higher. Upgrade to unlock buyer intelligence, competitor analysis, and market insights.",
     "cta": "Upgrade to {tier}"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Insights on EU public procurement, tender strategies, and how AI is transforming government contracting.",
+    "noPosts": "No posts yet. Check back soon!",
+    "readMore": "Read more"
   }
 }
