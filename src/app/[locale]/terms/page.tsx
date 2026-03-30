@@ -1,5 +1,11 @@
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Terms and Conditions',
+  description: 'Terms and conditions for using the Winly procurement intelligence platform.',
+}
 
 export default function TermsPage() {
   return (

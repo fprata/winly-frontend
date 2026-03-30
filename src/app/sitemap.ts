@@ -1,45 +1,27 @@
 import { MetadataRoute } from 'next'
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://winly.vercel.app'
+const BASE_URL = 'https://winly.me'
+const locales = ['en', 'pt']
 
+function localizedEntries(
+  path: string,
+  opts: { changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency']; priority: number }
+): MetadataRoute.Sitemap {
+  return locales.map((locale) => ({
+    url: `${BASE_URL}/${locale}${path}`,
+    lastModified: new Date(),
+    changeFrequency: opts.changeFrequency,
+    priority: opts.priority,
+  }))
+}
+
+export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/login`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    // Dashboard pages are excluded (require authentication)
+    ...localizedEntries('', { changeFrequency: 'weekly', priority: 1 }),
+    ...localizedEntries('/about', { changeFrequency: 'monthly', priority: 0.8 }),
+    ...localizedEntries('/contact', { changeFrequency: 'monthly', priority: 0.8 }),
+    ...localizedEntries('/terms', { changeFrequency: 'yearly', priority: 0.3 }),
+    ...localizedEntries('/privacy', { changeFrequency: 'yearly', priority: 0.3 }),
+    ...localizedEntries('/login', { changeFrequency: 'monthly', priority: 0.9 }),
   ]
 }

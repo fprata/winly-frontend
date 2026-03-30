@@ -24,6 +24,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: 'https://winly.vercel.app/sitemap.xml',
+    sitemap: 'https://winly.me/sitemap.xml',
   }
 }

@@ -3,6 +3,12 @@ import { Footer } from '@/components/Footer'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { ContactForm } from '@/components/ContactForm'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Contact Us',
+  description: 'Get in touch with the Winly team. We help businesses find and win EU public procurement contracts.',
+}
 
 export default async function ContactPage() {
   const t = await getTranslations('contact');
