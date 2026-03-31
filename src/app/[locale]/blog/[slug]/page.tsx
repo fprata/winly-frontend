@@ -1,5 +1,7 @@
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
+import { BlogCTA } from '@/components/blog/BlogCTA'
+import { RelatedPosts } from '@/components/blog/RelatedPosts'
 import { Link } from '@/navigation'
 import { getPost, getAllSlugs } from '@/lib/blog'
 import { MDXRemote } from 'next-mdx-remote/rsc'
@@ -146,6 +148,10 @@ export default async function BlogPostPage({
           <div className="prose prose-zinc max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl">
             <MDXRemote source={post.content} />
           </div>
+
+          <BlogCTA />
+
+          <RelatedPosts currentSlug={slug} currentTags={post.tags} locale={locale} />
         </article>
       </main>
 

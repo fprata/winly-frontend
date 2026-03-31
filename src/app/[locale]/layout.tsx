@@ -101,6 +101,9 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={inter.variable}>
+      <head>
+        <link rel="alternate" type="application/rss+xml" title="Winly Blog" href="/feed.xml" />
+      </head>
       <body className="bg-zinc-50 min-h-screen text-zinc-900 font-sans antialiased overflow-x-hidden">
         <script
           type="application/ld+json"

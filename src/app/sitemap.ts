@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getAllSlugs } from '@/lib/blog'
+import { getAllPosts } from '@/lib/blog'
 
 const BASE_URL = 'https://winly.me'
 const locales = ['en', 'pt']
@@ -24,13 +24,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...localizedEntries('/contact', { changeFrequency: 'monthly', priority: 0.8 }),
     ...localizedEntries('/terms', { changeFrequency: 'yearly', priority: 0.3 }),
     ...localizedEntries('/privacy', { changeFrequency: 'yearly', priority: 0.3 }),
-    ...localizedEntries('/login', { changeFrequency: 'monthly', priority: 0.9 }),
+    ...localizedEntries('/personas', { changeFrequency: 'monthly', priority: 0.7 }),
   ]
 
   const blogPosts: MetadataRoute.Sitemap = locales.flatMap((locale) =>
-    getAllSlugs(locale).map((slug) => ({
-      url: `${BASE_URL}/${locale}/blog/${slug}`,
-      lastModified: new Date(),
+    getAllPosts(locale).map((post) => ({
+      url: `${BASE_URL}/${locale}/blog/${post.slug}`,
+      lastModified: post.date ? new Date(post.date) : new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     }))
