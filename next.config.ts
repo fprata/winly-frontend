@@ -12,7 +12,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' blob: data: https://*.supabase.co",
   "font-src 'self' https://fonts.gstatic.com",
-  "connect-src 'self' https://*.supabase.co https://*.lemonsqueezy.com https://vitals.vercel-insights.com https://us.i.posthog.com https://eu.i.posthog.com https://eu-assets.i.posthog.com",
+  "connect-src 'self' https://*.supabase.co https://*.lemonsqueezy.com https://vitals.vercel-insights.com https://us.i.posthog.com https://eu.i.posthog.com https://us-assets.i.posthog.com https://eu-assets.i.posthog.com",
   "frame-src 'self' https://*.lemonsqueezy.com",
   "object-src 'none'",
   "base-uri 'self'",
