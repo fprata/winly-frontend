@@ -72,6 +72,9 @@ export async function updateSession(request: NextRequest, response?: NextRespons
   const isDashboardPage = pathnameWithoutLocale.startsWith('/dashboard')
   const isLandingPage = pathnameWithoutLocale === '/' || pathname === '/en' || pathname === '/pt'
   const isPersonasPage = pathnameWithoutLocale.startsWith('/personas')
+  const isPublicPage = ['/blog', '/about', '/contact', '/terms', '/privacy'].some(
+    (p) => pathnameWithoutLocale.startsWith(p)
+  )
 
   // Extract locale from pathname to preserve it in redirects
   const localeMatch = pathname.match(/^\/(en|pt)/)
@@ -79,7 +82,7 @@ export async function updateSession(request: NextRequest, response?: NextRespons
 
   // 1. Unauthenticated users:
   if (!user) {
-    if (!isAuthPage && !isLandingPage && !isPersonasPage) {
+    if (!isAuthPage && !isLandingPage && !isPersonasPage && !isPublicPage) {
        const url = request.nextUrl.clone()
        url.pathname = `${localePrefix}/login`
        return NextResponse.redirect(url)
