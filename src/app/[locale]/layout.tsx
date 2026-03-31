@@ -7,6 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { locales } from '@/i18n';
 import { QueryProvider } from '@/providers/QueryProvider';
+import { PostHogProvider } from '@/providers/PostHogProvider';
 import "../globals.css";
 
 const inter = Inter({
@@ -166,11 +167,13 @@ export default async function LocaleLayout({
             }),
           }}
         />
-        <QueryProvider>
-          <NextIntlClientProvider messages={messages}>
-            {children}
-          </NextIntlClientProvider>
-        </QueryProvider>
+        <PostHogProvider>
+          <QueryProvider>
+            <NextIntlClientProvider messages={messages}>
+              {children}
+            </NextIntlClientProvider>
+          </QueryProvider>
+        </PostHogProvider>
         <Analytics />
         <SpeedInsights />
       </body>
