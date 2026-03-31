@@ -33,6 +33,7 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.description,
+    keywords: post.tags,
     openGraph: {
       title: post.title,
       description: post.description,
@@ -40,9 +41,20 @@ export async function generateMetadata({
       publishedTime: post.date,
       authors: [post.author],
       tags: post.tags,
+      url: `https://winly.me/${locale}/blog/${slug}`,
+      siteName: 'Winly',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
     },
     alternates: {
       canonical: `https://winly.me/${locale}/blog/${slug}`,
+      languages: {
+        en: `https://winly.me/en/blog/${slug}`,
+        pt: `https://winly.me/pt/blog/${slug}`,
+      },
     },
   }
 }
