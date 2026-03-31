@@ -4,9 +4,16 @@ import { CheckCircle, Shield, Award, Users, Target, Cpu, Globe, BarChart3, FileT
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
-export const metadata: Metadata = {
-  title: "About Winly | Democratizing EU Public Procurement Access",
-  description: "Learn how Winly is leveling the playing field for SMEs in the €2T+ EU public procurement market. AI-powered intelligence platform combining TED & BASE data.",
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  return {
+    title: "About Winly | Democratizing EU Public Procurement Access",
+    description: "Learn how Winly is leveling the playing field for SMEs in the €2T+ EU public procurement market. AI-powered intelligence platform combining TED & BASE data.",
+    alternates: {
+      canonical: `https://winly.me/${locale}/about`,
+      languages: { en: 'https://winly.me/en/about', pt: 'https://winly.me/pt/about' },
+    },
+  }
 }
 
 export default async function AboutPage() {

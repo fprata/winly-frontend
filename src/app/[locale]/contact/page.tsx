@@ -5,9 +5,16 @@ import { getTranslations } from 'next-intl/server'
 import { ContactForm } from '@/components/ContactForm'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: 'Contact Us',
-  description: 'Get in touch with the Winly team. We help businesses find and win EU public procurement contracts.',
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  return {
+    title: 'Contact Us',
+    description: 'Get in touch with the Winly team. We help businesses find and win EU public procurement contracts.',
+    alternates: {
+      canonical: `https://winly.me/${locale}/contact`,
+      languages: { en: 'https://winly.me/en/contact', pt: 'https://winly.me/pt/contact' },
+    },
+  }
 }
 
 export default async function ContactPage() {

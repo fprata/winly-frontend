@@ -17,9 +17,16 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PersonaCarousel } from '@/components/PersonaCarousel';
 
-export const metadata: Metadata = {
-  title: 'Choose Your Persona',
-  description: 'Select your business profile to get personalized tender matching. Winly adapts its AI-powered procurement intelligence to your industry and company size.',
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  return {
+    title: 'Choose Your Persona',
+    description: 'Select your business profile to get personalized tender matching. Winly adapts its AI-powered procurement intelligence to your industry and company size.',
+    alternates: {
+      canonical: `https://winly.me/${locale}/personas`,
+      languages: { en: 'https://winly.me/en/personas', pt: 'https://winly.me/pt/personas' },
+    },
+  }
 }
 
 export default async function PersonasPage() {
