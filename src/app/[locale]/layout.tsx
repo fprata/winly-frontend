@@ -173,10 +173,10 @@ export default async function LocaleLayout({
           <QueryProvider>
             <NextIntlClientProvider messages={messages}>
               {children}
+              <CookieConsent />
             </NextIntlClientProvider>
           </QueryProvider>
         </PostHogProvider>
-        <CookieConsent />
         <Analytics />
         <SpeedInsights />
       </body>
