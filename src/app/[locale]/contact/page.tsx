@@ -1,6 +1,6 @@
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
-import { Mail, MapPin, Phone } from 'lucide-react'
+import { Mail } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { ContactForm } from '@/components/ContactForm'
 import type { Metadata } from 'next'
@@ -51,28 +51,6 @@ export default async function ContactPage() {
                     </div>
                  </div>
 
-                 <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                       <Phone size={24} />
-                    </div>
-                    <div>
-                       <h3 className="font-bold text-lg text-zinc-900">{t('salesLabel')}</h3>
-                       <p className="text-zinc-500 mb-1">{t('salesDesc')}</p>
-                       <a href="tel:+351210000000" className="text-blue-600 font-medium hover:underline">+351 210 000 000</a>
-                    </div>
-                 </div>
-
-                 <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                       <MapPin size={24} />
-                    </div>
-                    <div>
-                       <h3 className="font-bold text-lg text-zinc-900">{t('addressLabel')}</h3>
-                       <p className="text-zinc-500 whitespace-pre-line">
-                         {t('addressDesc')}
-                       </p>
-                    </div>
-                 </div>
               </div>
            </div>
 
