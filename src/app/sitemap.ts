@@ -24,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...localizedEntries('/contact', { changeFrequency: 'monthly', priority: 0.8 }),
     ...localizedEntries('/terms', { changeFrequency: 'yearly', priority: 0.3 }),
     ...localizedEntries('/privacy', { changeFrequency: 'yearly', priority: 0.3 }),
+    ...localizedEntries('/cookies', { changeFrequency: 'yearly', priority: 0.3 }),
     ...localizedEntries('/personas', { changeFrequency: 'monthly', priority: 0.7 }),
   ]
 

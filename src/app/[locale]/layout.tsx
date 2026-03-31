@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import { locales } from '@/i18n';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { PostHogProvider } from '@/providers/PostHogProvider';
+import { CookieConsent } from '@/components/CookieConsent';
 import "../globals.css";
 
 const inter = Inter({
@@ -102,7 +103,8 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={inter.variable}>
       <head>
-        <link rel="alternate" type="application/rss+xml" title="Winly Blog" href="/feed.xml" />
+        <link rel="alternate" type="application/rss+xml" title="Winly Blog (EN)" href="/feed.xml" />
+        <link rel="alternate" type="application/rss+xml" title="Winly Blog (PT)" href="/feed-pt.xml" />
       </head>
       <body className="bg-zinc-50 min-h-screen text-zinc-900 font-sans antialiased overflow-x-hidden">
         <script
@@ -174,6 +176,7 @@ export default async function LocaleLayout({
             </NextIntlClientProvider>
           </QueryProvider>
         </PostHogProvider>
+        <CookieConsent />
         <Analytics />
         <SpeedInsights />
       </body>

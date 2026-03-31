@@ -21,6 +21,7 @@ export function Footer() {
         <div className="flex gap-6 text-sm">
            <Link href="/privacy" className="text-zinc-500 hover:text-zinc-700 transition-colors">{t('privacy')}</Link>
            <Link href="/terms" className="text-zinc-500 hover:text-zinc-700 transition-colors">{t('terms')}</Link>
+           <Link href="/cookies" className="text-zinc-500 hover:text-zinc-700 transition-colors">{t('cookies')}</Link>
            <Link href="/contact" className="text-zinc-500 hover:text-zinc-700 transition-colors">{t('contact')}</Link>
            <Link href="/blog" className="text-zinc-500 hover:text-zinc-700 transition-colors">{t('blog')}</Link>
            <Link href="/about" className="text-zinc-500 hover:text-zinc-700 transition-colors">{t('about')}</Link>
