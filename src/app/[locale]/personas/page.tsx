@@ -1,20 +1,26 @@
 import React from 'react';
-import { 
-  Users, 
-  Building2, 
-  Trophy, 
-  Target, 
-  ShieldCheck, 
-  Zap, 
-  TrendingUp, 
-  Globe, 
-  Lock, 
+import type { Metadata } from 'next';
+import {
+  Users,
+  Building2,
+  Trophy,
+  Target,
+  ShieldCheck,
+  Zap,
+  TrendingUp,
+  Globe,
+  Lock,
   Award
 } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { PersonaCarousel } from '@/components/PersonaCarousel';
+
+export const metadata: Metadata = {
+  title: 'Choose Your Persona',
+  description: 'Select your business profile to get personalized tender matching. Winly adapts its AI-powered procurement intelligence to your industry and company size.',
+}
 
 export default async function PersonasPage() {
   const t = await getTranslations('intelligence.personas');

@@ -1,0 +1,90 @@
+# Winly
+
+> AI-powered procurement intelligence platform that helps businesses find, evaluate, and win public contracts across the European Union and Portugal.
+
+Winly is a procurement intelligence platform built for companies that want to compete in the EU public procurement market — a market worth over 2 trillion euros annually. The platform aggregates tender data from official European and Portuguese sources, applies AI-driven analysis, and delivers actionable intelligence so businesses can identify the right opportunities, understand their competition, and submit stronger bids.
+
+Winly combines data from TED (Tenders Electronic Daily), the official EU procurement journal publishing over 700,000 notices per year, and BASE (base.gov.pt), Portugal's national public procurement portal. By unifying these sources into a single platform, Winly eliminates the manual effort of monitoring multiple portals and deciphering complex procurement documents.
+
+The platform uses a proprietary 150-point AI scoring system to match tenders to each company's profile, providing win probability estimates, competitor intelligence, buyer behavior analysis, and price recommendations. Users can also leverage AI-powered document analysis to extract key requirements, risks, and evaluation criteria from tender documents (RFPs, terms of reference, and technical specifications).
+
+## Key Features
+
+- AI Tender Matching: Proprietary 150-point scoring algorithm matches relevant tenders to your company profile, with win probability estimates
+- Competitor Intelligence: Track competitors' bidding history, win rates, pricing patterns, and market positioning
+- Buyer Intelligence: Analyze contracting authority behavior, vendor diversity, spending patterns, and procurement preferences
+- AI Document Analysis: Upload and analyze tender documents (PDFs) to extract requirements, risks, evaluation criteria, and key deadlines
+- AI Chatbot: Ask questions about specific tenders and get instant, context-aware answers from analyzed procurement documents
+- Market Overview: Sector-level analytics, trend tracking, and market size data across EU procurement categories
+- Buyer Persona Classification: Categorize contracting authorities (Open Innovator, Loyalist, Price Hawk) to tailor your bidding strategy
+- Real-Time Notifications: Get alerted when new tenders matching your profile are published
+- PDF and Excel Export: Download tender data, analyses, and reports for offline use and team collaboration
+- Multilingual Support: Available in English and Portuguese
+
+## Data Sources
+
+- TED (Tenders Electronic Daily) — The official journal of EU public procurement, publishing over 700,000 contract notices per year from all EU member states
+- BASE (base.gov.pt) — Portugal's official public procurement portal, covering national and local government contracts
+
+## Pricing
+
+- Explorer (Free): Top 5 tender matches per day, basic search and filtering, market overview access
+- Pro (EUR 99/month, EUR 79/month billed annually): Unlimited tender matches, 5 AI document analyses per month, buyer and competitor intelligence, real-time notifications
+- Enterprise (EUR 199/month, EUR 159/month billed annually): Unlimited everything, unlimited AI document analyses, AI chatbot, PDF and Excel export, priority support
+
+## Target Users
+
+- SMEs bidding on EU and Portuguese public tenders
+- Procurement and bid management professionals
+- Business development teams in government contracting
+- Portuguese companies looking to enter or expand in public procurement
+- Consultancies advising clients on public tender strategy
+- Companies monitoring competitor activity in public markets
+
+## Industries Served
+
+- Information Technology and Digital Services
+- Construction and Infrastructure
+- Healthcare and Medical Supplies
+- Environmental and Green Services
+- Consulting and Professional Services
+- Transportation and Logistics
+- Education and Training
+- Defense and Security
+
+## Blog Topics
+
+- EU public procurement trends, regulations, and policy changes
+- Portugal procurement market analysis and opportunities
+- AI and technology in public procurement
+- Green and sustainable procurement requirements
+- SME bidding strategies and common mistakes
+- Competitor analysis techniques for public tenders
+- How to read and respond to EU tender documents
+- CPV codes and procurement classification guides
+
+## Company Information
+
+- Website: https://winly.me
+- Email: support.winly@winly.me
+- Location: Avenida da Liberdade, 110, Lisbon, Portugal
+- Languages: English, Portuguese
+- Founded in Lisbon, Portugal
+
+## Technical Details
+
+- Web application built with Next.js and React
+- Data pipeline processing TED and BASE sources daily
+- AI analysis powered by large language models
+- Secure authentication via Supabase
+- GDPR compliant
+
+## Links
+
+- Homepage: https://winly.me
+- Blog: https://winly.me/en/blog
+- About: https://winly.me/en/about
+- Contact: https://winly.me/en/contact
+- Terms of Service: https://winly.me/en/terms
+- Privacy Policy: https://winly.me/en/privacy
+- Login: https://winly.me/en/login

@@ -446,6 +446,19 @@ export default async function LandingPage() {
     { q: t('faq6q'), a: t('faq6a') },
   ]
 
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQS.map((faq) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.a,
+      },
+    })),
+  }
+
   return (
     <div className="bg-zinc-50 min-h-screen font-sans text-zinc-900 overflow-x-hidden">
       <Navbar />
@@ -906,6 +919,10 @@ export default async function LandingPage() {
 
       {/* ─── FAQ ──────────────────────────────────────────────────────────── */}
       <section className="py-24 px-6 bg-zinc-50 border-t border-zinc-200">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-black text-zinc-900 mb-4">{t('faqTitle')}</h2>

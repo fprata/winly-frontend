@@ -79,6 +79,16 @@ export default async function BlogPostPage({
     mainEntityOfPage: `https://winly.me/${locale}/blog/${slug}`,
   }
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `https://winly.me/${locale}` },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `https://winly.me/${locale}/blog` },
+      { '@type': 'ListItem', position: 3, name: post.title },
+    ],
+  }
+
   return (
     <div className="bg-zinc-50 min-h-screen font-sans text-zinc-900">
       <Navbar />
@@ -88,6 +98,10 @@ export default async function BlogPostPage({
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
           />
 
           <Link

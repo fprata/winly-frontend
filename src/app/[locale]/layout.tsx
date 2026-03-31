@@ -81,9 +81,6 @@ export const metadata: Metadata = {
       'x-default': 'https://winly.me/en',
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-  },
 };
 
 export default async function LocaleLayout({
