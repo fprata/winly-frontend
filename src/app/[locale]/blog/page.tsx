@@ -7,8 +7,8 @@ import { Calendar, Clock, ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Blog',
-  description: 'Insights on EU public procurement, tender strategies, and how AI is transforming government contracting for SMEs.',
+  title: 'EU Procurement Blog: Guides, Strategies & Intelligence',
+  description: 'Expert guides on EU public procurement, TED and BASE tenders, AI-powered bid strategies, and market intelligence for SMEs competing for government contracts.',
 }
 
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {

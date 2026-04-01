@@ -20,12 +20,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     ...localizedEntries('', { changeFrequency: 'weekly', priority: 1 }),
     ...localizedEntries('/about', { changeFrequency: 'monthly', priority: 0.8 }),
+    ...localizedEntries('/pricing', { changeFrequency: 'monthly', priority: 0.9 }),
     ...localizedEntries('/blog', { changeFrequency: 'weekly', priority: 0.9 }),
     ...localizedEntries('/contact', { changeFrequency: 'monthly', priority: 0.8 }),
     ...localizedEntries('/terms', { changeFrequency: 'yearly', priority: 0.3 }),
     ...localizedEntries('/privacy', { changeFrequency: 'yearly', priority: 0.3 }),
     ...localizedEntries('/cookies', { changeFrequency: 'yearly', priority: 0.3 }),
     ...localizedEntries('/personas', { changeFrequency: 'monthly', priority: 0.7 }),
+    ...localizedEntries('/compare/hermix', { changeFrequency: 'monthly', priority: 0.8 }),
+    ...localizedEntries('/compare/tendery', { changeFrequency: 'monthly', priority: 0.8 }),
   ]
 
   const blogPosts: MetadataRoute.Sitemap = locales.flatMap((locale) =>
