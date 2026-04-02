@@ -93,6 +93,12 @@ describe('PT translations are not identical to EN (likely untranslated)', () => 
     'tenders.similar',
     'intelligence.personas.title',
     'tenders.insights.poweredBy',
+    // Universal terms identical in both languages
+    'nav.blog',
+    'footer.cookies',
+    'footer.blog',
+    'landing.explorerName',
+    'blog.title',
   ]);
 
   // Only check strings longer than 3 chars (short ones like "OK" are often the same)
