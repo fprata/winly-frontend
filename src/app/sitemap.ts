@@ -29,6 +29,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...localizedEntries('/personas', { changeFrequency: 'monthly', priority: 0.7 }),
     ...localizedEntries('/compare/hermix', { changeFrequency: 'monthly', priority: 0.8 }),
     ...localizedEntries('/compare/tendery', { changeFrequency: 'monthly', priority: 0.8 }),
+    ...localizedEntries('/countries/portugal', { changeFrequency: 'monthly', priority: 0.8 }),
+    ...localizedEntries('/countries/spain', { changeFrequency: 'monthly', priority: 0.8 }),
+    ...localizedEntries('/glossary', { changeFrequency: 'monthly', priority: 0.8 }),
   ]
 
   const blogPosts: MetadataRoute.Sitemap = locales.flatMap((locale) =>

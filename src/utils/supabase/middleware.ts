@@ -72,7 +72,7 @@ export async function updateSession(request: NextRequest, response?: NextRespons
   const isDashboardPage = pathnameWithoutLocale.startsWith('/dashboard')
   const isLandingPage = pathnameWithoutLocale === '/' || pathname === '/en' || pathname === '/pt'
   const isPersonasPage = pathnameWithoutLocale.startsWith('/personas')
-  const isPublicPage = ['/blog', '/about', '/contact', '/terms', '/privacy', '/cookies', '/compare', '/pricing'].some(
+  const isPublicPage = ['/blog', '/about', '/contact', '/terms', '/privacy', '/cookies', '/compare', '/pricing', '/countries', '/glossary'].some(
     (p) => pathnameWithoutLocale.startsWith(p)
   )
 
